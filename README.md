@@ -1,25 +1,32 @@
-# Website
+# Reactodia Docs
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Reactodia documentation portal is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
 
 ### Installation
 
-```
-$ yarn
+```shell
+$ npm i
 ```
 
 ### Local Development
 
-```
-$ yarn start
+```shell
+$ npm run start
 ```
 
 This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
 
+To see embedded interactive examples at `/interactive-examples` create a symbolic link (or junction point on Windows) into compiled example bundles directory as `static/examples`.
+
+For example, on Windows using `cmd`:
+```shell
+reactodia.github.io\static> mklink /j examples ../../reactodia-workspace/dist/examples
+```
+
 ### Build
 
-```
-$ yarn build
+```shell
+$ npm run build
 ```
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
