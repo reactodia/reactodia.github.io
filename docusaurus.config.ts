@@ -21,6 +21,10 @@ const config: Config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
+  markdown: {
+    format: 'detect',
+  },
+
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -50,6 +54,21 @@ const config: Config = {
 
   plugins: [
     './src/plugins/import-raw-source',
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        entryPoints: [
+          '../reactodia-workspace/src/workspace.ts',
+          '../reactodia-workspace/src/worker-protocol.ts',
+          '../reactodia-workspace/src/default-layouts.worker.ts',
+        ],
+        tsconfig: '../reactodia-workspace/tsconfig.json',
+        excludePrivate: true,
+        excludeInternal: true,
+        propertiesFormat: 'Table',
+        readme: 'none',
+      },
+    ],
   ],
 
   themes: [
@@ -67,9 +86,15 @@ const config: Config = {
       items: [
         {
           type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
+          sidebarId: 'docs',
           position: 'left',
           label: 'Docs',
+        },
+        {
+          type: 'docSidebar',
+          sidebarId: 'api',
+          position: 'left',
+          label: 'API',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
