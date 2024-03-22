@@ -21,10 +21,6 @@ const config: Config = {
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
-  markdown: {
-    format: 'detect',
-  },
-
   // Even if you don't use internationalization, you can use this field to set
   // useful metadata like html lang. For example, if your site is Chinese, you
   // may want to replace "en" with "zh-Hans".
@@ -98,7 +94,7 @@ const config: Config = {
         },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
-          label: 'Live Demo',
+          label: 'Demo',
           position: 'left',
           items: [
             {to: '/live-demo/basic', label: 'Basic'},
@@ -125,6 +121,10 @@ const config: Config = {
             {
               label: 'Concepts',
               to: '/docs/category/concepts',
+            },
+            {
+              label: 'Components',
+              to: '/docs/category/components',
             },
             {
               label: 'Examples',
