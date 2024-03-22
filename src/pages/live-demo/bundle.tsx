@@ -1,8 +1,6 @@
-import clsx from 'clsx';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Layout from '@theme/Layout';
 
-import styles from './interactive-examples.module.css';
+import styles from './bundle.module.css';
 
 export default function WorkspaceExamples(): JSX.Element {
   return (

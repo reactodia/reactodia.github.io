@@ -3,7 +3,7 @@ import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
 const config: Config = {
-  title: 'Reactodia Docs',
+  title: 'Reactodia',
   tagline: 'Visual interaction with graph data in a form of a diagram.',
   favicon: 'img/favicon.ico',
 
@@ -34,7 +34,6 @@ const config: Config = {
       'classic',
       {
         docs: {
-          routeBasePath: '/', // Serve the docs at the site's root
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/reactodia/reactodia.github.io/tree/main/',
         },
@@ -47,6 +46,14 @@ const config: Config = {
         },
       } satisfies Preset.Options,
     ],
+  ],
+
+  plugins: [
+    './src/plugins/import-raw-source',
+  ],
+
+  themes: [
+    '@docusaurus/theme-live-codeblock',
   ],
 
   themeConfig: {
@@ -65,7 +72,14 @@ const config: Config = {
           label: 'Docs',
         },
         {to: '/blog', label: 'Blog', position: 'left'},
-        {to: '/interactive-examples', label: 'Interactive Examples', position: 'left'},
+        {
+          label: 'Live Demo',
+          position: 'left',
+          items: [
+            {to: '/live-demo/basic', label: 'Basic'},
+            {to: '/live-demo/bundle', label: 'Bundle (obsolete)'},
+          ]
+        },
         {
           href: 'https://github.com/reactodia/reactodia-workspace',
           label: 'GitHub',
@@ -81,7 +95,11 @@ const config: Config = {
           items: [
             {
               label: 'Intro',
-              to: '/intro',
+              to: '/docs',
+            },
+            {
+              label: 'Examples',
+              to: '/docs/category/examples',
             },
           ],
         },
