@@ -7,8 +7,7 @@ import { BasicExample } from '@site/src/examples/ReactodiaBasic';
 export default function Example(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <Layout title='Reactodia Example: Basic'
-      description="Description will go into a meta tag in <head />"
+    <Layout title='Example: Basic'
       noFooter>
       <InlineReactodia fullSize>
         <BasicExample />

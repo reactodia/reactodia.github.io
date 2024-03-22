@@ -4,48 +4,52 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  Svg: React.ComponentType<React.ComponentProps<'svg'>>;
+  imageUrl: string;
   description: JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Customizable Graph Navigator',
+    imageUrl: require('@site/static/img/feature-diagram.png').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Extend or customize graph workspace with React components.
+        Reactodia supports custom element or link components, additional
+        canvas widgets, extendable selection actions and more.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: 'Built-in Interaction Widgets',
+    imageUrl: require('@site/static/img/feature-interaction.png').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Reactodia was designed to have "batteries included" and contains
+        powerful built-in components for graph exploration, selection,
+        multi-touch support, export to image or document to print.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Visual Graph Editing',
+    imageUrl: require('@site/static/img/feature-authoring.png').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Edit graph data visually &mdash; create new entities, connect
+        existing ones with links, edit properties on any graph element.
+        Visual graph authoring is a unique and powerful way to manipulate
+        interconnected data emphasizing its natural many-to-many relations.
       </>
     ),
   },
 ];
 
-function Feature({title, Svg, description}: FeatureItem) {
+function Feature({ title, imageUrl, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <Svg className={styles.featureSvg} role="img" />
+        <img src={imageUrl} className={styles.featureSvg} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
@@ -55,7 +59,7 @@ function Feature({title, Svg, description}: FeatureItem) {
   );
 }
 
-export default function HomepageFeatures(): JSX.Element {
+export function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
       <div className="container">

@@ -5,8 +5,7 @@ import styles from './bundle.module.css';
 export default function WorkspaceExamples(): JSX.Element {
   return (
     <Layout
-      title='Interactive Examples'
-      description="Description will go into a meta tag in <head />"
+      title='Examples (obsolete)'
       noFooter>
       <iframe className={styles.frame}
         src='/examples/basic.html'
