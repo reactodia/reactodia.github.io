@@ -1,12 +1,14 @@
 .inline {
   border: 1px solid gray;
   height: var(--inline-reactodia-height);
+  background: white;
 }
 
 .fullSize {
   flex: auto;
   display: flex;
   flex-direction: column;
+  background: white;
 }
 
 .fullSize > * {

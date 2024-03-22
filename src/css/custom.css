@@ -32,4 +32,5 @@
 
 .playgroundPreview_node_modules-\@docusaurus-theme-live-codeblock-lib-theme-Playground-styles-module .reactodia-workspace {
   height: var(--inline-reactodia-height);
+  background: white;
 }

@@ -53,6 +53,23 @@
   color: var(--ifm-color-primary);
 }
 
+@media only screen and (max-width: 768px) {
+  .title {
+    font-size: 50px;
+  }
+
+  .logo {
+    display: block;
+    float: none;
+    margin: 0px auto;
+  }
+
+  .tagline {
+    font-size: 36px;
+    text-align: center;
+  }
+}
+
 .buttons {
   display: flex;
   align-items: center;

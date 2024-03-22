@@ -98,6 +98,10 @@ const config: Config = {
               to: '/docs',
             },
             {
+              label: 'Concepts',
+              to: '/docs/category/concepts',
+            },
+            {
               label: 'Examples',
               to: '/docs/category/examples',
             },
@@ -109,6 +113,10 @@ const config: Config = {
             {
               label: 'Blog',
               to: '/blog',
+            },
+            {
+              label: 'Changelog',
+              href: 'https://github.com/reactodia/reactodia-workspace/blob/master/CHANGELOG.md',
             },
             {
               label: 'GitHub',

@@ -13,7 +13,7 @@ function HomepageHeader() {
     <header className={clsx('hero hero--dark', styles.heroBanner)}>
       <div className="container">
         <Heading as="h1" className="hero__title">
-          <div className={styles.title}>{siteConfig.title}</div>
+          <span className={styles.title}>{siteConfig.title}</span>
         </Heading>
         <Heading as="h2" className={clsx('hero__title', styles.card)}>
           <ReactodiaLogoSvg className={styles.logo}
