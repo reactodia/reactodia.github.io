@@ -30,6 +30,23 @@
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
 
+/* Add alpha symbol after "Docs" link in the header */
+a.navbar__item.navbar__link[href="/docs/"]::after,
+a.menu__link[href="/docs/"]::after {
+  content: 'α';
+  margin-left: 5px;
+  vertical-align: super;
+  font-size: 12px;
+  font-weight: bold;
+  color: var(--ifm-color-primary);
+}
+
+aside a.menu__link[href="/docs/"]::after,
+.navbar-sidebar__items--show-secondary a.menu__link[href="/docs/"]::after {
+  display: none;
+}
+
+/* Style for displaying Reactodia from live editor code block */
 .playgroundPreview_node_modules-\@docusaurus-theme-live-codeblock-lib-theme-Playground-styles-module .reactodia-workspace {
   height: var(--inline-reactodia-height);
   background: white;
