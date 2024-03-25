@@ -13,27 +13,10 @@ function SimpleExample() {
         'https://raw.githubusercontent.com/reactodia/reactodia-workspace/' +
         'master/examples/resources/orgOntology.ttl';
 
-    const controllerRef = React.useRef<AbortController>();
-    const onWorkspaceMount = React.useCallback(workspace => {
-        if (workspace) {
-            const controller = new AbortController();
-            controllerRef.current = controller;
-            const context = workspace.getContext();
-            loadGraphData(context, controller.signal).catch(err => {
-                if (err.name === 'AbortError') {
-                    return;
-                }
-                context.overlayController.setSpinner({errorOccurred: true});
-                console.error(err);
-            });
-        } else if (controllerRef.current) {
-            controllerRef.current.abort();
-            controllerRef.current = undefined;
-        }
-    }, []);
+    const {defaultLayout} = Reactodia.useWorker(Layouts);
 
-    async function loadGraphData(context: Reactodia.WorkspaceContext, signal: AbortSignal) {
-        const {model, view, performLayout} = context;
+    const {onMount} = Reactodia.useLoadedWorkspace(async (context, signal) => {
+        const {model, performLayout} = context;
         // Fetch graph data to use as underlying data source
         const response = await fetch(GRAPH_DATA, {signal});
         const graphData = new N3.Parser().parse(await response.text());
@@ -49,16 +32,16 @@ function SimpleExample() {
         await model.requestLinksOfType();
 
         // Layout elements on canvas
-        await performLayout({
-            signal,
-            canvas: view.findAnyCanvas()!,
-            layoutFunction: Reactodia.layoutForcePadded,
-        });
-    }
+        await performLayout({signal});
+    }, []);
 
     return (
-        <Reactodia.Workspace ref={onWorkspaceMount}>
-            <Reactodia.DefaultWorkspace />
+        <Reactodia.Workspace ref={onMount}
+            defaultLayout={defaultLayout}>
+            <Reactodia.DefaultWorkspace
+                leftColumn={{defaultCollapsed: true}}
+                navigator={{expanded: false}}
+            />
         </Reactodia.Workspace>
     );
 }

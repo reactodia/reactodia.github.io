@@ -1,5 +1,4 @@
 ---
-sidebar_position: 1
 title: Workspace
 ---
 
@@ -8,6 +7,9 @@ title: Workspace
 *TODO*
 
 API references:
-  - [Workspace](/docs/api/workspace/classes/Workspace.md)
-  - [WorkspaceRoot](/docs/api/workspace/functions/WorkspaceRoot.md)
-  - [DefaultWorkspace](/docs/api/workspace/functions/DefaultWorkspace.md)
+  - [Workspace](/docs/api/workspace/classes/Workspace)
+    - [useLoadedWorkspace](/docs/api/workspace/functions/useLoadedWorkspace)
+  - [WorkspaceRoot](/docs/api/workspace/functions/WorkspaceRoot)
+  - [WorkspaceContext](/docs/api/workspace/interfaces/WorkspaceContext)
+    - [useWorkspace](/docs/api/workspace/functions/useWorkspace)
+  - [DefaultWorkspace](/docs/api/workspace/functions/DefaultWorkspace)

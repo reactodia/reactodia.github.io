@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Graph Authoring
@@ -7,6 +7,7 @@ sidebar_position: 3
 *TODO*
 
 API references:
-  - [MetadataApi](/docs/api/workspace/interfaces/MetadataApi.md)
-  - [ValidationApi](/docs/api/workspace/interfaces/ValidationApi.md)
-  - [AuthoringState](/docs/api/workspace/interfaces/AuthoringState.md)
+  - [MetadataApi](/docs/api/workspace/interfaces/MetadataApi)
+  - [ValidationApi](/docs/api/workspace/interfaces/ValidationApi)
+  - [AuthoringState](/docs/api/workspace/interfaces/AuthoringState) and its [utility namespace](/docs/api/workspace/namespaces/AuthoringState)
+  - [EditorController](/docs/api/workspace/classes/EditorController)

@@ -10,6 +10,9 @@ const ReactLiveScope = {
   ...React,
   Reactodia,
   N3,
+  Layouts: Reactodia.defineLayoutWorker(() => new Worker(
+    new URL('@reactodia/workspace/layout.worker', import.meta.url)
+  )),
 };
 
 export default ReactLiveScope;
