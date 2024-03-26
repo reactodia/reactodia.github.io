@@ -98,7 +98,10 @@ const config: Config = {
           label: 'Demo',
           position: 'left',
           items: [
-            {to: '/live-demo/basic', label: 'Basic'},
+            {to: '/live-demo/basic', label: 'Basic Workspace'},
+            {to: '/live-demo/rdf', label: 'RDF Graph Authoring'},
+            {to: '/live-demo/stress-test', label: 'Stress Test'},
+            {to: '/live-demo/wikidata', label: 'Wikidata Explorer'},
             {to: '/live-demo/bundle', label: 'Bundle (obsolete)'},
           ]
         },

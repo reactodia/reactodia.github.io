@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: Live
+title: In Live Editor
 ---
 
 # Example in the live editor

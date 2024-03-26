@@ -1,0 +1,38 @@
+---
+sidebar_position: 4
+---
+import CodeBlock from '@theme/CodeBlock';
+import Link from '@docusaurus/Link';
+
+# Stress Test
+
+Example demonstrating how workspace handles large graphs with many elements and links.
+
+:::tip
+
+[▶︎ Open demo with default settings](/live-demo/stress-test)
+
+|              | 250 nodes | 500 nodes | 1000 nodes |
+|--------------|-----------|-----------|------------|
+| 2 edges each | [▶︎ Open](/live-demo/stress-test?node-count=250&edges-per-node=2) | [▶︎ Open](/live-demo/stress-test?node-count=500&edges-per-node=2) | [▶︎ Open](/live-demo/stress-test?node-count=1000&edges-per-node=2) |
+| 4 edges each | [▶︎ Open](/live-demo/stress-test?node-count=250&edges-per-node=4) | [▶︎ Open](/live-demo/stress-test?node-count=500&edges-per-node=4) | [▶︎ Open](/live-demo/stress-test?node-count=1000&edges-per-node=4) |
+
+:::
+
+import StressTestExampleSource from '!@site/src/examples/ReactodiaStressTest?raw';
+import ExampleCommonSource from '!@site/src/examples/ExampleCommon?raw';
+
+<CodeBlock language="tsx"
+  title="/src/examples/ReactodiaStressTest.tsx"
+  showLineNumbers>
+  {StressTestExampleSource}
+</CodeBlock>
+
+<details>
+  <summary>ExampleCommon.tsx</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleCommon.tsx"
+    showLineNumbers>
+    {ExampleCommonSource}
+  </CodeBlock>
+</details>

@@ -1,0 +1,43 @@
+---
+sidebar_position: 3
+---
+import CodeBlock from '@theme/CodeBlock';
+import Link from '@docusaurus/Link';
+
+# RDF Graph Authoring
+
+Example demonstrating working with in-memory RDF data and graph authoring capabilities.
+
+:::tip
+
+[▶︎ Open live demo](/live-demo/rdf)
+
+:::
+
+import RdfExampleSource from '!@site/src/examples/ReactodiaRdf?raw';
+import ExampleMetadataApiSource from '!@site/src/examples/ExampleMetadataApi?raw';
+import ExampleCommonSource from '!@site/src/examples/ExampleCommon?raw';
+
+<CodeBlock language="tsx"
+  title="/src/examples/ReactodiaRdf.tsx"
+  showLineNumbers>
+  {RdfExampleSource}
+</CodeBlock>
+
+<details>
+  <summary>ExampleMetadataApi.ts</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleMetadataApi.ts"
+    showLineNumbers>
+    {ExampleMetadataApiSource}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>ExampleCommon.tsx</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleCommon.tsx"
+    showLineNumbers>
+    {ExampleCommonSource}
+  </CodeBlock>
+</details>
