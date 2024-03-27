@@ -1,5 +1,6 @@
 /node_modules
 /.docusaurus
+/build
 /docs/api
 /static/examples
 *.log
