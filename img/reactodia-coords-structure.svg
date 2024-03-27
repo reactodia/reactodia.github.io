@@ -1,0 +1,53 @@
+<svg width="800" height="700" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <defs>
+  <filter height="200%" width="200%" y="-50%" x="-50%" id="svg_33_blur">
+   <feGaussianBlur stdDeviation="0" in="SourceGraphic"/>
+  </filter>
+ </defs>
+ <g>
+  <title>background</title>
+  <rect fill="#fff" id="canvas_background" height="576" width="699" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g transform="scale(1.2)">
+  <title>Layer 1</title>
+  <rect stroke="#000" opacity="0.64" id="svg_13" height="520.000007" width="481.290337" y="38.895168" x="111.612891" stroke-opacity="null" fill="#FFB27C"/>
+  <rect stroke="#000" opacity="0.7" id="svg_26" height="415.48391" width="293.548372" y="127.282241" x="232.903226" stroke-opacity="null" fill="#849854"/>
+  <text transform="rotate(-90 516.7207641601564,331.5632629394532) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_31" y="335.766133" x="469.677398" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- paperHeight -&gt;</text>
+  <rect opacity="0.66" stroke="#000" id="svg_1" height="265.161284" width="475.483861" y="241.572589" x="75.483869" stroke-width="1.5" fill="#fff"/>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_3" y="257.701612" x="80.645161" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">(0, 0) in browser page coords</text>
+  <text font-style="italic" filter="url(#svg_33_blur)" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="26" id="svg_34" y="158.249998" x="443.661318" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#729C62">paper</text>
+  <rect opacity="0.58" id="svg_4" height="164.516129" width="315.483871" y="288.024187" x="174.838709" fill-opacity="null" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#fff"/>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_5" y="303.508059" x="184.516132" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">(0, 0) in paper area client coords, same units as screen</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_6" y="439.637105" x="283.225807" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- clientWidth -&gt;</text>
+  <ellipse ry="5.483871" rx="5.483871" id="svg_9" cy="243.185488" cx="74.516131" stroke-width="1.5" stroke="#fff" fill="#000000"/>
+  <ellipse ry="5.483871" rx="5.483871" id="svg_10" cy="288.991932" cx="173.870971" stroke-width="1.5" stroke="#fff" fill="#000000"/>
+  <text transform="rotate(-90 470.20715332031256,370.2699279785157) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_12" y="374.47581" x="424.516107" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- clientHeight -&gt;</text>
+  <line stroke="#000" stroke-dasharray="2,2" stroke-linecap="null" stroke-linejoin="null" id="svg_14" y2="125.991938" x2="234.737389" y1="125.991938" x1="111.61291" fill-opacity="null" stroke-opacity="null" fill="none"/>
+  <line stroke-dasharray="2,2" stroke-linecap="null" stroke-linejoin="null" id="svg_15" y2="40.689025" x2="234.193548" y1="125.991938" x1="234.193548" fill-opacity="null" stroke-opacity="null" stroke="#000" fill="none"/>
+  <ellipse ry="5.483871" rx="5.483871" id="svg_16" cy="125.766131" cx="233.225802" stroke-width="1.5" stroke="#fff" fill="#000000"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_17" y="122.217742" x="240.000002" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">(0, 0) in scrollable pane coords, same units as screen</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="10" id="svg_18" y="119.6371" x="138.709675" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- paddingX -&gt;</text>
+  <text transform="rotate(-90 224.68598937988284,82.52999114990233) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="10" id="svg_19" y="86.088714" x="191.612899" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- paddingY -&gt;</text>
+  <line stroke="#000" stroke-dasharray="5,2,2,2,2,2" stroke-linecap="null" stroke-linejoin="null" id="svg_20" y2="288.572585" x2="173.886573" y1="288.572585" x1="113.548387" stroke-width="1.5" fill="none"/>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="8" id="svg_21" y="283.508066" x="114.838708" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- scrollLeft -&gt;</text>
+  <line stroke-dasharray="5,2,2,2,2,2" stroke-linecap="null" stroke-linejoin="null" id="svg_22" y2="39.161205" x2="174.193548" y1="288.572583" x1="174.193548" stroke-width="1.5" stroke="#000" fill="none"/>
+  <text transform="rotate(-90 167.90599060058597,171.2368927001953) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="8" id="svg_23" y="173.830652" x="142.580639" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- scrollTop -&gt;</text>
+  <ellipse ry="5.483871" rx="5.483871" id="svg_24" cy="210.282263" cx="299.032259" stroke-width="1.5" stroke="#fff" fill="#000000"/>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_25" y="223.508066" x="304.516131" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">(0, 0) in paper coords, scaled units</text>
+  <line stroke-dasharray="5,2,2,2" stroke-linecap="null" stroke-linejoin="null" id="svg_27" y2="209.217742" x2="233.297924" y1="209.217742" x1="299.30647" stroke-opacity="null" stroke-width="null" stroke="#000" fill="none"/>
+  <line stroke-linecap="null" stroke-linejoin="null" id="svg_28" y2="128.416559" x2="299.30647" y1="209.862904" x1="299.30647" stroke-opacity="null" stroke-dasharray="5,2,2,2" stroke-width="null" stroke="#000" fill="none"/>
+  <text transform="rotate(-90 292.9705200195313,167.36845397949222) " xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="8" id="svg_29" y="169.959684" x="270.967741" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- originY -&gt;</text>
+  <text xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="8" id="svg_30" y="205.443547" x="241.935483" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- originX -&gt;</text>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_32" y="537.701627" x="341.290324" fill-opacity="null" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">&lt;- paperWidth -&gt;</text>
+  <text style="cursor: move;" opacity="0.39" font-style="italic" filter="url(#svg_33_blur)" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="26" id="svg_33" y="376.31452" x="203.661307" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#000000">paper area (viewport)</text>
+  <text font-style="italic" filter="url(#svg_33_blur)" font-weight="normal" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="26" id="svg_35" y="67.927412" x="409.467771" stroke-opacity="null" stroke-width="0" stroke="#000" fill="#B8874D">scrollable pane</text>
+  <rect id="svg_36" height="3.870968" width="310.322588" y="445.991941" x="177.209693" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#ffffff"/>
+  <rect stroke="#000" id="svg_37" height="153.548386" width="3.870968" y="291.153228" x="484.306474" stroke-opacity="null" stroke-width="1.5" fill="#ffffff"/>
+  <rect opacity="0.64" id="svg_38" height="3.225807" width="240.645167" y="445.991941" x="217.854855" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#000000"/>
+  <rect opacity="0.59" id="svg_39" height="43.225807" width="3.225807" y="342.766132" x="484.951636" stroke-opacity="null" stroke-width="1.5" stroke="#000" fill="#000000"/>
+ </g>
+</svg>

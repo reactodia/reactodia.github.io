@@ -1,1 +1,0 @@
-(()=>{"use strict";window.location.href="rdf.html"})();
