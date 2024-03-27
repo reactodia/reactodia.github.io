@@ -47,7 +47,7 @@ aside a.menu__link[href="/docs/"]::after,
 }
 
 /* Style for displaying Reactodia from live editor code block */
-.playgroundPreview_node_modules-\@docusaurus-theme-live-codeblock-lib-theme-Playground-styles-module .reactodia-workspace {
+.reactodia-live-editor .reactodia-workspace {
   height: var(--inline-reactodia-height);
   background: white;
 }

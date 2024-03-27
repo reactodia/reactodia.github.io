@@ -36,13 +36,15 @@ function SimpleExample() {
     }, []);
 
     return (
-        <Reactodia.Workspace ref={onMount}
-            defaultLayout={defaultLayout}>
-            <Reactodia.DefaultWorkspace
-                leftColumn={{defaultCollapsed: true}}
-                navigator={{expanded: false}}
-            />
-        </Reactodia.Workspace>
+        <div className='reactodia-live-editor'>
+            <Reactodia.Workspace ref={onMount}
+                defaultLayout={defaultLayout}>
+                <Reactodia.DefaultWorkspace
+                    leftColumn={{defaultCollapsed: true}}
+                    navigator={{expanded: false}}
+                />
+            </Reactodia.Workspace>
+        </div>
     );
 }
 ```

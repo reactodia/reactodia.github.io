@@ -8,7 +8,7 @@ export default function WorkspaceExamples(): JSX.Element {
       title='Examples (obsolete)'
       noFooter>
       <iframe className={styles.frame}
-        src='/examples/basic.html'
+        src='/examples-bundle/basic.html'
       />
     </Layout>
   );
