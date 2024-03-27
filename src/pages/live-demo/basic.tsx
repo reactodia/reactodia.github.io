@@ -1,14 +1,21 @@
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import Layout from '@theme/Layout';
 import { InlineReactodia } from '@site/src/components/InlineReactodia';
-import { BasicExample } from '@site/src/examples/ReactodiaBasic';
 
 export default function Example(): JSX.Element {
   return (
     <Layout title='Example: Basic'
       noFooter>
-      <InlineReactodia fullSize>
-        <BasicExample />
-      </InlineReactodia>
+      <BrowserOnly>
+        {() => {
+          const {BasicExample} = require('@site/src/examples/ReactodiaBasic');
+          return (
+            <InlineReactodia fullSize>
+              <BasicExample />
+            </InlineReactodia>
+          );
+        }}
+      </BrowserOnly>
     </Layout>
   );
 }

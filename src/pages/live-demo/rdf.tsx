@@ -1,14 +1,21 @@
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import Layout from '@theme/Layout';
 import { InlineReactodia } from '@site/src/components/InlineReactodia';
-import { RdfExample } from '@site/src/examples/ReactodiaRdf';
 
 export default function Example(): JSX.Element {
   return (
     <Layout title='Example: RDF'
       noFooter>
-      <InlineReactodia fullSize>
-        <RdfExample />
-      </InlineReactodia>
+      <BrowserOnly>
+        {() => {
+          const {RdfExample} = require('@site/src/examples/ReactodiaRdf');
+          return (
+            <InlineReactodia fullSize>
+              <RdfExample />
+            </InlineReactodia>
+          );
+        }}
+      </BrowserOnly>
     </Layout>
   );
 }
