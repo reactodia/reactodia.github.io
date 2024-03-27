@@ -23,7 +23,7 @@ export function RdfExample() {
       'master/examples/resources/orgOntology.ttl'
   });
 
-  const {onMount} = Reactodia.useLoadedWorkspace(async (context, signal) => {
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model} = context;
 
     let turtleData: string;

@@ -15,7 +15,7 @@ export function StressTestExample(props: {
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
-  const {onMount} = Reactodia.useLoadedWorkspace(async (context, signal) => {
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, view} = context;
 
     const dataProvider = new Reactodia.RdfDataProvider();

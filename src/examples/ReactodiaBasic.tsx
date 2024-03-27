@@ -13,7 +13,7 @@ export function BasicExample() {
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
-  const {onMount} = Reactodia.useLoadedWorkspace(async (context, signal) => {
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, performLayout} = context;
     // Fetch graph data to use as underlying data source
     const response = await fetch(GRAPH_DATA, {signal});
