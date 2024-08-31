@@ -23,6 +23,7 @@ export function WikidataExample() {
       },
       {
         ...Reactodia.WikidataSettings,
+        filterOnlyLanguages: ['de', 'en', 'es', 'ru', 'zh'],
         // Public Wikidata endpoint is too overloaded for the connection statistics
         linkTypesStatisticsQuery: '',
       });
@@ -50,10 +51,6 @@ export function WikidataExample() {
             { code: 'de', label: 'Deutsch' },
             { code: 'en', label: 'english' },
             { code: 'es', label: 'español' },
-            { code: 'fr', label: 'français' },
-            { code: 'ja', label: '日本語' },
-            { code: 'hi', label: 'हिन्दी' },
-            { code: 'pt', label: 'português' },
             { code: 'ru', label: 'русский' },
             { code: 'zh', label: '汉语' },
           ],

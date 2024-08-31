@@ -56,11 +56,18 @@ const config: Config = {
           '../reactodia-workspace/src/layout.worker.ts',
         ],
         tsconfig: '../reactodia-workspace/tsconfig.json',
+        readme: 'none',
+        hideGroupHeadings: true,
         excludePrivate: true,
         excludeProtected: true,
         excludeInternal: true,
-        // propertiesFormat: 'Table',
-        readme: 'none',
+        excludeExternals: true,
+        enumMembersFormat: 'htmlTable',
+        parametersFormat: 'htmlTable',
+        propertiesFormat: 'htmlTable',
+        tableColumnSettings: {
+          hideSources: true,
+        }
       },
     ],
   ],
@@ -98,7 +105,6 @@ const config: Config = {
             {to: '/live-demo/rdf', label: 'RDF Graph Authoring'},
             {to: '/live-demo/stress-test', label: 'Stress Test'},
             {to: '/live-demo/wikidata', label: 'Wikidata Explorer'},
-            {to: '/live-demo/bundle', label: 'Bundle (obsolete)'},
           ]
         },
         {
