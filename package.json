@@ -1,6 +1,6 @@
 {
   "name": "@reactodia/reactodia.github.io",
-  "version": "0.25.1",
+  "version": "0.26.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -19,7 +19,7 @@
     "@docusaurus/preset-classic": "3.1.1",
     "@docusaurus/theme-live-codeblock": "^3.1.1",
     "@mdx-js/react": "^3.0.0",
-    "@reactodia/workspace": "^0.25.1",
+    "@reactodia/workspace": "^0.26.0",
     "clsx": "^2.0.0",
     "n3": "^1.17.2",
     "prism-react-renderer": "^2.3.0",

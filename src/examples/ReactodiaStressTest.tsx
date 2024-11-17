@@ -34,19 +34,14 @@ export function StressTestExample(props: {
       const y = Math.floor(i / rowCount) * estimatedHeight;
       model.addElement(new Reactodia.EntityElement({
         id: `n:${i}`,
-        data: {
-          id: nodeId,
-          types: [],
-          label: [],
-          properties: {},
-        },
+        data: Reactodia.EntityElement.placeholderData(nodeId),
         position: {x, y},
       }));
     }
     batch.store();
     await Promise.all([
       model.requestElementData(nodes),
-      model.requestLinksOfType(),
+      model.requestLinks(),
     ]);
     model.history.reset();
 

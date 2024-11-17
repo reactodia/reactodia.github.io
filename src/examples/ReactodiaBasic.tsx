@@ -27,7 +27,7 @@ export function BasicExample() {
     for (const {element} of await dataProvider.lookup({elementTypeId})) {
       model.createElement(element);
     }
-    await model.requestLinksOfType();
+    await model.requestLinks();
 
     // Layout elements on canvas
     await performLayout({signal});

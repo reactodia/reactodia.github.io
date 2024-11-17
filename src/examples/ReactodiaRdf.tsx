@@ -46,6 +46,8 @@ export function RdfExample() {
 
   const [metadataApi] = React.useState(() => new ExampleMetadataApi());
   const [validationApi] = React.useState(() => new ExampleValidationApi());
+  const [renameLinkProvider] = React.useState(() => new RenameSubclassOfProvider());
+
   const suggestProperties = React.useCallback<Reactodia.PropertySuggestionHandler>(params => {
     let maxLength = 0;
     for (const iri of params.properties) {
@@ -63,6 +65,7 @@ export function RdfExample() {
       defaultLayout={defaultLayout}
       metadataApi={metadataApi}
       validationApi={validationApi}
+      renameLinkProvider={renameLinkProvider}
       typeStyleResolver={Reactodia.SemanticTypeStyles}
       onIriClick={({iri}) => window.open(iri)}>
       <Reactodia.DefaultWorkspace
@@ -75,10 +78,7 @@ export function RdfExample() {
           },
           linkTemplateResolver: type => {
             if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
-              return {
-                ...Reactodia.DefaultLinkTemplate,
-                editableLabel: EDITABLE_LINK_LABEL,
-              };
+              return Reactodia.DefaultLinkTemplate;
             }
             return Reactodia.OntologyLinkTemplates(type);
           },
@@ -95,28 +95,11 @@ export function RdfExample() {
   );
 }
 
-const CUSTOM_LINK_LABEL_IRI = 'urn:example:custom-link-label';
-const EDITABLE_LINK_LABEL: Reactodia.EditableLinkLabel = {
-  getLabel: link => {
-    const {linkState} = link;
-    if (
-      linkState &&
-      Object.prototype.hasOwnProperty.call(linkState, CUSTOM_LINK_LABEL_IRI)
-    ) {
-      const customLabel = linkState[CUSTOM_LINK_LABEL_IRI];
-      if (typeof customLabel === 'string') {
-        return customLabel;
-      }
-    }
-    return undefined;
-  },
-  setLabel: (link, label) => {
-    link.setLinkState({
-      ...link.linkState,
-      [CUSTOM_LINK_LABEL_IRI]: label.length === 0 ? undefined : label,
-    });
-  },
-};
+class RenameSubclassOfProvider extends Reactodia.RenameLinkToLinkStateProvider {
+  override canRename(link: Reactodia.Link): boolean {
+      return link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
+  }
+}
 
 interface ToolbarActionOpenTurtleGraphProps {
   onOpen: (dataSource: TurtleDataSource) => void;
