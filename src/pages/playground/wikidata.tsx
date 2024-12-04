@@ -4,14 +4,14 @@ import { InlineReactodia } from '@site/src/components/InlineReactodia';
 
 export default function Example(): JSX.Element {
   return (
-    <Layout title='Example: RDF'
+    <Layout title='Playground: Wikidata'
       noFooter>
       <BrowserOnly>
         {() => {
-          const {RdfExample} = require('@site/src/examples/ReactodiaRdf');
+          const {ReactodiaWikidata} = require('@site/src/examples/ReactodiaWikidata');
           return (
             <InlineReactodia fullSize>
-              <RdfExample />
+              <ReactodiaWikidata />
             </InlineReactodia>
           );
         }}

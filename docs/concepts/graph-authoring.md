@@ -7,7 +7,7 @@ sidebar_position: 6
 *TODO*
 
 API references:
-  - [MetadataApi](/docs/api/workspace/interfaces/MetadataApi)
-  - [ValidationApi](/docs/api/workspace/interfaces/ValidationApi)
+  - [MetadataProvider](/docs/api/workspace/interfaces/MetadataProvider)
+  - [ValidationProvider](/docs/api/workspace/interfaces/ValidationProvider)
   - [AuthoringState](/docs/api/workspace/interfaces/AuthoringState) and its [utility namespace](/docs/api/workspace/namespaces/AuthoringState)
   - [EditorController](/docs/api/workspace/classes/EditorController)

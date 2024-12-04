@@ -4,7 +4,7 @@ title: Canvas
 
 # Canvas Components
 
-*TODO*
+Component to display a canvas for the diagram with elements, links and additional widgets.
 
 API references:
   - [Canvas](/docs/api/workspace/functions/Canvas)

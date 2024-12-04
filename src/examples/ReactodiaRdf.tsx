@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 import * as N3 from 'n3';
 
-import { ExampleMetadataApi, ExampleValidationApi } from './ExampleMetadataApi';
+import { ExampleMetadataProvider, ExampleValidationProvider } from './ExampleMetadata';
 import { ExampleToolbarMenu } from './ExampleCommon';
 
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
@@ -22,9 +22,13 @@ export function RdfExample() {
       'https://raw.githubusercontent.com/reactodia/reactodia-workspace/' +
       'master/examples/resources/orgOntology.ttl'
   });
+  const [searchCommands] = React.useState(() =>
+    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
+  );
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model} = context;
+    const {model, editor} = context;
+    editor.setAuthoringMode(true);
 
     let turtleData: string;
     if (dataSource.type === 'url') {
@@ -42,29 +46,19 @@ export function RdfExample() {
     }
 
     await model.importLayout({dataProvider, signal});
+
+    searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
   }, [dataSource]);
 
-  const [metadataApi] = React.useState(() => new ExampleMetadataApi());
-  const [validationApi] = React.useState(() => new ExampleValidationApi());
+  const [metadataProvider] = React.useState(() => new ExampleMetadataProvider());
+  const [validationProvider] = React.useState(() => new ExampleValidationProvider());
   const [renameLinkProvider] = React.useState(() => new RenameSubclassOfProvider());
-
-  const suggestProperties = React.useCallback<Reactodia.PropertySuggestionHandler>(params => {
-    let maxLength = 0;
-    for (const iri of params.properties) {
-      maxLength = Math.max(maxLength, iri.length);
-    }
-    const scores = params.properties.map((p): Reactodia.PropertyScore => ({
-      propertyIri: p,
-      score: 1 - p.length / maxLength,
-    }));
-    return Reactodia.delay(300).then(() => scores);
-  }, []);
 
   return (
     <Reactodia.Workspace ref={onMount}
       defaultLayout={defaultLayout}
-      metadataApi={metadataApi}
-      validationApi={validationApi}
+      metadataProvider={metadataProvider}
+      validationProvider={validationProvider}
       renameLinkProvider={renameLinkProvider}
       typeStyleResolver={Reactodia.SemanticTypeStyles}
       onIriClick={({iri}) => window.open(iri)}>
@@ -83,13 +77,13 @@ export function RdfExample() {
             return Reactodia.OntologyLinkTemplates(type);
           },
         }}
-        connectionsMenu={{suggestProperties}}
-        toolbar={{
-          menu: <>
+        menu={
+          <>
             <ToolbarActionOpenTurtleGraph onOpen={setDataSource} />
             <ExampleToolbarMenu />
           </>
-        }}
+        }
+        searchCommands={searchCommands}
       />
     </Reactodia.Workspace>
   );

@@ -70,6 +70,16 @@ const config: Config = {
         }
       },
     ],
+    [
+      "@docusaurus/plugin-client-redirects",
+      {
+        createRedirects: (path: string) => {
+          if (path.startsWith('/live-demo/')) {
+            return [path.replace('/live-demo/', '/playground')];
+          }
+        }
+      }
+    ]
   ],
 
   themes: [
@@ -98,13 +108,14 @@ const config: Config = {
           label: 'API',
         },
         {
-          label: 'Demo',
+          label: 'Playground',
           position: 'left',
           items: [
-            {to: '/live-demo/basic', label: 'Basic Workspace'},
-            {to: '/live-demo/rdf', label: 'RDF Graph Authoring'},
-            {to: '/live-demo/stress-test', label: 'Stress Test'},
-            {to: '/live-demo/wikidata', label: 'Wikidata Explorer'},
+            {to: '/playground/basic', label: 'Basic Workspace'},
+            {to: '/playground/rdf', label: 'RDF Graph Authoring'},
+            {to: '/playground/sparql', label: 'SPARQL Navigator'},
+            {to: '/playground/stress-test', label: 'Stress Test'},
+            {to: '/playground/wikidata', label: 'Wikidata Explorer'},
           ]
         },
         {

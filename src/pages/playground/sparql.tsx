@@ -4,14 +4,14 @@ import { InlineReactodia } from '@site/src/components/InlineReactodia';
 
 export default function Example(): JSX.Element {
   return (
-    <Layout title='Example: Basic'
+    <Layout title='Playground: SPARQL'
       noFooter>
       <BrowserOnly>
         {() => {
-          const {BasicExample} = require('@site/src/examples/ReactodiaBasic');
+          const {ReactodiaSparql} = require('@site/src/examples/ReactodiaSparql');
           return (
             <InlineReactodia fullSize>
-              <BasicExample />
+              <ReactodiaSparql />
             </InlineReactodia>
           );
         }}

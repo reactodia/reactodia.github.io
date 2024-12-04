@@ -7,7 +7,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
 
-export function StressTestExample(props: {
+export function ReactodiaStressTest(props: {
   nodeCount?: number;
   edgesPerNode?: number;
 }) {
@@ -56,13 +56,9 @@ export function StressTestExample(props: {
     <Reactodia.Workspace ref={onMount}
       defaultLayout={defaultLayout}>
       <Reactodia.DefaultWorkspace
-        leftColumn={{defaultCollapsed: true}}
-        toolbar={{
-          menu: <ExampleToolbarMenu />,
-        }}
-        navigator={{
-          expanded: false,
-        }}
+        menu={<ExampleToolbarMenu />}
+        search={null}
+        navigator={{expanded: false}}
       />
     </Reactodia.Workspace>
   );

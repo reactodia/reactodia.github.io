@@ -1,0 +1,53 @@
+---
+sidebar_position: 3
+---
+import CodeBlock from '@theme/CodeBlock';
+import Link from '@docusaurus/Link';
+
+# SPARQL Navigator
+
+Example demonstrating graph data exploration using a generic SPARQL endpoint.
+
+:::tip
+
+[▶︎ Open live demo](/playground/sparql)
+
+:::
+
+import SparqlExampleSource from '!@site/src/examples/ReactodiaSparql?raw';
+import ExampleCommonSource from '!@site/src/examples/ExampleCommon?raw';
+import HashQuerySource from '!@site/src/examples/HashQuery?raw';
+import SparqlConnectionSource from '!@site/src/examples/SparqlConnection?raw';
+
+<CodeBlock language="tsx"
+  title="/src/examples/SparqlExample.tsx"
+  showLineNumbers>
+  {RdfExampleSource}
+</CodeBlock>
+
+<details>
+  <summary>ExampleCommon.tsx</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleCommon.tsx"
+    showLineNumbers>
+    {ExampleCommonSource}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>HashQuery.ts</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/HashQuery.ts"
+    showLineNumbers>
+    {HashQuerySource}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>SparqlConnection.ts</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/SparqlConnection.ts"
+    showLineNumbers>
+    {SparqlConnectionSource}
+  </CodeBlock>
+</details>

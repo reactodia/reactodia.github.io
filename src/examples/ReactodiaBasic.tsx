@@ -6,7 +6,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
 
-export function BasicExample() {
+export function ReactodiaBasic() {
   const GRAPH_DATA =
     'https://raw.githubusercontent.com/reactodia/reactodia-workspace/' +
     'master/examples/resources/orgOntology.ttl';

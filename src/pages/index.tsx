@@ -36,8 +36,8 @@ function HomepageHeader() {
           </Link>
           <Link
             className="button button--info button--lg"
-            to="/live-demo/basic">
-            Try a Demo
+            to="/playground/basic">
+            Open the Playground
           </Link>
         </div>
       </div>

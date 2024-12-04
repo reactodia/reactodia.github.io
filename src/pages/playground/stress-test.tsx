@@ -4,11 +4,11 @@ import { InlineReactodia } from '@site/src/components/InlineReactodia';
 
 export default function Example(): JSX.Element {
   return (
-    <Layout title='Example: Stress Test'
+    <Layout title='Playground: Stress Test'
       noFooter>
       <BrowserOnly>
         {() => {
-          const {StressTestExample} = require('@site/src/examples/ReactodiaStressTest');
+          const {ReactodiaStressTest} = require('@site/src/examples/ReactodiaStressTest');
 
           const params = new URLSearchParams(document.location.search);
           const nodeCount = params.has('node-count') ? Number(params.get('node-count')) : NaN;
@@ -16,7 +16,7 @@ export default function Example(): JSX.Element {
 
           return (
             <InlineReactodia fullSize>
-              <StressTestExample
+              <ReactodiaStressTest
                 nodeCount={Number.isFinite(nodeCount) ? nodeCount : undefined}
                 edgesPerNode={Number.isFinite(edgedPerNode) ? edgedPerNode : undefined}
               />

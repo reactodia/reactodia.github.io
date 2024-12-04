@@ -8,6 +8,7 @@ sidebar_position: 1
 
 API references:
   - [DataProvider](/docs/api/workspace/interfaces/DataProvider)
+    - [EmptyDataProvider](/docs/api/workspace/classes/EmptyDataProvider)
     - [RdfDataProvider](/docs/api/workspace/classes/RdfDataProvider)
     - [SparqlDataProvider](/docs/api/workspace/classes/SparqlDataProvider)
     - [CompositeDataProvider](/docs/api/workspace/classes/CompositeDataProvider)
