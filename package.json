@@ -1,6 +1,6 @@
 {
   "name": "@reactodia/reactodia.github.io",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -16,11 +16,10 @@
   },
   "dependencies": {
     "@docusaurus/core": "3.1.1",
-    "@docusaurus/plugin-client-redirects": "^3.1.1",
     "@docusaurus/preset-classic": "3.1.1",
     "@docusaurus/theme-live-codeblock": "^3.1.1",
     "@mdx-js/react": "^3.0.0",
-    "@reactodia/workspace": "file:../reactodia-workspace/reactodia-workspace-0.27.0-pre.1.tgz",
+    "@reactodia/workspace": "^0.27.0",
     "clsx": "^2.0.0",
     "n3": "^1.17.2",
     "prism-react-renderer": "^2.3.0",
@@ -31,6 +30,7 @@
     "@docusaurus/module-type-aliases": "3.1.1",
     "@docusaurus/tsconfig": "3.1.1",
     "@docusaurus/types": "3.1.1",
+    "@vscode/codicons": "^0.0.36",
     "docusaurus-plugin-typedoc": "^1.0.5",
     "typedoc": "^0.26.6",
     "typedoc-plugin-markdown": "^4.2.6",

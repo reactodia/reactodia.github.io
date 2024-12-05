@@ -7,7 +7,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
 
-export function ReactodiaWikidata() {
+export function PlaygroundWikidata() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
   const [searchCommands] = React.useState(() =>

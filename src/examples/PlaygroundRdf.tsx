@@ -13,7 +13,7 @@ type TurtleDataSource =
   | { type: 'url'; url: string }
   | { type: 'data'; data: string };
 
-export function RdfExample() {
+export function PlaygroundRdf() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
   const [dataSource, setDataSource] = React.useState<TurtleDataSource>({
@@ -64,12 +64,6 @@ export function RdfExample() {
       onIriClick={({iri}) => window.open(iri)}>
       <Reactodia.DefaultWorkspace
         canvas={{
-          elementTemplateResolver: types => {
-            if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
-              return Reactodia.ClassicTemplate;
-            }
-            return undefined;
-          },
           linkTemplateResolver: type => {
             if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
               return Reactodia.DefaultLinkTemplate;

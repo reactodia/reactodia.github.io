@@ -5,20 +5,20 @@ import { ViewSource } from '@site/src/components/ViewSource';
 
 export default function Example(): JSX.Element {
   return (
-    <Layout title='Playground: SPARQL'
+    <Layout title='Playground: Classic Workspace'
       noFooter>
       <BrowserOnly>
         {() => {
-          const {PlaygroundSparql} = require('@site/src/examples/PlaygroundSparql')
-            typeof import('@site/src/examples/PlaygroundSparql');
+          const {PlaygroundClassicWorkspace} = require('@site/src/examples/PlaygroundClassicWorkspace') as
+            typeof import('@site/src/examples/PlaygroundClassicWorkspace');
           return (
             <InlineReactodia fullSize>
-              <PlaygroundSparql />
+              <PlaygroundClassicWorkspace />
             </InlineReactodia>
           );
         }}
       </BrowserOnly>
-      <ViewSource target='/docs/examples/sparql' />
+      <ViewSource target='/docs/examples/classic-workspace' />
     </Layout>
   );
 }

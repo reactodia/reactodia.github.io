@@ -1,0 +1,23 @@
+.viewSource {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  margin-top: 10px;
+  right: 10px;
+  z-index: 100;
+
+  text-decoration: none;
+  color: var(--ifm-color-emphasis-600);
+
+  background-color: var(--ifm-color-emphasis-0);
+  border: 2px solid var(--ifm-color-emphasis-600);
+  border-radius: var(--ifm-button-border-radius);
+  font-weight: var(--ifm-button-font-weight);
+  padding: 0.1rem 0.4rem;
+}
+
+.viewSource:hover {
+  text-decoration: none;
+  color: var(--ifm-color-emphasis-600);
+  background-color: var(--ifm-color-emphasis-200);
+}

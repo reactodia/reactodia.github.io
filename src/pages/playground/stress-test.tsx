@@ -1,6 +1,7 @@
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import Layout from '@theme/Layout';
 import { InlineReactodia } from '@site/src/components/InlineReactodia';
+import { ViewSource } from '@site/src/components/ViewSource';
 
 export default function Example(): JSX.Element {
   return (
@@ -8,7 +9,8 @@ export default function Example(): JSX.Element {
       noFooter>
       <BrowserOnly>
         {() => {
-          const {ReactodiaStressTest} = require('@site/src/examples/ReactodiaStressTest');
+          const {PlaygroundStressTest} = require('@site/src/examples/PlaygroundStressTest') as
+            typeof import('@site/src/examples/PlaygroundStressTest');
 
           const params = new URLSearchParams(document.location.search);
           const nodeCount = params.has('node-count') ? Number(params.get('node-count')) : NaN;
@@ -16,7 +18,7 @@ export default function Example(): JSX.Element {
 
           return (
             <InlineReactodia fullSize>
-              <ReactodiaStressTest
+              <PlaygroundStressTest
                 nodeCount={Number.isFinite(nodeCount) ? nodeCount : undefined}
                 edgesPerNode={Number.isFinite(edgedPerNode) ? edgedPerNode : undefined}
               />
@@ -24,6 +26,7 @@ export default function Example(): JSX.Element {
           );
         }}
       </BrowserOnly>
+      <ViewSource target='/docs/examples/stress-test' />
     </Layout>
   );
 }

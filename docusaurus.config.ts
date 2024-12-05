@@ -70,16 +70,6 @@ const config: Config = {
         }
       },
     ],
-    [
-      "@docusaurus/plugin-client-redirects",
-      {
-        createRedirects: (path: string) => {
-          if (path.startsWith('/live-demo/')) {
-            return [path.replace('/live-demo/', '/playground')];
-          }
-        }
-      }
-    ]
   ],
 
   themes: [
@@ -116,6 +106,7 @@ const config: Config = {
             {to: '/playground/sparql', label: 'SPARQL Navigator'},
             {to: '/playground/stress-test', label: 'Stress Test'},
             {to: '/playground/wikidata', label: 'Wikidata Explorer'},
+            {to: '/playground/classic-workspace', label: 'Classic Workspace'},
           ]
         },
         {

@@ -11,7 +11,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
 
-export function ReactodiaSparql() {
+export function PlaygroundSparql() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
   const [connectionSettings, setConnectionSettings] = React.useState(

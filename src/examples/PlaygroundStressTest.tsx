@@ -7,7 +7,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
 
-export function ReactodiaStressTest(props: {
+export function PlaygroundStressTest(props: {
   nodeCount?: number;
   edgesPerNode?: number;
 }) {
