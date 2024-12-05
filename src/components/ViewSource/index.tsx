@@ -12,9 +12,10 @@ export function ViewSource(props: {
   const {target} = props;
   return (
     <Link className={styles.viewSource}
-      to={target}>
+      to={target}
+      title='View source code for the playground page'>
       <CodeIcon width={24} height={24} />
-      View Source
+      <span className={styles.label}>View Source</span>
     </Link>
   );
 }

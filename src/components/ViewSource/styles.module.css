@@ -4,7 +4,7 @@
   position: absolute;
   margin-top: 10px;
   right: 10px;
-  z-index: 100;
+  z-index: 200;
 
   text-decoration: none;
   color: var(--ifm-color-emphasis-600);
@@ -20,4 +20,17 @@
   text-decoration: none;
   color: var(--ifm-color-emphasis-600);
   background-color: var(--ifm-color-emphasis-200);
+}
+
+@media (width <= 700px) {
+  .viewSource {
+    margin-top: 14px;
+    top: 0px;
+  }
+}
+
+@media (width <= 400px) {
+  .label {
+    display: none;
+  }
 }
