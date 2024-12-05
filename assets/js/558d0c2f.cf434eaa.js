@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_reactodia_reactodia_github_io=self.webpackChunk_reactodia_reactodia_github_io||[]).push([[402],{85764:(t,a,e)=>{e.r(a),e.d(a,{default:()=>s});var r=e(56347),i=e(74848);function s(){return(0,i.jsx)(r.rd,{to:"/playground/stress-test"})}}}]);
