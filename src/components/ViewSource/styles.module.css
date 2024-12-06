@@ -22,6 +22,10 @@
   background-color: var(--ifm-color-emphasis-200);
 }
 
+:global(.navbar-sidebar--show) ~ :global(.main-wrapper) .viewSource {
+  display: none;
+}
+
 @media (width <= 700px) {
   .viewSource {
     margin-top: 14px;
@@ -31,6 +35,12 @@
 
 @media (width <= 400px) {
   .label {
+    display: none;
+  }
+}
+
+@media (width <= 240px) {
+  .viewSource {
     display: none;
   }
 }
