@@ -3,7 +3,7 @@ import * as Reactodia from '@reactodia/workspace';
 import { saveAs } from 'file-saver';
 
 export function ExampleToolbarMenu() {
-  const {model, editor} = Reactodia.useWorkspace();
+  const {model, editor, overlay} = Reactodia.useWorkspace();
   return (
     <>
       <Reactodia.ToolbarActionOpen
@@ -16,8 +16,9 @@ export function ExampleToolbarMenu() {
             }
           }
 
-          const json = await file.text();
+          const task = overlay.startTask({title: 'Importing a layout from file'});
           try {
+            const json = await file.text();
             const diagramLayout = JSON.parse(json);
             await model.importLayout({
               dataProvider: model.dataProvider,
@@ -26,7 +27,12 @@ export function ExampleToolbarMenu() {
               validateLinks: true,
             });
           } catch (err) {
-            alert('Failed to load specified file with a diagram layout.');
+            task.setError(new Error(
+              'Failed to load specified file with a diagram layout.',
+              {cause: err}
+            ));
+          } finally {
+            task.end();
           }
         }}>
         Open diagram from file

@@ -17,25 +17,29 @@ Reactodia provides layout panel components to display a row or a column of resiz
 ```tsx live
 function SomeLayout() {
   return (
-    <Reactodia.WorkspaceLayoutRow>
-      <Reactodia.WorkspaceLayoutColumn>
-        <Reactodia.WorkspaceLayoutItem heading='First'>
-          First item
+    <div style={{height: '300px'}}>
+      <Reactodia.WorkspaceLayoutRow>
+        <Reactodia.WorkspaceLayoutColumn>
+          <Reactodia.WorkspaceLayoutItem heading='First'>
+            First item
+          </Reactodia.WorkspaceLayoutItem>
+          <Reactodia.WorkspaceLayoutItem heading='Second'>
+            Second item
+          </Reactodia.WorkspaceLayoutItem>
+          <Reactodia.WorkspaceLayoutItem heading='Third'>
+            Third item
+          </Reactodia.WorkspaceLayoutItem>
+        </Reactodia.WorkspaceLayoutColumn>
+        <Reactodia.WorkspaceLayoutItem>
+          Central area
         </Reactodia.WorkspaceLayoutItem>
-        <Reactodia.WorkspaceLayoutItem heading='Second'>
-          Second item
-        </Reactodia.WorkspaceLayoutItem>
-        <Reactodia.WorkspaceLayoutItem heading='Third'>
-          Third item
-        </Reactodia.WorkspaceLayoutItem>
-      </Reactodia.WorkspaceLayoutColumn>
-      <Reactodia.WorkspaceLayoutItem>
-        Central area
-      </Reactodia.WorkspaceLayoutItem>
-      <Reactodia.WorkspaceLayoutItem heading='Only item in right panel'>
-        Right panel
-      </Reactodia.WorkspaceLayoutItem>
-    </Reactodia.WorkspaceLayoutRow>
+        <Reactodia.WorkspaceLayoutColumn>
+          <Reactodia.WorkspaceLayoutItem heading='Only item in right panel'>
+            Right panel
+          </Reactodia.WorkspaceLayoutItem>
+        </Reactodia.WorkspaceLayoutColumn>
+      </Reactodia.WorkspaceLayoutRow>
+    </div>
   )
 }
 ```

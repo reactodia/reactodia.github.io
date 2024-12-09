@@ -6,6 +6,8 @@ title: Workspace
 
 [Workspace](/docs/api/workspace/classes/Workspace) is a top-level component which establishes [workspace context](/docs/api/workspace/interfaces/WorkspaceContext), which stores graph data and provides means to display and interact with the diagram.
 
+## Hooks
+
 [useLoadedWorkspace()](/docs/api/workspace/functions/useLoadedWorkspace) hook should be used to perform an initial initialization for the workspace which correctly reverts the changes and aborts async operations via provided [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) when the workspace component is unmounted.
 
 [useWorkspace()](/docs/api/workspace/functions/useWorkspace) hook can be used from inside `<Workspace>` child components to access workspace context.

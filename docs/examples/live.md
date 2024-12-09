@@ -1,9 +1,9 @@
 ---
 sidebar_position: 1
-title: In Live Editor
+title: Live Playground
 ---
 
-# Example in the live editor
+# Playground with the live editor
 
 Workspace usage example via live editor block which updates on every change.
 
