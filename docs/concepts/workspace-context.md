@@ -1,10 +1,10 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Workspace Context
 
-*TODO*
+This page describes common context for the Reactodia workspace components.
 
 API references:
   - [WorkspaceContext](/docs/api/workspace/interfaces/WorkspaceContext)

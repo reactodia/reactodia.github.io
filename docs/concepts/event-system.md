@@ -1,11 +1,11 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: Event System
 ---
 
 # Publish-Subscribe Event System
 
-*TODO*
+This page describes publish-subscribe mechanism which is used in Reactodia to connect different components and react to state changes.
 
 API references:
   - [Events](/docs/api/workspace/interfaces/Events), [EventTrigger](/docs/api/workspace/interfaces/EventTrigger) and [EventSource](/docs/api/workspace/classes/EventSource)

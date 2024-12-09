@@ -1,12 +1,10 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 ---
 
 # Command History
 
 This page describes how command history and undo/redo works in Reactodia.
-
-*TODO*
 
 API references:
   - [Command](/docs/api/workspace/interfaces/Command) and its [utility namespace](/docs/api/workspace/namespaces/Command)

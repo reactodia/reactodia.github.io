@@ -1,6 +1,9 @@
 # Instances Search
 
-Component to search for entities by various filter criteria using [data provider lookup](/docs/concepts/data-provider.md) and add them as elements to the diagram.
+[InstancesSearch](/docs/api/workspace/functions/InstancesSearch.md) is a component to search for entities by various filter criteria using [data provider lookup](/docs/concepts/data-provider.md) and add them as elements to the diagram.
 
-API references:
-  - [InstancesSearchProps](/docs/api/workspace/interfaces/InstancesSearchProps)
+:::tip
+
+The same functionality is also available as `SearchSectionEntities` [unified search section](/docs/components/unified-search.md).
+
+:::

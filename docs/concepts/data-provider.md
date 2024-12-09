@@ -1,10 +1,10 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 ---
 
 # Data Provider
 
-*TODO*
+This page describes the data provider contract for incremental data loading when exploring the graph.
 
 API references:
   - [DataProvider](/docs/api/workspace/interfaces/DataProvider)

@@ -1,10 +1,10 @@
 ---
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 # Graph Authoring
 
-*TODO*
+This page describes visual graph authoring mechanism to edit the graph data: create, update or delete [entities and relations](/docs/concepts/diagram-model.md).
 
 API references:
   - [MetadataProvider](/docs/api/workspace/interfaces/MetadataProvider)

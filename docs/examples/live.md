@@ -39,10 +39,7 @@ function SimpleExample() {
         <div className='reactodia-live-editor'>
             <Reactodia.Workspace ref={onMount}
                 defaultLayout={defaultLayout}>
-                <Reactodia.DefaultWorkspace
-                    leftColumn={{defaultCollapsed: true}}
-                    navigator={{expanded: false}}
-                />
+                <Reactodia.DefaultWorkspace />
             </Reactodia.Workspace>
         </div>
     );
