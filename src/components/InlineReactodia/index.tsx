@@ -1,16 +1,23 @@
 import clsx from 'clsx';
 import * as React from 'react';
 import BrowserOnly from '@docusaurus/BrowserOnly';
+import Head from '@docusaurus/Head';
 
 import styles from './styles.module.css';
 
-export interface InlineReactodiaProps {
+export function InlineReactodiaHead() {
+  return (
+    <Head>
+      <meta name="viewport" content="initial-scale=1, interactive-widget=resizes-content" />
+    </Head>
+  );
+}
+
+export function InlineReactodia(props: {
   fullSize?: boolean;
   height?: string;
   children: React.ReactNode;
-}
-
-export function InlineReactodia(props: InlineReactodiaProps) {
+}) {
   const {fullSize, height, children} = props;
   const css = {
     ['--inline-reactodia-height']: fullSize ? 'auto' : height,
