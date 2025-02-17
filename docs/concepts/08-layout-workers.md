@@ -1,7 +1,3 @@
----
-sidebar_position: 8
----
-
 # Layout and Web Workers
 
 This page describes how Reactodia uses [Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Worker) to perform non-blocking graph layout algorithm on the diagram content.

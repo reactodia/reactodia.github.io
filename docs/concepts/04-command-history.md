@@ -1,7 +1,3 @@
----
-sidebar_position: 4
----
-
 # Command History
 
 This page describes how command history and undo/redo works in Reactodia.

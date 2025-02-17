@@ -1,7 +1,3 @@
----
-sidebar_position: 6
----
-
 # Canvas Coordinates
 
 Reactodia uses different coordinate systems when dealing with infinitely-resizable and scalable canvas content.

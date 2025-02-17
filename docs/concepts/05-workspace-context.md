@@ -1,7 +1,3 @@
----
-sidebar_position: 5
----
-
 # Workspace Context
 
 This page describes common context for the Reactodia workspace components.

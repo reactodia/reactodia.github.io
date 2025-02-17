@@ -1,7 +1,3 @@
----
-sidebar_position: 2
----
-
 # Data Provider
 
 This page describes the data provider contract for incremental data loading when exploring the graph.
