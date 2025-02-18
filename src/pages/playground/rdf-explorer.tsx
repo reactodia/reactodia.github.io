@@ -7,20 +7,20 @@ export default function Example(): JSX.Element {
   return (
     <>
       <InlineReactodiaHead />
-      <Layout title='Playground: RDF'
+      <Layout title='Playground: RDF Explorer'
         noFooter>
         <BrowserOnly>
           {() => {
-            const {PlaygroundRdf} = require('@site/src/examples/PlaygroundRdf') as
-              typeof import('@site/src/examples/PlaygroundRdf');
+            const {PlaygroundRdfExplorer} = require('@site/src/examples/PlaygroundRdfExplorer') as
+              typeof import('@site/src/examples/PlaygroundRdfExplorer');
             return (
               <InlineReactodia fullSize>
-                <PlaygroundRdf />
+                <PlaygroundRdfExplorer />
               </InlineReactodia>
             );
           }}
         </BrowserOnly>
-        <ViewSource target='/docs/examples/rdf' />
+        <ViewSource target='/docs/examples/rdf-explorer' />
       </Layout>
     </>
   );

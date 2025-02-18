@@ -7,9 +7,7 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
 ));
 
 export function PlaygroundBasic() {
-  const GRAPH_DATA =
-    'https://raw.githubusercontent.com/reactodia/reactodia-workspace/' +
-    'master/examples/resources/orgOntology.ttl';
+  const GRAPH_DATA = 'https://reactodia.github.io/resources/orgOntology.ttl';
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 

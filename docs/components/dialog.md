@@ -6,6 +6,8 @@ title: Dialog
 
 It is possible to show a dialog either attached to target [element](/docs/concepts/graph-model.md), [link](/docs/concepts/graph-model.md) or as a modal over the canvas viewport itself.
 
+## Showing a dialog
+
 The following methods and properties from [OverlayController](/docs/api/workspace/classes/OverlayController) (accessible from [workspace context](/docs/concepts/workspace-context.md)) provide means to interact with the dialogs:
 
 | Method or property | Description |
@@ -53,3 +55,13 @@ function Example() {
   );
 }
 ```
+
+## Styles
+
+The component look can be customized using the following CSS properties (see [design system](/docs/concepts/design-system.mdx) for more information):
+
+| Property | Description |
+|----------|-------------|
+| `--reactodia-dialog-border-color`  | Border color for the dialog (uses the base border color if not set). |
+| `--reactodia-dialog-border-radius` | Border radius for the dialog (uses the base border radius if not set). |
+| `--reactodia-dialog-border-width`  | Border width for the dialog (uses the base border width if not set). |

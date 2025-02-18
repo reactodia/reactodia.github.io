@@ -17,7 +17,7 @@ Reactodia provides layout panel components to display a row or a column of resiz
 ```tsx live
 function SomeLayout() {
   return (
-    <div style={{height: '300px'}}>
+    <Reactodia.WorkspaceRoot style={{height: '300px'}}>
       <Reactodia.WorkspaceLayoutRow>
         <Reactodia.WorkspaceLayoutColumn>
           <Reactodia.WorkspaceLayoutItem heading='First'>
@@ -39,7 +39,7 @@ function SomeLayout() {
           </Reactodia.WorkspaceLayoutItem>
         </Reactodia.WorkspaceLayoutColumn>
       </Reactodia.WorkspaceLayoutRow>
-    </div>
+    </Reactodia.WorkspaceRoot>
   )
 }
 ```

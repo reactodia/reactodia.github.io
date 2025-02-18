@@ -47,6 +47,7 @@ const config: Config = {
 
   plugins: [
     './src/plugins/import-raw-source',
+    './src/plugins/configure-webpack',
     [
       'docusaurus-plugin-typedoc',
       {
@@ -55,7 +56,7 @@ const config: Config = {
           '../reactodia-workspace/src/worker-protocol.ts',
           '../reactodia-workspace/src/layout.worker.ts',
         ],
-        tsconfig: '../reactodia-workspace/tsconfig.json',
+        tsconfig: '../reactodia-workspace/tsconfig.typings.json',
         readme: 'none',
         hideGroupHeadings: true,
         excludePrivate: true,
@@ -102,7 +103,8 @@ const config: Config = {
           position: 'left',
           items: [
             {to: '/playground/basic', label: 'Basic Workspace'},
-            {to: '/playground/rdf', label: 'RDF Graph Authoring'},
+            {to: '/playground/rdf-explorer', label: 'RDF Explorer'},
+            {to: '/playground/graph-authoring', label: 'Graph Authoring'},
             {to: '/playground/sparql', label: 'SPARQL Navigator'},
             {to: '/playground/stress-test', label: 'Stress Test'},
             {to: '/playground/wikidata', label: 'Wikidata Explorer'},
@@ -159,6 +161,7 @@ const config: Config = {
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
+      additionalLanguages: ['json'],
     },
   } satisfies Preset.ThemeConfig,
 };
