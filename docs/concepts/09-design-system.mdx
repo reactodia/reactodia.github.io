@@ -1,0 +1,166 @@
+---
+title: Design System
+---
+
+import * as Reactodia from '@reactodia/workspace';
+import { ColorBoxes } from '@site/src/components/ColorBoxes';
+
+# Basic Design System
+
+Reactodia defines a basic design system inspired by [Infima](https://infima.dev/)
+styling framework to support both light and dark color schemes and easy customization
+via CSS custom properties.
+
+Toggle active color scheme at the top to see how the default colors are defined for
+either light or dark themes.
+
+## Colors
+
+### Grays {#color-grays}
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={Array.from(
+            {length: 11},
+            (_, i) => `var(--reactodia-color-gray-${i * 100})`)
+        }
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme independent gray colors gradient from 0 (white) to 1000 (black) in increments of 100:
+```css
+--reactodia-color-gray-{i}
+```
+
+### Emphasis {#color-emphasis}
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={Array.from(
+            {length: 11},
+            (_, i) => `var(--reactodia-color-emphasis-${i * 100})`)
+        }
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific gray colors gradient from 0 (same as schema color) to 1000
+(opposite to schema color) in increments of 100:
+```css
+--reactodia-color-emphasis-{i}
+```
+
+### Content and Background
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={[
+            'var(--reactodia-color-content)',
+            'var(--reactodia-color-content-inverse)',
+            'var(--reactodia-color-content-contrast)',
+        ]}
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific color for a text-like content, pure inverse for the background, and a contrast
+(which is suitable for content on top of a background of the named color):
+```css
+--reactodia-color-content
+--reactodia-color-content-inverse
+--reactodia-color-content-contrast
+```
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={[
+            'var(--reactodia-background-color)',
+            'var(--reactodia-background-color-surface)',
+        ]}
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific color for a background-like layers, and a surface one
+which can be used for layers placed on top of the main background:
+```css
+--reactodia-background-color
+--reactodia-background-color-surface
+```
+
+export const NamedColorBoxes = ({color}) => (
+    <>
+        <ColorBoxes
+            colors={[
+                `var(--reactodia-color-${color}-lightest)`,
+                `var(--reactodia-color-${color}-lighter)`,
+                `var(--reactodia-color-${color}-light)`,
+                `var(--reactodia-color-${color})`,
+                `var(--reactodia-color-${color}-dark)`,
+                `var(--reactodia-color-${color}-darker)`,
+                `var(--reactodia-color-${color}-darkest)`,
+            ]}
+        />
+        <ColorBoxes
+            colors={[
+                `var(--reactodia-color-${color}-contrast-background)`,
+                `var(--reactodia-color-${color}-contrast-foreground)`,
+            ]}
+        />
+    </>
+);
+
+### Named colors
+
+Named colors can be used to show specific action types for buttons, importance for statuses, etc.
+The primary color can be specifically used to highlight the "main" action or give a color accent
+to a UI element:
+```css
+--reactodia-color-{color}-lightest
+--reactodia-color-{color}-lighter
+--reactodia-color-{color}-light
+--reactodia-color-{color}
+--reactodia-color-{color}-dark
+--reactodia-color-{color}-darker
+--reactodia-color-{color}-darkest
+```
+
+Additionally, each color has a contrast foreground (to put on the named color)
+and a contrast background (to put the named color on):
+```css
+--reactodia-color-{color}-contrast-background
+--reactodia-color-{color}-contrast-foreground
+```
+
+#### `primary` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='primary' />
+</Reactodia.WorkspaceRoot>
+
+#### `secondary` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='secondary' />
+</Reactodia.WorkspaceRoot>
+
+#### `success` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='success' />
+</Reactodia.WorkspaceRoot>
+
+#### `info` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='info' />
+</Reactodia.WorkspaceRoot>
+
+#### `warning` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='warning' />
+</Reactodia.WorkspaceRoot>
+
+#### `danger` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='danger' />
+</Reactodia.WorkspaceRoot>
