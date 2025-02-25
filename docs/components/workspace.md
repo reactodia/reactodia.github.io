@@ -10,7 +10,7 @@ title: Workspace
 
 [useLoadedWorkspace()](/docs/api/workspace/functions/useLoadedWorkspace) hook should be used to perform an initial initialization for the workspace which correctly reverts the changes and aborts async operations via provided [AbortSignal](https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal) when the workspace component is unmounted.
 
-[useWorkspace()](/docs/api/workspace/functions/useWorkspace) hook can be used from inside `<Workspace>` child components to access workspace context.
+[useWorkspace()](/docs/api/workspace/functions/useWorkspace) hook can be used from inside `<Workspace>` child components to access workspace context; see [workspace context](/docs/concepts/workspace-context.md) for details.
 
 ## Workspace Layout
 
@@ -20,7 +20,7 @@ Default built-in layout is provided as [DefaultWorkspace](/docs/api/workspace/fu
 
 Alternative (classic) built-in layout is provided as [ClassicWorkspace](/docs/api/workspace/functions/ClassicWorkspace) component which uses [layout panels](/docs/components/layout-panels.md) with [class tree](/docs/components/class-tree.md), [instances search](/docs/components/instances-search.md), [link types toolbox](/docs/components/link-types-toolbox.md), [ClassicToolbar](/docs/api/workspace/functions/ClassicToolbar) and all built-in [canvas widgets](/docs/components/canvas.md).
 
-When providing a custom workspace layout it is required to use [WorkspaceRoot](/docs/api/workspace/functions/WorkspaceRoot) as a top-level parent component to establish necessary defaults.
+When providing a custom workspace layout it is required to use [WorkspaceRoot](/docs/api/workspace/functions/WorkspaceRoot) as a top-level parent component to establish necessary style defaults, including styles for light or dark [color scheme](/docs/concepts/design-system.mdx).
 
 ### Example: canvas-only custom layout
 

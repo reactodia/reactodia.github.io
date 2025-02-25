@@ -36,3 +36,13 @@ There are several built-in link actions that can be used:
 | [LinkActionDelete](/docs/api/workspace/functions/LinkActionDelete.md) | Deletes [the relation](/docs/concepts/graph-authoring.md). |
 | [LinkActionMoveEndpoint](/docs/api/workspace/functions/LinkActionMoveEndpoint.md) | Displays a handle which allows to [change the relation](/docs/concepts/graph-authoring.md) by moving its endpoint (source or target) to another entity. |
 | [LinkActionRename](/docs/api/workspace/functions/LinkActionRename.md) | Starts [renaming a link](/docs/api/workspace/interfaces/RenameLinkProvider.md) (change the label on the diagram only). |
+
+## Styles
+
+The component look can be customized using the following CSS properties (see [design system](/docs/concepts/design-system.mdx) for more information):
+
+| Property | Description |
+|----------|-------------|
+| `--reactodia-selection-icon-filter`  | [CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) for the element selection action icons. |
+| `--reactodia-selection-multiple-box-shadow` | Box shadow for the selection rectangle with multiple elements. |
+| `--reactodia-selection-single-box-shadow`  | Box shadow for the selection rectangle with a single element. |

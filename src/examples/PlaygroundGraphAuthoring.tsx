@@ -2,6 +2,7 @@ import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 import * as N3 from 'n3';
 
+import { ExampleMetadataProvider, ExampleValidationProvider } from './ExampleMetadata';
 import { ExampleToolbarMenu } from './ExampleCommon';
 
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
@@ -12,7 +13,7 @@ type TurtleDataSource =
   | { type: 'url'; url: string }
   | { type: 'data'; data: string };
 
-export function PlaygroundClassicWorkspace() {
+export function PlaygroundGraphAuthoring() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
   const [dataSource, setDataSource] = React.useState<TurtleDataSource>({
@@ -24,7 +25,7 @@ export function PlaygroundClassicWorkspace() {
   );
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model, editor} = context;
+    const {model, editor, performLayout} = context;
     editor.setAuthoringMode(true);
 
     let turtleData: string;
@@ -44,22 +45,40 @@ export function PlaygroundClassicWorkspace() {
 
     await model.importLayout({dataProvider, signal});
 
-    searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+    if (dataSource.type === 'url') {
+      const elements = [
+        model.createElement('http://www.w3.org/ns/org#Organization'),
+        model.createElement('http://www.w3.org/ns/org#FormalOrganization'),
+        model.createElement('http://www.w3.org/ns/org#hasMember'),
+        model.createElement('http://www.w3.org/ns/org#hasSubOrganization'),
+        model.createElement('http://www.w3.org/ns/org#subOrganizationOf'),
+        model.createElement('http://www.w3.org/ns/org#unitOf'),
+      ];
+      model.history.execute(Reactodia.setElementExpanded(elements[0], true));
+      await Promise.all([
+        model.requestElementData(elements.map(el => el.iri)),
+        model.requestLinks(),
+      ]);
+      await performLayout({signal});
+    } else {
+      searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+    }
   }, [dataSource]);
+
+  const [metadataProvider] = React.useState(() => new ExampleMetadataProvider());
+  const [validationProvider] = React.useState(() => new ExampleValidationProvider());
+  const [renameLinkProvider] = React.useState(() => new RenameSubclassOfProvider());
 
   return (
     <Reactodia.Workspace ref={onMount}
       defaultLayout={defaultLayout}
+      metadataProvider={metadataProvider}
+      validationProvider={validationProvider}
+      renameLinkProvider={renameLinkProvider}
       typeStyleResolver={Reactodia.SemanticTypeStyles}
       onIriClick={({iri}) => window.open(iri)}>
-      <Reactodia.ClassicWorkspace
+      <Reactodia.DefaultWorkspace
         canvas={{
-          elementTemplateResolver: types => {
-            if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
-              return Reactodia.ClassicTemplate;
-            }
-            return undefined;
-          },
           linkTemplateResolver: type => {
             if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
               return Reactodia.DefaultLinkTemplate;
@@ -67,18 +86,22 @@ export function PlaygroundClassicWorkspace() {
             return Reactodia.OntologyLinkTemplates(type);
           },
         }}
-        toolbar={{
-          menu: (
-            <>
-              <ToolbarActionOpenTurtleGraph onOpen={setDataSource} />
-              <ExampleToolbarMenu />
-            </>
-          )
-        }}
+        menu={
+          <>
+            <ToolbarActionOpenTurtleGraph onOpen={setDataSource} />
+            <ExampleToolbarMenu />
+          </>
+        }
         searchCommands={searchCommands}
       />
     </Reactodia.Workspace>
   );
+}
+
+class RenameSubclassOfProvider extends Reactodia.RenameLinkToLinkStateProvider {
+  override canRename(link: Reactodia.Link): boolean {
+      return link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
+  }
 }
 
 function ToolbarActionOpenTurtleGraph(props: {

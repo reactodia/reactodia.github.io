@@ -2,6 +2,8 @@
 
 [Toolbar](/docs/api/workspace/functions/Toolbar) component is a [canvas widget](/docs/components/canvas.md) to display a simple toolbar with a an optional dropdown menu.
 
+## Toolbar actions
+
 There are several built-in toolbar actions that can be displayed as menu items or quick action buttons:
 | Action component | Description |
 |------------------|-------------|
@@ -14,3 +16,11 @@ There are several built-in toolbar actions that can be displayed as menu items o
 | [ToolbarActionRedo](/docs/api/workspace/functions/ToolbarActionRedo.md) | Performs a [redo](/docs/api/workspace/interfaces/CommandHistory.md#redo) for a command from the [command history](/docs/concepts/command-history.md). |
 | [ToolbarActionLayout](/docs/api/workspace/functions/ToolbarActionLayout.md) | Performs the default [graph layout algorithm](/docs/concepts/layout-workers.md) on the diagram content. |
 | [ToolbarLanguageSelector](/docs/api/workspace/functions/ToolbarLanguageSelector.md) | Displays a [data language](/docs/api/workspace/classes/DiagramModel.md#language) selector for the workspace. |
+
+## Styles
+
+The component look can be customized using the following CSS properties (see [design system](/docs/concepts/design-system.mdx) for more information):
+
+| Property | Description |
+|----------|-------------|
+| `--reactodia-toolbar-height` | Default height for the toolbar and the menu toggle. |

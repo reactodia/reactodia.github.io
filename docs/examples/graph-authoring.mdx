@@ -1,0 +1,43 @@
+---
+sidebar_position: 4
+---
+import CodeBlock from '@theme/CodeBlock';
+import Link from '@docusaurus/Link';
+
+# Graph Authoring
+
+Example demonstrating [visual graph authoring](/docs/concepts/graph-authoring) capabilities on in-memory RDF graph data.
+
+:::tip
+
+[▶︎ Open live demo](/playground/graph-authoring)
+
+:::
+
+import GraphAuthoringExampleSource from '!@site/src/examples/PlaygroundGraphAuthoring?raw';
+import ExampleMetadataSource from '!@site/src/examples/ExampleMetadata?raw';
+import ExampleCommonSource from '!@site/src/examples/ExampleCommon?raw';
+
+<CodeBlock language="tsx"
+  title="/src/examples/PlaygroundGraphAuthoring.tsx"
+  showLineNumbers>
+  {GraphAuthoringExampleSource}
+</CodeBlock>
+
+<details>
+  <summary>ExampleMetadata.ts</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleMetadata.ts"
+    showLineNumbers>
+    {ExampleMetadataSource}
+  </CodeBlock>
+</details>
+
+<details>
+  <summary>ExampleCommon.tsx</summary>
+  <CodeBlock language="tsx"
+    title="/src/examples/ExampleCommon.tsx"
+    showLineNumbers>
+    {ExampleCommonSource}
+  </CodeBlock>
+</details>

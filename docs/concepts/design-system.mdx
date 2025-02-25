@@ -1,0 +1,416 @@
+---
+sidebar_position: 10
+title: Design System
+---
+
+import * as React from 'react';
+import * as Reactodia from '@reactodia/workspace';
+import { ButtonToggle } from '@site/src/components/ButtonToggle';
+import { ColorBoxes } from '@site/src/components/ColorBoxes';
+
+# Basic Design System
+
+Reactodia defines a basic design system inspired by [Infima](https://infima.dev/) styling framework to support both light and dark color schemes and easy customization via [CSS custom properties](https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_cascading_variables/Using_CSS_custom_properties).
+
+This page documents base (common) styles for used as defaults for all UI components. Component-specific CSS properties are documented on the corresponding [component pages](/docs/category/components).
+
+See [Reactodia theme styling source](https://github.com/reactodia/reactodia-workspace/tree/master/styles/theme) for the complete list of CSS properties to customize and their defaults for both light and dark color schemes.
+
+## Colors
+
+:::tip
+
+Toggle active color scheme at the top to see how the default colors are defined for either light or dark themes.
+
+:::
+
+### Grays {#color-grays}
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={Array.from(
+            {length: 11},
+            (_, i) => `var(--reactodia-color-gray-${i * 100})`)
+        }
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme independent gray colors gradient from 0 (white) to 1000 (black) in increments of 100:
+```css
+--reactodia-color-gray-{i}
+```
+
+### Emphasis {#color-emphasis}
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={Array.from(
+            {length: 11},
+            (_, i) => `var(--reactodia-color-emphasis-${i * 100})`)
+        }
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific gray colors gradient from 0 (same as schema color) to 1000 (opposite to schema color) in increments of 100:
+```css
+--reactodia-color-emphasis-{i}
+```
+
+### Content and Background
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={[
+            'var(--reactodia-color-content)',
+            'var(--reactodia-color-content-inverse)',
+            'var(--reactodia-color-content-contrast)',
+        ]}
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific color for a text-like content, pure inverse for the background, and a contrast (which is suitable for content on top of a background of the named color):
+```css
+--reactodia-color-content
+--reactodia-color-content-inverse
+--reactodia-color-content-contrast
+```
+
+<Reactodia.WorkspaceRoot>
+    <ColorBoxes
+        colors={[
+            'var(--reactodia-background-color)',
+            'var(--reactodia-background-color-surface)',
+        ]}
+    />
+</Reactodia.WorkspaceRoot>
+
+Color-scheme specific color for a background-like layers, and a surface one which can be used for layers placed on top of the main background:
+```css
+--reactodia-background-color
+--reactodia-background-color-surface
+```
+
+### Named colors
+
+export const NamedColorBoxes = ({color}) => (
+    <>
+        <ColorBoxes
+            colors={[
+                `var(--reactodia-color-${color}-lightest)`,
+                `var(--reactodia-color-${color}-lighter)`,
+                `var(--reactodia-color-${color}-light)`,
+                `var(--reactodia-color-${color})`,
+                `var(--reactodia-color-${color}-dark)`,
+                `var(--reactodia-color-${color}-darker)`,
+                `var(--reactodia-color-${color}-darkest)`,
+            ]}
+        />
+        <ColorBoxes
+            colors={[
+                `var(--reactodia-color-${color}-contrast-background)`,
+                `var(--reactodia-color-${color}-contrast-foreground)`,
+            ]}
+        />
+    </>
+);
+
+Named colors can be used to show specific action types for buttons, importance for statuses, etc. The primary color can be specifically used to highlight the "main" action or give a color accent to a UI element:
+```css
+--reactodia-color-{color}-lightest
+--reactodia-color-{color}-lighter
+--reactodia-color-{color}-light
+--reactodia-color-{color}
+--reactodia-color-{color}-dark
+--reactodia-color-{color}-darker
+--reactodia-color-{color}-darkest
+```
+
+Additionally, each color has a contrast foreground (to put on the named color) and a contrast background (to put the named color on):
+```css
+--reactodia-color-{color}-contrast-background
+--reactodia-color-{color}-contrast-foreground
+```
+
+#### `primary` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='primary' />
+</Reactodia.WorkspaceRoot>
+
+#### `secondary` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='secondary' />
+</Reactodia.WorkspaceRoot>
+
+#### `success` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='success' />
+</Reactodia.WorkspaceRoot>
+
+#### `info` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='info' />
+</Reactodia.WorkspaceRoot>
+
+#### `warning` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='warning' />
+</Reactodia.WorkspaceRoot>
+
+#### `danger` color
+
+<Reactodia.WorkspaceRoot>
+    <NamedColorBoxes color='danger' />
+</Reactodia.WorkspaceRoot>
+
+## Text
+
+The following properties allow to customize font family, base size and color:
+
+```css
+--reactodia-font-family-base
+--reactodia-font-family-monospace
+--reactodia-font-size-base
+--reactodia-line-height-base
+--reactodia-font-color-base
+--reactodia-font-color-base-inverse
+```
+
+```tsx live
+function Text() {
+    return (
+        <Reactodia.WorkspaceRoot>
+            <p>
+                Normal: The quick brown fox jumps over the lazy dog.
+            </p>
+            <p style={{fontFamily: 'var(--reactodia-font-family-monospace)'}}>
+                Monospace: The quick brown fox jumps over the lazy dog.
+            </p>
+            <p style={{
+                color: 'var(--reactodia-font-color-base-inverse)',
+                backgroundColor: 'var(--reactodia-color-gray-800)',
+            }}>
+                Inverse: The quick brown fox jumps over the lazy dog.
+            </p>
+        </Reactodia.WorkspaceRoot>
+    );
+}
+```
+
+## Borders
+
+The following properties allow to customize base border styling, including default border radius for UI elements such as buttons, inputs, panels, etc:
+```css
+--reactodia-border-width-base
+--reactodia-border-radius-base
+--reactodia-border-color-base
+```
+
+```tsx live
+function Borders() {
+    return <Reactodia.WorkspaceRoot style={{
+        maxWidth: 300,
+        gap: 5,
+        '--reactodia-border-width-base': '2px',
+        '--reactodia-border-radius-base': '5px',
+    }}>
+        <div style={{
+            display: 'grid',
+            padding: 10,
+            justifyContent: 'center',
+            borderStyle: 'solid',
+            borderWidth: 'var(--reactodia-border-width-base)',
+            borderRadius: 'var(--reactodia-border-radius-base)',
+            borderColor: 'var(--reactodia-border-color-base)',
+        }}>
+            Panel
+        </div>
+        <button type='button'
+            className='reactodia-btn reactodia-btn-default'>
+            Button
+        </button>
+        <input type='text'
+            className='reactodia-form-control'
+            placeholder='Input text here...'
+        />
+    </Reactodia.WorkspaceRoot>
+}
+```
+
+## Spacing
+
+The following properties allow to customize default spacing between UI elements:
+```css
+--reactodia-spacing-base
+--reactodia-spacing-vertical
+--reactodia-spacing-horizontal
+```
+
+```tsx live
+function Spacing() {
+    return <Reactodia.WorkspaceRoot>
+        <div style={{
+            display: 'grid',
+            gridTemplateRows: 'repeat(3, min-content)',
+            gridTemplateColumns: 'repeat(3, min-content)',
+        }}>
+            {Array.from({length: 9}, (_, i) =>
+                <div key={i} style={{
+                    width: 50,
+                    height: 50,
+                    marginRight: 'var(--reactodia-spacing-horizontal)',
+                    marginBottom: 'var(--reactodia-spacing-vertical)',
+                    backgroundColor: 'var(--reactodia-color-primary)',
+                }} />
+            )}
+        </div>
+    </Reactodia.WorkspaceRoot>
+}
+```
+
+## Controls
+
+### Buttons
+
+export const Button = ({kind, state}) => {
+    const active = state === 'active' ? 'active' : '';
+    return (
+        <button type='button'
+            className={`reactodia-btn reactodia-btn-${kind} ${active}`}
+            disabled={state === 'disabled'}>
+            <span style={{textTransform: 'capitalize'}}>{kind}</span>
+        </button>
+    );
+};
+
+export const Buttons = () => {
+    const [state, setState] = React.useState('default');
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+            }}>
+            <div>
+                Button state:
+                <ButtonToggle states={['default', 'active', 'disabled']}
+                    value={state}
+                    onChange={setState}
+                />
+            </div>
+            <div style={{display: 'flex', flexDirection: 'row', flexWrap: 'wrap', gap: 5}}>
+                <Button kind='default' state={state} />
+                <Button kind='primary' state={state} />
+                <Button kind='secondary' state={state} />
+                <Button kind='success' state={state} />
+                <Button kind='info' state={state} />
+                <Button kind='warning' state={state} />
+                <Button kind='danger' state={state} />
+            </div>
+        </div>
+    );
+};
+
+<Reactodia.WorkspaceRoot style={{marginBottom: 10}}>
+    <Buttons />
+</Reactodia.WorkspaceRoot>
+
+There are specific CSS properties to define the style of various buttons:
+```tsx live
+function Button() {
+    return <Reactodia.WorkspaceRoot>
+        <div style={{
+            '--reactodia-button-border-radius': 'inherit',
+            '--reactodia-button-border-width': 'inherit',
+            '--reactodia-button-default-background-color': 'inherit',
+            '--reactodia-button-default-background-color-active': 'inherit',
+            '--reactodia-button-default-background-color-focus': 'inherit',
+            '--reactodia-button-default-border-color': 'inherit',
+            '--reactodia-button-default-color': 'inherit',
+            '--reactodia-button-default-color-focus': 'inherit',
+        }}>
+            <button type='button'
+                className='reactodia-btn reactodia-btn-default'>
+                Button
+            </button>
+        </div>
+    </Reactodia.WorkspaceRoot>
+}
+```
+
+### Inputs
+
+export const Inputs = () => {
+    const [state, setState] = React.useState('default');
+    return (
+        <div
+            style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 10,
+            }}>
+            <div>
+                Input state:
+                <ButtonToggle states={['default', 'disabled']}
+                    value={state}
+                    onChange={setState}
+                />
+            </div>
+            <div style={{display: 'flex', flexDirection: 'column', gap: 5, maxWidth: 300}}>
+                <input type='text'
+                    className='reactodia-form-control'
+                    placeholder='Input text here...'
+                    disabled={state === 'disabled'}
+                />
+                <select className='reactodia-form-control'
+                    disabled={state === 'disabled'}>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </div>
+        </div>
+    );
+};
+
+<Reactodia.WorkspaceRoot style={{marginBottom: 10}}>
+    <Inputs />
+</Reactodia.WorkspaceRoot>
+
+There are specific CSS properties to define the style of various inputs, including `<input type="text">` and `<select>`:
+
+```tsx live
+function Inputs() {
+    return (
+        <Reactodia.WorkspaceRoot>
+            <div style={{
+                display: 'flex',
+                gap: 5,
+                '--reactodia-input-color': 'inherit',
+                '--reactodia-input-color-placeholder': 'inherit',
+                '--reactodia-input-background-color': 'inherit',
+                '--reactodia-input-background-color-disabled': 'inherit',
+                '--reactodia-input-border-color': 'inherit',
+                '--reactodia-input-border-color-focus': 'inherit',
+                '--reactodia-input-border-radius': 'inherit',
+                '--reactodia-input-border-width': 'inherit',
+            }}>
+                <input type='text'
+                    className='reactodia-form-control'
+                    placeholder='Input text here...'
+                />
+                <select className='reactodia-form-control'>
+                    <option>Option 1</option>
+                    <option>Option 2</option>
+                    <option>Option 3</option>
+                </select>
+            </style>
+        </Reactodia.WorkspaceRoot>
+    );
+}
+```
