@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk_reactodia_reactodia_github_io=self.webpackChunk_reactodia_reactodia_github_io||[]).push([[19881],{69081:(a,t,i)=>{i.r(t),i.d(t,{default:()=>u});var e=i(64965),r=i(64922);function u(){return(0,r.jsx)(e.rd,{to:"/playground/wikidata"})}}}]);
