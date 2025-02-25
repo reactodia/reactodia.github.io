@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Workspace Context
 
-Reactodia uses a common context to connect its components with the [graph model](./graph-model.md) and other services such as [graph layout](./layout-workers.md), [i18n](./i18n.md) and [visual graph authoring](./graph-authoring.md).
+Reactodia uses a common context to connect its components with the [graph model](/docs/concepts/graph-model) and other services such as [graph layout](/docs/concepts/layout-workers), [i18n](/docs/concepts/i18n) and [visual graph authoring](/docs/concepts/graph-authoring).
 
 ## Services and stores in the context
 
@@ -12,11 +12,11 @@ The [`WorkspaceContext`](/docs/api/workspace/interfaces/WorkspaceContext) contai
 
 | Property name | Type             | Description |
 |---------------|------------------|-------------|
-| `model`       | [`DataDiagramModel`](/docs/api/workspace/classes/DataDiagramModel.md) | Stores the diagram content and asynchronously fetches from a data provider.<br/>See [graph model](./graph-model.md). |
+| `model`       | [`DataDiagramModel`](/docs/api/workspace/classes/DataDiagramModel.md) | Stores the diagram content and asynchronously fetches from a data provider.<br/>See [graph model](/docs/concepts/graph-model). |
 | `view`        | [`SharedCanvasState`](/docs/api/workspace/classes/SharedCanvasState.md) | Stores common state and settings for all [canvases](/docs/components/canvas.md) in the workspace. |
-| `editor`      | [`EditorController`](/docs/api/workspace/classes/EditorController.md) | Stores, modifies and validates changes from the visual graph authoring.<br/>See [graph authoring](./graph-authoring.md). |
+| `editor`      | [`EditorController`](/docs/api/workspace/classes/EditorController.md) | Stores, modifies and validates changes from the visual graph authoring.<br/>See [graph authoring](/docs/concepts/graph-authoring). |
 | `overlay`     | [`OverlayController`](/docs/api/workspace/classes/OverlayController.md) | Controls UI overlays for the canvases, including dialogs and tasks. |
-| `translation` | [`Translation`](/docs/api/workspace/interfaces/Translation.md) | Provides a translation for UI text strings.<br/>See [i18n](./i18n.md). |
+| `translation` | [`Translation`](/docs/api/workspace/interfaces/Translation.md) | Provides a translation for UI text strings.<br/>See [i18n](/docs/concepts/i18n). |
 
 ## Getting the workspace context
 
@@ -70,5 +70,5 @@ function Example() {
 ```
 
 :::note
-The library also uses separate context for [i18n](./i18n.md) (which is accessible by [`useTranslation()`](/docs/api/workspace/functions/useTranslation.md) hook and `translation` property of the workspace context) and a nested context for the [`Canvas`](/docs/components/canvas.md).
+The library also uses separate context for [i18n](/docs/concepts/i18n) (which is accessible by [`useTranslation()`](/docs/api/workspace/functions/useTranslation.md) hook and `translation` property of the workspace context) and a nested context for the [`Canvas`](/docs/components/canvas.md).
 :::

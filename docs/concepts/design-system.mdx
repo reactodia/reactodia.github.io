@@ -3,10 +3,11 @@ sidebar_position: 10
 title: Design System
 ---
 
+import BrowserOnly from '@docusaurus/BrowserOnly';
 import * as React from 'react';
-import * as Reactodia from '@reactodia/workspace';
 import { ButtonToggle } from '@site/src/components/ButtonToggle';
 import { ColorBoxes } from '@site/src/components/ColorBoxes';
+import { WithReactodiaStyles } from '@site/src/components/WithReactodiaStyles';
 
 # Basic Design System
 
@@ -26,14 +27,14 @@ Toggle active color scheme at the top to see how the default colors are defined 
 
 ### Grays {#color-grays}
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <ColorBoxes
         colors={Array.from(
             {length: 11},
             (_, i) => `var(--reactodia-color-gray-${i * 100})`)
         }
     />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 Color-scheme independent gray colors gradient from 0 (white) to 1000 (black) in increments of 100:
 ```css
@@ -42,14 +43,14 @@ Color-scheme independent gray colors gradient from 0 (white) to 1000 (black) in 
 
 ### Emphasis {#color-emphasis}
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <ColorBoxes
         colors={Array.from(
             {length: 11},
             (_, i) => `var(--reactodia-color-emphasis-${i * 100})`)
         }
     />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 Color-scheme specific gray colors gradient from 0 (same as schema color) to 1000 (opposite to schema color) in increments of 100:
 ```css
@@ -58,7 +59,7 @@ Color-scheme specific gray colors gradient from 0 (same as schema color) to 1000
 
 ### Content and Background
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <ColorBoxes
         colors={[
             'var(--reactodia-color-content)',
@@ -66,7 +67,7 @@ Color-scheme specific gray colors gradient from 0 (same as schema color) to 1000
             'var(--reactodia-color-content-contrast)',
         ]}
     />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 Color-scheme specific color for a text-like content, pure inverse for the background, and a contrast (which is suitable for content on top of a background of the named color):
 ```css
@@ -75,14 +76,14 @@ Color-scheme specific color for a text-like content, pure inverse for the backgr
 --reactodia-color-content-contrast
 ```
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <ColorBoxes
         colors={[
             'var(--reactodia-background-color)',
             'var(--reactodia-background-color-surface)',
         ]}
     />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 Color-scheme specific color for a background-like layers, and a surface one which can be used for layers placed on top of the main background:
 ```css
@@ -133,39 +134,39 @@ Additionally, each color has a contrast foreground (to put on the named color) a
 
 #### `primary` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='primary' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 #### `secondary` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='secondary' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 #### `success` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='success' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 #### `info` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='info' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 #### `warning` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='warning' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 #### `danger` color
 
-<Reactodia.WorkspaceRoot>
+<WithReactodiaStyles>
     <NamedColorBoxes color='danger' />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 ## Text
 
@@ -316,9 +317,9 @@ export const Buttons = () => {
     );
 };
 
-<Reactodia.WorkspaceRoot style={{marginBottom: 10}}>
+<WithReactodiaStyles>
     <Buttons />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 There are specific CSS properties to define the style of various buttons:
 ```tsx live
@@ -378,9 +379,9 @@ export const Inputs = () => {
     );
 };
 
-<Reactodia.WorkspaceRoot style={{marginBottom: 10}}>
+<WithReactodiaStyles>
     <Inputs />
-</Reactodia.WorkspaceRoot>
+</WithReactodiaStyles>
 
 There are specific CSS properties to define the style of various inputs, including `<input type="text">` and `<select>`:
 

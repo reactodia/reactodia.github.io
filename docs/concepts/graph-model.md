@@ -10,9 +10,9 @@ The central part of the Reactodia state is the diagram content which is a mutabl
 
 The diagram is composed of *abstract* [elements](/docs/api/workspace/classes/Element.md) and [links](/docs/api/workspace/classes/Link.md) and can be though of as collection of graph nodes and edges drawn on the canvas surface.
 
-Each **element** is identified by a [generated ID](/docs/api/workspace/classes/Element.md#generateid), stores a [position](/docs/api/workspace/classes/Element.md#position) (in [paper coordinates](./canvas-coordinates.md)) and an arbitrary persisted [element state](/docs/api/workspace/classes/Element.md#elementstate).
+Each **element** is identified by a [generated ID](/docs/api/workspace/classes/Element.md#generateid), stores a [position](/docs/api/workspace/classes/Element.md#position) (in [paper coordinates](/docs/concepts/canvas-coordinates)) and an arbitrary persisted [element state](/docs/api/workspace/classes/Element.md#elementstate).
 
-Each **link** is identified by a [generated ID](/docs/api/workspace/classes/Link.md#generateid), has source and target element IDs, and a [link type IRI](/docs/api/workspace/type-aliases/LinkTypeIri.md). In its state it stores path geometry as a [collection of points](/docs/api/workspace/classes/Link.md#vertices) (in [paper coordinates](./canvas-coordinates.md)) and an arbitrary persisted [link state](/docs/api/workspace/classes/Link.md#linkstate).
+Each **link** is identified by a [generated ID](/docs/api/workspace/classes/Link.md#generateid), has source and target element IDs, and a [link type IRI](/docs/api/workspace/type-aliases/LinkTypeIri.md). In its state it stores path geometry as a [collection of points](/docs/api/workspace/classes/Link.md#vertices) (in [paper coordinates](/docs/concepts/canvas-coordinates)) and an arbitrary persisted [link state](/docs/api/workspace/classes/Link.md#linkstate).
 
 :::note
 Currently there is only one concrete element type besides the data graph ones: [`VoidElement`](/docs/api/workspace/classes/VoidElement.md) which is displayed as nothing (empty point) but can be connected to with the links.
@@ -20,7 +20,7 @@ Currently there is only one concrete element type besides the data graph ones: [
 
 ## Data graph
 
-While elements and links are considered to be diagram graph nodes and edges, some of them can represent entities and relations from (external) data graph defined by the [`DataProvider`](./data-provider.md):
+While elements and links are considered to be diagram graph nodes and edges, some of them can represent entities and relations from (external) data graph defined by the [`DataProvider`](/docs/concepts/data-provider):
 
 | Cell type | Description |
 |-----------|-------------|
@@ -32,16 +32,16 @@ While elements and links are considered to be diagram graph nodes and edges, som
 :::note
 An IRI is [Internationalized Resource Identifier](https://en.wikipedia.org/wiki/Internationalized_Resource_Identifier) which is basically a URI but may additionally contain most unicode characters.
 
-See how the library uses [IRIs and RDF](./data-provider.md#iri-and-rdf) for more details.
+See how the library uses [IRIs and RDF](/docs/concepts/data-provider#iri-and-rdf) for more details.
 :::
 
 Basically, a sub-graph of a full external data graph composed of entities and relations forms a diagram on the canvas. By exploring that graph, other entities and relation are added to the diagram content, expanding the view of the data graph and presenting more interconnections throughout the data.
 
-Using the [graph authoring](./graph-authoring.md) feature it is possible to work on the changes to the data graph and apply it once ready.
+Using the [graph authoring](/docs/concepts/graph-authoring) feature it is possible to work on the changes to the data graph and apply it once ready.
 
 ## Manipulating the diagram
 
-To access and manipulate the diagram one can use [diagram model](/docs/api/workspace/classes/DataDiagramModel.md) from [`WorkspaceContext`](./workspace-context.md):
+To access and manipulate the diagram one can use [diagram model](/docs/api/workspace/classes/DataDiagramModel.md) from [`WorkspaceContext`](/docs/concepts/workspace-context):
 ```ts
 function WorkingWithDiagramModel() {
     const {model} = Reactodia.useWorkspace();
@@ -92,7 +92,7 @@ function WorkingWithDiagramModel() {
 
 ## Link visibility
 
-Some links can be hidden from the canvas by setting its link type visibility with [`setLinkVisibility()`](/docs/api/workspace/classes/DataDiagramModel.md#setlinkvisibility) to `hidden`. The hidden links are invisible and would not affect the [graph layout](./layout-workers.md).
+Some links can be hidden from the canvas by setting its link type visibility with [`setLinkVisibility()`](/docs/api/workspace/classes/DataDiagramModel.md#setlinkvisibility) to `hidden`. The hidden links are invisible and would not affect the [graph layout](/docs/concepts/layout-workers).
 
 Alternatively, a link type visibility can be set to `withoutLabel` to display it as path (line) only without any additional labels.
 

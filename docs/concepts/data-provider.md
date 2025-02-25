@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Data Provider
 
-Reactodia defines a contract ([`DataProvider`](/docs/api/workspace/interfaces/DataProvider) interface) to query a subset of data from external source ([data graph](./graph-model.md#data-graph)) to provide means for incremental data loading when exploring the graph.
+Reactodia defines a contract ([`DataProvider`](/docs/api/workspace/interfaces/DataProvider) interface) to query a subset of data from external source ([data graph](/docs/concepts/graph-model#data-graph)) to provide means for incremental data loading when exploring the graph.
 
 ## IRI and RDF
 
@@ -17,7 +17,7 @@ Reactodia uses RDF ([Resource Description Framework](https://en.wikipedia.org/wi
 
 For interoperability with other RDF-based libraries for JavaScript, the property values for entities and relations are stored as either **named node** or **literal** values using commonly used [RDF/JS](https://rdf.js.org/) representation.
 
-To provide improved type-safety with TypeScript when dealing with various kinds of IRIs from the [data graph](./graph-model.md#data-graph), the library uses the following [branded string types](https://www.learningtypescript.com/articles/branded-types):
+To provide improved type-safety with TypeScript when dealing with various kinds of IRIs from the [data graph](/docs/concepts/graph-model#data-graph), the library uses the following [branded string types](https://www.learningtypescript.com/articles/branded-types):
 
 | Type            | Description |
 |-----------------|-------------|
