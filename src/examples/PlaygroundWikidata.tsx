@@ -81,11 +81,12 @@ export function PlaygroundWikidata() {
 }
 
 function ClearWikidataCacheAction() {
+  const {model} = Reactodia.useWorkspace();
   return (
     <Reactodia.ToolbarAction
       title='Clear locally-cached data previously fetched from Wikidata'
       onSelect={() => {
-        const {model: {dataProvider}} = Reactodia.useWorkspace();
+        const {dataProvider} = model;
         if (dataProvider instanceof Reactodia.IndexedDbCachedProvider) {
           dataProvider.clearCache();
         }
