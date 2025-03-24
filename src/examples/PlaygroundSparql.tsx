@@ -26,12 +26,8 @@ export function PlaygroundSparql() {
     setConnectionSettings(settings);
   };
 
-  const [searchCommands] = React.useState(() =>
-    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
-  );
-
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model} = context;
+    const {model, getCommandBus} = context;
 
     if (connectionSettings) {
       const dataProvider = new Reactodia.SparqlDataProvider({
@@ -45,7 +41,8 @@ export function PlaygroundSparql() {
         signal,
       });
 
-      searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+      getCommandBus(Reactodia.UnifiedSearchTopic)
+        .trigger('focus', {sectionKey: 'elementTypes'});
     } else {
       showConnectionDialog(connectionSettings, applyConnectionSettings, context);
     }
@@ -53,11 +50,9 @@ export function PlaygroundSparql() {
 
   return (
     <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      onIriClick={({iri}) => window.open(iri)}>
+      defaultLayout={defaultLayout}>
       <Reactodia.DefaultWorkspace
         menu={<ExampleToolbarMenu />}
-        searchCommands={searchCommands}
         canvasWidgets={[
           <Reactodia.Toolbar key='sparql-settings'
             dock='sw'

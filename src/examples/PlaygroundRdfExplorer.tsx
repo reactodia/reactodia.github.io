@@ -19,12 +19,9 @@ export function PlaygroundRdfExplorer() {
     type: 'url',
     url: 'https://reactodia.github.io/resources/orgOntology.ttl',
   });
-  const [searchCommands] = React.useState(() =>
-    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
-  );
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model} = context;
+    const {model, getCommandBus} = context;
 
     let turtleData: string;
     if (dataSource.type === 'url') {
@@ -43,13 +40,13 @@ export function PlaygroundRdfExplorer() {
 
     await model.importLayout({dataProvider, signal});
 
-    searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+    getCommandBus(Reactodia.UnifiedSearchTopic)
+      .trigger('focus', {sectionKey: 'elementTypes'});
   }, [dataSource]);
 
   return (
     <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      onIriClick={({iri}) => window.open(iri)}>
+      defaultLayout={defaultLayout}>
       <Reactodia.DefaultWorkspace
         menu={
           <>
@@ -57,7 +54,6 @@ export function PlaygroundRdfExplorer() {
             <ExampleToolbarMenu />
           </>
         }
-        searchCommands={searchCommands}
         languages={[
           {code: 'de', label: 'Deutsch'},
           {code: 'en', label: 'english'},

@@ -1,28 +1,28 @@
+---
+title: <Navigator />
+---
+
 # Navigator
 
-[Navigator](/docs/api/workspace/functions/Navigator) component is a [canvas widget](/docs/components/canvas.md) to display a minimap of the diagram contents.
+[`<Navigator />`](/docs/api/workspace/functions/Navigator) component is a [canvas widget](/docs/components/canvas.md) to display a minimap of the diagram contents.
 
 ```tsx live
 function Example() {
-  const GRAPH_DATA = 'https://reactodia.github.io/resources/orgOntology.ttl';
-
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, view, performLayout} = context;
 
-    const response = await fetch(GRAPH_DATA, {signal});
-    const graphData = new N3.Parser().parse(await response.text());
-    const dataProvider = new Reactodia.RdfDataProvider({acceptBlankNodes: false});
-    dataProvider.addGraph(graphData);
-    await model.importLayout({dataProvider, signal});
+    const alice = model.createElement('urn:example:Alice');
+    const bob = model.createElement('urn:example:Bob');
+    bob.setData({...bob.data, types: ['urn:example:Balloon']});
+    model.createLinks({
+      sourceId: alice.iri,
+      targetId: bob.iri,
+      linkTypeId: 'urn:example:knows',
+      properties: {},
+    });
 
-    const first = model.createElement('http://www.w3.org/ns/org#Organization');
-    const second = model.createElement('http://www.w3.org/ns/org#FormalOrganization');
-    await Promise.all([
-        model.requestElementData([first.iri, second.iri]),
-        model.requestLinks(),
-    ]);
     await performLayout({signal});
   }, []);
 
@@ -31,14 +31,19 @@ function Example() {
       <Reactodia.Workspace ref={onMount}
         defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
-            menu={null}
-            search={null}
-            actions={null}
-            navigator={{
-                expanded: true,
-                viewportFill: 'lightgreen',
-                viewportStroke: {color: 'green'},
-            }}
+          menu={null}
+          search={null}
+          actions={null}
+          navigator={{
+            expanded: true,
+            viewportFill: 'lightgreen',
+            viewportStroke: {color: 'green'},
+          }}
+          canvas={{
+            elementTemplateResolver: types =>
+              types.includes('urn:example:Balloon')
+                ? Reactodia.RoundTemplate : undefined,
+          }}
         />
       </Reactodia.Workspace>
     </div>

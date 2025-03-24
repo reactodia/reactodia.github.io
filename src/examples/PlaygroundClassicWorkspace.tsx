@@ -1,9 +1,11 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
+import { SemanticTypeStyles, makeOntologyLinkTemplates } from '@reactodia/workspace/legacy-styles';
 import * as N3 from 'n3';
 
 import { ExampleToolbarMenu } from './ExampleCommon';
 
+const OntologyLinkTemplates = makeOntologyLinkTemplates(Reactodia);
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
@@ -19,12 +21,9 @@ export function PlaygroundClassicWorkspace() {
     type: 'url',
     url: 'https://reactodia.github.io/resources/orgOntology.ttl',
   });
-  const [searchCommands] = React.useState(() =>
-    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
-  );
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model, editor} = context;
+    const {model, editor, getCommandBus} = context;
     editor.setAuthoringMode(true);
 
     let turtleData: string;
@@ -44,14 +43,14 @@ export function PlaygroundClassicWorkspace() {
 
     await model.importLayout({dataProvider, signal});
 
-    searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+    getCommandBus(Reactodia.UnifiedSearchTopic)
+      .trigger('focus', {sectionKey: 'elementTypes'});
   }, [dataSource]);
 
   return (
     <Reactodia.Workspace ref={onMount}
       defaultLayout={defaultLayout}
-      typeStyleResolver={Reactodia.SemanticTypeStyles}
-      onIriClick={({iri}) => window.open(iri)}>
+      typeStyleResolver={SemanticTypeStyles}>
       <Reactodia.ClassicWorkspace
         canvas={{
           elementTemplateResolver: types => {
@@ -64,7 +63,7 @@ export function PlaygroundClassicWorkspace() {
             if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
               return Reactodia.DefaultLinkTemplate;
             }
-            return Reactodia.OntologyLinkTemplates(type);
+            return OntologyLinkTemplates(type);
           },
         }}
         toolbar={{
@@ -75,7 +74,6 @@ export function PlaygroundClassicWorkspace() {
             </>
           )
         }}
-        searchCommands={searchCommands}
       />
     </Reactodia.Workspace>
   );

@@ -53,8 +53,9 @@ const config: Config = {
       {
         entryPoints: [
           '../reactodia-workspace/src/workspace.ts',
-          '../reactodia-workspace/src/worker-protocol.ts',
+          '../reactodia-workspace/src/layout-sync.ts',
           '../reactodia-workspace/src/layout.worker.ts',
+          '../reactodia-workspace/src/legacy-styles.tsx',
         ],
         tsconfig: '../reactodia-workspace/tsconfig.typings.json',
         readme: 'none',
@@ -162,6 +163,13 @@ const config: Config = {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
       additionalLanguages: ['json'],
+    },
+    liveCodeBlock: {
+      /**
+       * The position of the live playground, above or under the editor
+       * Possible values: "top" | "bottom"
+       */
+      playgroundPosition: 'top',
     },
   } satisfies Preset.ThemeConfig,
 };

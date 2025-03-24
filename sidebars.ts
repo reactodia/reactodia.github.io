@@ -74,12 +74,16 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
     },
     {
+      ...findSidebarCategory(typedocItems, 'layout-sync'),
+      label: '/layout-sync',
+    },
+    {
       ...findSidebarCategory(typedocItems, 'layout.worker'),
       label: '/layout.worker',
     },
     {
-      ...findSidebarCategory(typedocItems, 'worker-protocol'),
-      label: '/worker-protocol',
+      ...findSidebarCategory(typedocItems, 'legacy-styles'),
+      label: '/legacy-styles',
     },
   ],
 };

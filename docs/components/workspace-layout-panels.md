@@ -1,5 +1,5 @@
 ---
-title: Layout Panels
+title: <WorkspaceLayout* />
 ---
 
 # Resizable and Collapsible Layout Panels
@@ -8,9 +8,9 @@ Reactodia provides layout panel components to display a row or a column of resiz
 
 | Layout panel component | Description |
 |------------------------|-------------|
-| [WorkspaceLayoutRow](/docs/api/workspace/functions/WorkspaceLayoutRow) | Displays a horizontal row with resizable child columns or items which can be expanded or collapsed. |
-| [WorkspaceLayoutColumn](/docs/api/workspace/functions/WorkspaceLayoutColumn) | Displays a vertical accordion column with resizable child items which can be expanded or collapsed. |
-| [WorkspaceLayoutItem](/docs/api/workspace/functions/WorkspaceLayoutItem) | Displays a child component within the layout row or column. |
+| [`<WorkspaceLayoutRow />`](/docs/api/workspace/functions/WorkspaceLayoutRow) | Displays a horizontal row with resizable child columns or items which can be expanded or collapsed. |
+| [`<WorkspaceLayoutColumn />`](/docs/api/workspace/functions/WorkspaceLayoutColumn) | Displays a vertical accordion column with resizable child items which can be expanded or collapsed. |
+| [`<WorkspaceLayoutItem />`](/docs/api/workspace/functions/WorkspaceLayoutItem) | Displays a child component within the layout row or column. |
 
 ### Example: layout with central area and side columns
 

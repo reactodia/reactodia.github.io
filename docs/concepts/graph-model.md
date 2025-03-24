@@ -92,7 +92,7 @@ function WorkingWithDiagramModel() {
 
 ## Link visibility
 
-Some links can be hidden from the canvas by setting its link type visibility with [`setLinkVisibility()`](/docs/api/workspace/classes/DataDiagramModel.md#setlinkvisibility) to `hidden`. The hidden links are invisible and would not affect the [graph layout](/docs/concepts/layout-workers).
+Some links can be hidden from the canvas by setting its link type visibility with [`setLinkVisibility()`](/docs/api/workspace/classes/DataDiagramModel.md#setlinkvisibility) to `hidden`. The hidden links are invisible and would not affect the [graph layout](/docs/concepts/graph-layout).
 
 Alternatively, a link type visibility can be set to `withoutLabel` to display it as path (line) only without any additional labels.
 

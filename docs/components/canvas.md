@@ -1,14 +1,14 @@
 ---
-title: Canvas
+title: <Canvas />
 ---
 
 # Canvas and widgets
 
-[Canvas](/docs/api/workspace/functions/Canvas) is a main component to display a scrollable canvas for the diagram with [elements](/docs/concepts/graph-model.md), [links](/docs/concepts/graph-model.md) and additional widgets.
+[`<Canvas />`](/docs/api/workspace/functions/Canvas) is a main component to display a scrollable canvas for the diagram with [elements](/docs/concepts/graph-model.md), [links](/docs/concepts/graph-model.md) and additional widgets.
 
 ## Getting the canvas instance
 
-[useCanvas()](/docs/api/workspace/functions/useCanvas) hook called from a canvas widget can be used to get the [CanvasApi](/docs/api/workspace/interfaces/CanvasApi) instance from a context to read or subscribe to the canvas state or perform viewport-related effects:
+[`useCanvas()`](/docs/api/workspace/functions/useCanvas) hook called from a canvas widget can be used to get the [`CanvasApi`](/docs/api/workspace/interfaces/CanvasApi) instance from a context to read or subscribe to the canvas state or perform viewport-related effects:
 
 ```ts
 function MyWidget() {
@@ -17,7 +17,7 @@ function MyWidget() {
 }
 ```
 
-Alternatively, with [SharedCanvasState.findAnyCanvas()](/docs/api/workspace/classes/SharedCanvasState.md#findanycanvas) or [SharedCanvasState.findAllCanvases()](/docs/api/workspace/classes/SharedCanvasState.md#findallcanvases) methods it is possible to get canvas instance outside the canvas component:
+Alternatively, with [`SharedCanvasState.findAnyCanvas()`](/docs/api/workspace/classes/SharedCanvasState.md#findanycanvas) or [`SharedCanvasState.findAllCanvases()`](/docs/api/workspace/classes/SharedCanvasState.md#findallcanvases) methods it is possible to get canvas instance outside the canvas component:
 
 ```ts
 function NonWidgetComponent {

@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # Workspace Context
 
-Reactodia uses a common context to connect its components with the [graph model](/docs/concepts/graph-model) and other services such as [graph layout](/docs/concepts/layout-workers), [i18n](/docs/concepts/i18n) and [visual graph authoring](/docs/concepts/graph-authoring).
+Reactodia uses a common context to connect its components with the [graph model](/docs/concepts/graph-model) and other services such as [graph layout](/docs/concepts/graph-layout), [i18n](/docs/concepts/i18n) and [visual graph authoring](/docs/concepts/graph-authoring).
 
 ## Services and stores in the context
 

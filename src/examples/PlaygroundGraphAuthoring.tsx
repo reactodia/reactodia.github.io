@@ -20,12 +20,9 @@ export function PlaygroundGraphAuthoring() {
     type: 'url',
     url: 'https://reactodia.github.io/resources/orgOntology.ttl',
   });
-  const [searchCommands] = React.useState(() =>
-    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
-  );
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model, editor, performLayout} = context;
+    const {model, editor, getCommandBus, performLayout} = context;
     editor.setAuthoringMode(true);
 
     let turtleData: string;
@@ -61,7 +58,8 @@ export function PlaygroundGraphAuthoring() {
       ]);
       await performLayout({signal});
     } else {
-      searchCommands.trigger('focus', {sectionKey: 'elementTypes'});
+      getCommandBus(Reactodia.UnifiedSearchTopic)
+        .trigger('focus', {sectionKey: 'elementTypes'});
     }
   }, [dataSource]);
 
@@ -74,25 +72,14 @@ export function PlaygroundGraphAuthoring() {
       defaultLayout={defaultLayout}
       metadataProvider={metadataProvider}
       validationProvider={validationProvider}
-      renameLinkProvider={renameLinkProvider}
-      typeStyleResolver={Reactodia.SemanticTypeStyles}
-      onIriClick={({iri}) => window.open(iri)}>
+      renameLinkProvider={renameLinkProvider}>
       <Reactodia.DefaultWorkspace
-        canvas={{
-          linkTemplateResolver: type => {
-            if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
-              return Reactodia.DefaultLinkTemplate;
-            }
-            return Reactodia.OntologyLinkTemplates(type);
-          },
-        }}
         menu={
           <>
             <ToolbarActionOpenTurtleGraph onOpen={setDataSource} />
             <ExampleToolbarMenu />
           </>
         }
-        searchCommands={searchCommands}
       />
     </Reactodia.Workspace>
   );

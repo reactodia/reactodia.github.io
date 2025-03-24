@@ -10,12 +10,8 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
 export function PlaygroundWikidata() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
-  const [searchCommands] = React.useState(() =>
-    new Reactodia.EventSource<Reactodia.UnifiedSearchCommands>
-  );
-
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model} = context;
+    const {model, getCommandBus} = context;
 
     const sparqlProvider = new Reactodia.SparqlDataProvider(
       {
@@ -40,7 +36,8 @@ export function PlaygroundWikidata() {
 
     await model.importLayout({ dataProvider, signal });
 
-    searchCommands.trigger('focus', {sectionKey: 'entities'});
+    getCommandBus(Reactodia.UnifiedSearchTopic)
+      .trigger('focus', {sectionKey: 'entities'});
   }, []);
 
   const suggestProperties = React.useCallback<Reactodia.PropertySuggestionHandler>(params => {
@@ -57,8 +54,7 @@ export function PlaygroundWikidata() {
 
   return (
     <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      onIriClick={({ iri }) => window.open(iri)}>
+      defaultLayout={defaultLayout}>
       <Reactodia.DefaultWorkspace
         menu={
           <>
@@ -66,7 +62,6 @@ export function PlaygroundWikidata() {
             <ClearWikidataCacheAction />
           </>
         }
-        searchCommands={searchCommands}
         connectionsMenu={{suggestProperties}}
         languages={[
           { code: 'de', label: 'Deutsch' },
