@@ -3,7 +3,7 @@ import Layout from '@theme/Layout';
 import { InlineReactodia, InlineReactodiaHead } from '@site/src/components/InlineReactodia';
 import { ViewSource } from '@site/src/components/ViewSource';
 
-export default function Example(): JSX.Element {
+export default function Example() {
   return (
     <>
       <InlineReactodiaHead />

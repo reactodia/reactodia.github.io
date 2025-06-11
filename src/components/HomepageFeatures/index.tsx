@@ -1,3 +1,4 @@
+import * as React from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
@@ -5,7 +6,7 @@ import styles from './styles.module.css';
 type FeatureItem = {
   title: string;
   imageUrl: string;
-  description: JSX.Element;
+  description: React.JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
@@ -59,7 +60,7 @@ function Feature({ title, imageUrl, description }: FeatureItem) {
   );
 }
 
-export function HomepageFeatures(): JSX.Element {
+export function HomepageFeatures() {
   return (
     <section className={styles.features}>
       <div className="container">

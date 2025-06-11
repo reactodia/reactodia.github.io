@@ -1,5 +1,5 @@
 import { Redirect } from '@docusaurus/router';
 
-export default function Page(): JSX.Element {
+export default function Page() {
   return <Redirect to='/playground/basic' />;
 }
