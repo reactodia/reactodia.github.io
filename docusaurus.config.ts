@@ -105,6 +105,7 @@ const config: Config = {
           items: [
             {to: '/playground/basic', label: 'Basic Workspace'},
             {to: '/playground/rdf-explorer', label: 'RDF Explorer'},
+            {to: '/playground/style-customization', label: 'Style Customization'},
             {to: '/playground/graph-authoring', label: 'Graph Authoring'},
             {to: '/playground/sparql', label: 'SPARQL Navigator'},
             {to: '/playground/stress-test', label: 'Stress Test'},

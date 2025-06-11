@@ -1,5 +1,5 @@
 ---
-sidebar_position: 11
+sidebar_position: 12
 title: Design System
 ---
 
@@ -208,6 +208,7 @@ The following properties allow to customize base border styling, including defau
 ```css
 --reactodia-border-width-base
 --reactodia-border-radius-base
+--reactodia-border-radius-s
 --reactodia-border-color-base
 ```
 
@@ -218,17 +219,25 @@ function Borders() {
         gap: 5,
         '--reactodia-border-width-base': undefined,
         '--reactodia-border-radius-base': undefined,
+        '--reactodia-border-radius-s': undefined,
     }}>
         <div style={{
             display: 'grid',
             padding: 10,
             justifyContent: 'center',
-            borderStyle: 'solid',
-            borderWidth: 'var(--reactodia-border-width-base)',
+            border: 'var(--reactodia-border-width-base) solid var(--reactodia-border-color-base)',
             borderRadius: 'var(--reactodia-border-radius-base)',
-            borderColor: 'var(--reactodia-border-color-base)',
         }}>
             Panel
+        </div>
+        <div style={{
+            display: 'grid',
+            padding: 10,
+            justifyContent: 'center',
+            border: 'var(--reactodia-border-width-base) solid var(--reactodia-border-color-base)',
+            borderRadius: 'var(--reactodia-border-radius-s)',
+        }}>
+            Panel with border-radius-s
         </div>
         <button type='button'
             className='reactodia-btn reactodia-btn-default'>

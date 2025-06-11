@@ -5,6 +5,15 @@
   width: 100%;
 }
 
-.featureSvg {
+.featureImageLight,
+.featureImageDark {
   height: 200px;
+}
+
+[data-theme='dark'] .featureImageLight {
+  display: none;
+}
+
+[data-theme='light'] .featureImageDark {
+  display: none;
 }

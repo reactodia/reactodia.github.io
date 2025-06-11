@@ -51,7 +51,6 @@ export function PlaygroundGraphAuthoring() {
         model.createElement('http://www.w3.org/ns/org#subOrganizationOf'),
         model.createElement('http://www.w3.org/ns/org#unitOf'),
       ];
-      model.history.execute(Reactodia.setElementExpanded(elements[0], true));
       await Promise.all([
         model.requestElementData(elements.map(el => el.iri)),
         model.requestLinks(),
@@ -80,6 +79,11 @@ export function PlaygroundGraphAuthoring() {
             <ExampleToolbarMenu />
           </>
         }
+        visualAuthoring={{
+          inputResolver: (property, inputProps) => property === 'http://www.w3.org/2000/01/rdf-schema#comment'
+            ? <Reactodia.FormInputList {...inputProps} valueInput={MultilineTextInput} />
+            : undefined,
+        }}
       />
     </Reactodia.Workspace>
   );
@@ -89,6 +93,10 @@ class RenameSubclassOfProvider extends Reactodia.RenameLinkToLinkStateProvider {
   override canRename(link: Reactodia.Link): boolean {
       return link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
   }
+}
+
+function MultilineTextInput(props: Reactodia.FormInputSingleProps) {
+  return <Reactodia.FormInputText {...props} multiline />;
 }
 
 function ToolbarActionOpenTurtleGraph(props: {

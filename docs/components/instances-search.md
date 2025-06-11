@@ -10,6 +10,8 @@ title: <InstancesSearch />
 The same functionality is also available as `<SearchSectionEntities />` [unified search section](/docs/components/unified-search.md).
 :::
 
+The component observes [`InstancesSearchTopic`](/docs/api/workspace/variables/InstancesSearchTopic.md) [command bus topic](/docs/concepts/event-system.md#command-bus).
+
 ```tsx live
 function Example() {
   const GRAPH_DATA = 'https://reactodia.github.io/resources/orgOntology.ttl';

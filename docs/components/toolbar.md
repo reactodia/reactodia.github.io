@@ -21,6 +21,75 @@ There are several built-in toolbar actions that can be displayed as menu items o
 | [`<ToolbarActionLayout />`](/docs/api/workspace/functions/ToolbarActionLayout.md) | Performs the default [graph layout algorithm](/docs/concepts/graph-layout.md) on the diagram content. |
 | [`<ToolbarLanguageSelector />`](/docs/api/workspace/functions/ToolbarLanguageSelector.md) | Displays a [data language](/docs/api/workspace/classes/DiagramModel.md#language) selector for the workspace. |
 
+### Example: additional toolbars
+
+```tsx live
+function Example() {
+  const {defaultLayout} = Reactodia.useWorker(Layouts);
+
+  const {onMount, getContext} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+    const {model, view, performLayout} = context;
+    model.createElement('http://example.com/entity1');
+    model.createElement('http://example.com/entity2');
+    model.createLinks({
+      sourceId: 'http://example.com/entity1',
+      targetId: 'http://example.com/entity2',
+      linkTypeId: 'http://example.com/connectedTo',
+      properties: {},
+    });
+    await performLayout({signal});
+  }, []);
+
+  return (
+    <div className='reactodia-live-editor'>
+      <Reactodia.Workspace ref={onMount}
+        defaultLayout={defaultLayout}>
+        <Reactodia.DefaultWorkspace
+          actions={null}
+          navigator={null}
+          canvasWidgets={[
+            <Reactodia.Toolbar key='bottom-left'
+              dock='sw'
+              menu={
+                <>
+                  <Reactodia.ToolbarActionClearAll />
+                  <Reactodia.ToolbarActionExport kind='print' />
+                </>
+              }>
+              <Reactodia.ToolbarActionUndo />
+              <Reactodia.ToolbarActionRedo />
+              <Reactodia.ToolbarActionLayout />
+            </Reactodia.Toolbar>,
+            <Reactodia.Toolbar key='top-right'
+              dock='ne'>
+              <Reactodia.ToolbarAction
+                onSelect={() => {
+                  const {overlay} = getContext();
+                  overlay.showDialog({content: <div>🎉</div>});
+                }}>
+                Show a dialog
+              </Reactodia.ToolbarAction>
+            </Reactodia.Toolbar>,
+            <Reactodia.Toolbar key='bottom-right'
+              dock='se'>
+              <Reactodia.ToolbarLanguageSelector
+                languages={[
+                  {code: 'de', label: 'Deutsch'},
+                  {code: 'en', label: 'english'},
+                  {code: 'es', label: 'español'},
+                  {code: 'ru', label: 'русский'},
+                  {code: 'zh', label: '汉语'},
+                ]}
+              />
+            </Reactodia.Toolbar>,
+          ]}
+        />
+      </Reactodia.Workspace>
+    </div>
+  );
+}
+```
+
 ## Styles
 
 The component look can be customized using the following CSS properties (see [design system](/docs/concepts/design-system.mdx) for more information):

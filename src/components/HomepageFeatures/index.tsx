@@ -5,14 +5,16 @@ import styles from './styles.module.css';
 
 type FeatureItem = {
   title: string;
-  imageUrl: string;
+  imageLightUrl: string;
+  imageDarkUrl: string;
   description: React.JSX.Element;
 };
 
 const FeatureList: FeatureItem[] = [
   {
     title: 'Customizable Graph Navigator',
-    imageUrl: require('@site/static/img/feature-diagram.png').default,
+    imageLightUrl: require('@site/static/img/feature-diagram-light.png').default,
+    imageDarkUrl: require('@site/static/img/feature-diagram-dark.png').default,
     description: (
       <>
         Extend or customize graph workspace with React components.
@@ -23,7 +25,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Built-in Interaction Widgets',
-    imageUrl: require('@site/static/img/feature-interaction.png').default,
+    imageLightUrl: require('@site/static/img/feature-interaction-light.png').default,
+    imageDarkUrl: require('@site/static/img/feature-interaction-dark.png').default,
     description: (
       <>
         Reactodia was designed to have "batteries included" and contains
@@ -34,7 +37,8 @@ const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Visual Graph Editing',
-    imageUrl: require('@site/static/img/feature-authoring.png').default,
+    imageLightUrl: require('@site/static/img/feature-authoring-light.png').default,
+    imageDarkUrl: require('@site/static/img/feature-authoring-dark.png').default,
     description: (
       <>
         Edit graph data visually &mdash; create new entities, connect
@@ -46,11 +50,12 @@ const FeatureList: FeatureItem[] = [
   },
 ];
 
-function Feature({ title, imageUrl, description }: FeatureItem) {
+function Feature({ title, imageLightUrl, imageDarkUrl, description }: FeatureItem) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <img src={imageUrl} className={styles.featureSvg} />
+        <img src={imageLightUrl} className={styles.featureImageLight} />
+        <img src={imageDarkUrl} className={styles.featureImageDark} />
       </div>
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>

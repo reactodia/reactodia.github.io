@@ -25,7 +25,7 @@ function SimpleExample() {
 
         // Create empty diagram and put owl:Class entities with links between them
         await model.createNewDiagram({dataProvider, signal});
-        const elementTypeId = 'http://www.w3.org/2002/07/owl#Class' as Reactodia.ElementTypeIri;
+        const elementTypeId = 'http://www.w3.org/2002/07/owl#Class';
         for (const {element} of await dataProvider.lookup({elementTypeId})) {
             model.createElement(element);
         }

@@ -122,3 +122,45 @@ class MyObservableThing {
 :::tip
 [`EventSource`](/docs/api/workspace/classes/EventSource) implements [`EventTrigger`](/docs/api/workspace/interfaces/EventTrigger) interface which can be used as a separate type, e.g. a combination of `Events<T> & EventTrigger<T>` can be used as an "event bus" to trigger and listen for events at the same time.
 :::
+
+## Using command bus to communicate with components {#command-bus}
+
+Reactodia workspace context provides means for components to communicate with each other through an event bus (**command bus**). It is possible to get a shared command bus instance by calling [`WorkspaceContext.getCommandBus()`](/docs/api/workspace/interfaces/WorkspaceContext.md) with a defined [`CommandBusTopic`](/docs/api/workspace/classes/CommandBusTopic.md) constant:
+
+```ts
+// Define possible commands for a bus
+interface MyCommands {
+  showAlert: { readonly message: string };
+}
+// Define a command bus topic
+const MyTopic = CommandBusTopic.define<MyCommands>();
+
+// Observe commands in a component
+function MyComponent() {
+  const {getCommandBus} = Reactodia.useWorkspace();
+
+  const commands = getCommandBus(MyTopic);
+  React.useEffect(() => {
+    // Subscribe for a command in a particular topic
+    const listener = new Reactodia.EventObserver();
+    listener.listen(commands, 'showAlert', ({message}) => {
+      showAlert(message);
+    });
+    return () => listener.stopListening();
+  }, [commands]);
+  // ...
+}
+
+// Trigger commands from any other place
+function OtherComponent() {
+  const {getCommandBus} = Reactodia.useWorkspace();
+
+  const onClick = () => {
+    getCommandBus(MyTopic)
+      .trigger('showAlert', {message: 'Hello!'});
+  };
+  // ...
+}
+```
+
+Each Reactodia [`<Workspace />`](/docs/components/workspace.md) instance maintains its own command buses for each topic not connected to other workspaces in any way.

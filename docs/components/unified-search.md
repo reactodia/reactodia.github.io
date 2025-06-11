@@ -6,6 +6,8 @@ title: <UnifiedSearch />
 
 [`<UnifiedSearch />`](/docs/api/workspace/functions/UnifiedSearch.md) is a component to display a search input with a dropdown for results.
 
+The component observes [`UnifiedSearchTopic`](/docs/api/workspace/variables/UnifiedSearchTopic.md) [command bus topic](/docs/concepts/event-system.md#command-bus).
+
 ## Search sections
 
 One or many available search sections (providers) can be specified:
@@ -15,6 +17,8 @@ One or many available search sections (providers) can be specified:
 | [`<SearchSectionElementTypes />`](/docs/api/workspace/functions/SearchSectionElementTypes.md) | Allows to lookup entity types displayed in the tree form and create new entities in [authoring mode](/docs/concepts/graph-authoring.md). |
 | [`<SearchSectionEntities />`](/docs/api/workspace/functions/SearchSectionEntities.md) | Allows to lookup entities using [data provider](/docs/concepts/data-provider.md). |
 | [`<SearchSectionLinkTypes />`](/docs/api/workspace/functions/SearchSectionLinkTypes.md) | Allows to lookup displayed link types and change their [visibility settings](/docs/api/workspace/classes/DiagramModel.md#getlinkvisibility). |
+
+`<SearchSectionEntities />` component observes [`InstancesSearchTopic`](/docs/api/workspace/variables/InstancesSearchTopic.md) [command bus topic](/docs/concepts/event-system.md#command-bus).
 
 ## Implement a custom search section
 

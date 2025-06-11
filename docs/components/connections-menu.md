@@ -6,6 +6,8 @@ title: <ConnectionsMenu />
 
 [`<ConnectionsMenu />`](/docs/api/workspace/functions/ConnectionsMenu) component is a [canvas widget](/docs/components/canvas.md) to explore and navigate the graph by adding connected entities to the diagram.
 
+The component observes [`ConnectionsMenuTopic`](/docs/api/workspace/variables/ConnectionsMenuTopic.md) [command bus topic](/docs/concepts/event-system.md#command-bus).
+
 ### Example: opening a connections menu on load
 
 ```tsx live

@@ -10,8 +10,9 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
 export function PlaygroundStressTest(props: {
   nodeCount?: number;
   edgesPerNode?: number;
+  propertiesPerEdge?: number;
 }) {
-  const {nodeCount = 500, edgesPerNode = 2} = props;
+  const {nodeCount = 500, edgesPerNode = 2, propertiesPerEdge = 0} = props;
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
@@ -19,7 +20,11 @@ export function PlaygroundStressTest(props: {
     const {model, view} = context;
 
     const dataProvider = new Reactodia.RdfDataProvider();
-    const [graphData, nodes] = createLayout(nodeCount, edgesPerNode, dataProvider.factory);
+    const [graphData, nodes] = createLayout(dataProvider.factory, {
+      nodeCount,
+      edgesPerNode,
+      propertiesPerEdge,
+    });
     dataProvider.addGraph(graphData);
 
     await model.importLayout({dataProvider, signal});
@@ -64,19 +69,18 @@ export function PlaygroundStressTest(props: {
   );
 }
 
-function createLayout(
-  nodeCount: number,
-  edgesPerNode: number,
-  factory: Reactodia.Rdf.DataFactory
-): [Reactodia.Rdf.Quad[], Reactodia.ElementIri[]] {
-  const rdfType = factory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
-  const rdfsLabel = factory.namedNode('http://www.w3.org/2000/01/rdf-schema#label');
+function createLayout(factory: Reactodia.Rdf.DataFactory, options: {
+  nodeCount: number;
+  edgesPerNode: number;
+  propertiesPerEdge: number;
+}): [Reactodia.Rdf.Quad[], Reactodia.ElementIri[]] {
+  const {nodeCount, edgesPerNode, propertiesPerEdge} = options;
+  const rdfType = factory.namedNode(Reactodia.rdf.type);
+  const rdfsLabel = factory.namedNode(Reactodia.rdfs.label);
   const nodeType = factory.namedNode('urn:test:Node');
   const linkType = factory.namedNode('urn:test:link');
 
-  const makeNodeIri = (n: number) => factory.namedNode(
-    `urn:test:n:${n}` as Reactodia.ElementIri
-  );
+  const makeNodeIri = (n: number) => factory.namedNode(`urn:test:n:${n}`);
 
   const elementIris: Reactodia.ElementIri[] = [];
   const quads: Reactodia.Rdf.Quad[] = [];
@@ -91,7 +95,13 @@ function createLayout(
     for (let j = 0; j < edgesPerNode; j++) {
       const target = i - j - 1;
       if (target >= 0) {
-        quads.push(factory.quad(iri, linkType, makeNodeIri(target)));
+        const link = factory.quad(iri, linkType, makeNodeIri(target));
+        quads.push(link);
+        for (let k = 0; k < propertiesPerEdge; k++) {
+          quads.push(factory.quad(
+            link, factory.namedNode(`urn:test:property-${k}`), factory.literal(String(k))
+          ));
+        };
       }
     }
   }

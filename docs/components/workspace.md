@@ -50,3 +50,27 @@ function Example() {
   );
 }
 ```
+
+## Customize type styles
+
+Reactodia displays [entities](/docs/concepts/graph-model.md) in different places throughout the workspace components. It is possible to customize overall style based on entity types (accent color and icon) by providing a custom [`TypeStyleResolver`](/docs/api/workspace/type-aliases/TypeStyleResolver.md) to the `<Workspace typeStyleResolver={...} />`:
+
+```tsx
+<Reactodia.Workspace
+  typeStyleResolver={types => {
+      if (types.includes('http://www.w3.org/2000/01/rdf-schema#Class')) {
+          return {icon: CERTIFICATE_ICON, iconMonochrome: true};
+      } else if (types.includes('http://www.w3.org/2002/07/owl#Class')) {
+          return {icon: CERTIFICATE_ICON, iconMonochrome: true};
+      } else if (types.includes('http://www.w3.org/2002/07/owl#ObjectProperty')) {
+          return {icon: COG_ICON, iconMonochrome: true};
+      } else if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
+          return {color: '#00b9f2'};
+      } else {
+          return undefined;
+      }
+  }}
+  ...>
+```
+
+By default, the colors are assigned deterministically based on total hash of the types in the [entity data](/docs/api/workspace/interfaces/ElementModel.md).

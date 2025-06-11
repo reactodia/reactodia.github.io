@@ -89,8 +89,8 @@ function ExampleRdfProviderProvisionFromJGF() {
     } as const;
 
     const factory = Reactodia.Rdf.DefaultDataFactory;
-    const hasType = factory.namedNode('http://www.w3.org/1999/02/22-rdf-syntax-ns#type');
-    const hasLabel = factory.namedNode('http://www.w3.org/2000/01/rdf-schema#label');
+    const hasType = factory.namedNode(Reactodia.rdf.type);
+    const hasLabel = factory.namedNode(Reactodia.rdfs.label);
 
     const triples: Reactodia.Rdf.Quad[] = [];
     for (const [id, node] of Object.entries(jsonGraph.graph.nodes)) {

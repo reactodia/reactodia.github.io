@@ -47,20 +47,21 @@ function WorkingWithDiagramModel() {
     const {model} = Reactodia.useWorkspace();
 
     // Different ways to place entities to the canvas
-    const element1 = model.createElement('http://example.com/element1' as Reactodia.ElementIri);
-    const element2 = model.createElement('urn:my:element2'  as Reactodia.ElementIri);
+    const element1 = model.createElement('http://example.com/element1');
+    const element2 = model.createElement('urn:my:element2');
     const element3 = model.createElement({
-        id: 'my-schema:element3' as Reactodia.ElementIri,
-        types: ['urn:my:MyElement' as Reactodia.ElementTypeIri],
-        label: ['Element3'],
-        properties: {},
+        id: 'my-schema:element3',
+        types: ['urn:my:MyElement'],
+        properties: {
+            [Reactodia.rdfs.label]: [model.factory.literal('Element3')],
+        },
     });
 
     // Place relations between specified entities (must exist on the diagram)
     const [link1] = model.createLinks({
         sourceId: element1.iri,
         targetId: element2.iri,
-        linkTypeId: 'urn:my:linkTypeA' as Reactodia.LinkTypeIri,
+        linkTypeId: 'urn:my:linkTypeA',
         properties: {},
     });
 
@@ -100,8 +101,8 @@ Alternatively, a link type visibility can be set to `withoutLabel` to display it
 function WorkingWithLinkVisibility() {
     const {model} = Reactodia.useWorkspace();
 
-    model.setLinkVisibility('urn:my:linkTypeA' as Reactodia.LinkTypeIri, 'hidden');
-    model.setLinkVisibility('urn:my:linkTypeB' as Reactodia.LinkTypeIri, 'withoutLabel');
+    model.setLinkVisibility('urn:my:linkTypeA', 'hidden');
+    model.setLinkVisibility('urn:my:linkTypeB', 'withoutLabel');
 }
 ```
 
