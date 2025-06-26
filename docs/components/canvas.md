@@ -158,6 +158,8 @@ It is possible to export a "snapshot" of currently rendered canvas content into 
 :::note
 When exporting into an SVG, the resulting document would include all diagram content as well as every CSS rule which applies to any DOM element inside the diagram content.
 
+If possible, every image referenced from `<img>` elements, `mask` (`mask-image`) and `background` (`background-image`) CSS properties are fetched and embedded as base64 data URL strings. To ensure that images can be embedded (to export the diagram as a complete raster image) it is required that a used image can be loaded into a [`<img crossorigin="anonymous">`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/crossorigin) element.
+
 Diagram is always exported in the [light theme](/docs/concepts/design-system.mdx).
 :::
 
