@@ -122,14 +122,10 @@ function ExampleRdfProviderProvisionFromJGF() {
     dataProvider.addGraph(triples);
 
     await model.createNewDiagram({dataProvider, signal});
-
-    const elementIris: Reactodia.ElementIri[] = [];
     for (const {element} of await dataProvider.lookup({elementTypeId: 'graph:type:Person'})) {
-      elementIris.push(model.createElement(element).iri);
+      model.createElement(element.id);
     }
-
-    await model.requestElementData(elementIris);
-    await model.requestLinks();
+    await model.requestData();
     await performLayout({signal});
   }, []);
 

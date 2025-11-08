@@ -67,6 +67,7 @@ The component look can be customized using the following CSS properties (see [de
 | `--reactodia-dialog-border-color`  | Border color for the dialog (uses the base border color if not set). |
 | `--reactodia-dialog-border-radius` | Border radius for the dialog (uses the base border radius if not set). |
 | `--reactodia-dialog-border-width`  | Border width for the dialog (uses the base border width if not set). |
+| `--reactodia-dialog-viewport-breakpoint-s` | Makes the dialog fill the viewport if the available width is less or equal to that value. |
 
 ## Overlay tasks
 

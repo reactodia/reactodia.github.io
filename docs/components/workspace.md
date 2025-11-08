@@ -16,9 +16,9 @@ title: <Workspace />
 
 The UI of the workspace is defined by the child components provided to the `<Workspace />`:
 
-Default built-in layout is provided as [`<DefaultWorkspace />`](/docs/api/workspace/functions/DefaultWorkspace) component which includes the [unified search](/docs/components/unified-search.md), main menu and action [toolbars](/docs/components/toolbar.md) and all built-in [canvas widgets](/docs/components/canvas.md).
+Default built-in layout is provided as [`<DefaultWorkspace />`](/docs/api/workspace/functions/DefaultWorkspace) component which includes the [unified search](/docs/components/unified-search.md), main menu and action [toolbars](/docs/components/toolbar.md) and all built-in [canvas widgets](/docs/components/canvas.md#widgets).
 
-Alternative (classic) built-in layout is provided as [`<ClassicWorkspace />`](/docs/api/workspace/functions/ClassicWorkspace) component which uses [layout panels](/docs/components/workspace-layout-panels.md) with [class tree](/docs/components/class-tree.md), [instances search](/docs/components/instances-search.md), [link types toolbox](/docs/components/link-types-toolbox.md), [`<ClassicToolbar />`](/docs/api/workspace/functions/ClassicToolbar) and all built-in [canvas widgets](/docs/components/canvas.md).
+Alternative (classic) built-in layout is provided as [`<ClassicWorkspace />`](/docs/api/workspace/functions/ClassicWorkspace) component which uses [layout panels](/docs/components/workspace-layout-panels.md) with [class tree](/docs/components/class-tree.md), [instances search](/docs/components/instances-search.md), [link types toolbox](/docs/components/link-types-toolbox.md), [`<ClassicToolbar />`](/docs/api/workspace/functions/ClassicToolbar) and all built-in [canvas widgets](/docs/components/canvas.md#widgets).
 
 When providing a custom workspace layout it is required to use [`<WorkspaceRoot />`](/docs/api/workspace/functions/WorkspaceRoot) as a top-level parent component to establish necessary style defaults, including styles for light or dark [color scheme](/docs/concepts/design-system.mdx).
 

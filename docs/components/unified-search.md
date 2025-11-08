@@ -104,6 +104,8 @@ function SearchWithNpm() {
     <div className='reactodia-live-editor'>
       <Reactodia.Workspace defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
+          mainToolbar={{dock: 'n'}}
+          navigator={{expanded: false}}
           search={{sections}}
         />
       </Reactodia.Workspace>

@@ -31,10 +31,9 @@ function Example() {
     dataProvider.addGraph(graphData);
     await model.createNewDiagram({dataProvider, signal});
     const element = model.createElement('http://www.w3.org/ns/org#Organization');
-    await Promise.all([
-        model.requestElementData([element.iri]),
-        model.requestLinks(),
-    ]);
+    await model.requestData();
+    await performLayout({signal});
+    model.setSelection([element]);
     editor.setAuthoringMode(true);
     getCommandBus(Reactodia.VisualAuthoringTopic)
         .trigger('editEntity', {target: element});
@@ -59,6 +58,7 @@ function Example() {
         defaultLayout={defaultLayout}>
           <Reactodia.DefaultWorkspace
             search={null}
+            navigator={{expanded: false}}
             visualAuthoring={{
               inputResolver: (property, inputProps) =>
                 property === RDF_COMMENT

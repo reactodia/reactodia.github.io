@@ -19,35 +19,53 @@ const rdfs = vocabulary('http://www.w3.org/2000/01/rdf-schema#', [
 const SIMULATED_DELAY: number = 50; /* ms */
 
 export class ExampleMetadataProvider extends Reactodia.BaseMetadataProvider {
-  private readonly propertyTypes = [owl.AnnotationProperty, owl.DatatypeProperty, owl.ObjectProperty];
+  private readonly propertyTypes = [
+    owl.AnnotationProperty,
+    owl.DatatypeProperty,
+    owl.ObjectProperty,
+  ];
   private readonly editableTypes = new Set([owl.Class, ...this.propertyTypes]);
-  private readonly editableRelations = new Set<Reactodia.LinkTypeIri>([rdfs.domain, rdfs.range]);
-  private readonly literalLanguages: ReadonlyArray<string> = ['de', 'en', 'es', 'ru', 'zh'];
+  private readonly editableRelations = new Set<Reactodia.LinkTypeIri>([
+    rdfs.domain,
+    rdfs.range,
+  ]);
+  private readonly literalLanguages: ReadonlyArray<string> =
+    ['de', 'en', 'es', 'ru', 'zh'];
 
   constructor() {
     super({
       getLiteralLanguages: () => this.literalLanguages,
       createEntity: async (type, {signal}) => {
         await Reactodia.delay(SIMULATED_DELAY, {signal});
-        const random32BitDigits = Math.floor((1 + Math.random()) * 0x100000000).toString(16).substring(1);
+        const random32BitDigits = Math.floor((1 + Math.random()) * 0x100000000)
+          .toString(16).substring(1);
         const typeLabel = Reactodia.Rdf.getLocalName(type) ?? 'Entity';
         return {
-          id: `${type}_${random32BitDigits}`,
-          types: [type],
-          properties: {
-            [Reactodia.rdfs.label]: [
-              Reactodia.Rdf.DefaultDataFactory.literal(`New ${typeLabel}`)
-            ]
+          data: {
+            id: `${type}_${random32BitDigits}`,
+            types: [type],
+            properties: {
+              [Reactodia.rdfs.label]: [
+                Reactodia.Rdf.DefaultDataFactory.literal(`New ${typeLabel}`)
+              ]
+            },
           },
+          elementState: type === owl.Class
+            ? Reactodia.TemplateState.empty.set(
+              Reactodia.TemplateProperties.Expanded, true
+            )
+            : undefined,
         };
       },
       createRelation: async (source, target, linkType, {signal}) => {
         await Reactodia.delay(SIMULATED_DELAY, {signal});
         return {
-          sourceId: source.id,
-          targetId: target.id,
-          linkTypeId: linkType,
-          properties: {},
+          data: {
+            sourceId: source.id,
+            targetId: target.id,
+            linkTypeId: linkType,
+            properties: {},
+          },
         };
       },
       canConnect: async (source, target, linkType, {signal}) => {

@@ -4,7 +4,7 @@ title: <ConnectionsMenu />
 
 # Connections Menu
 
-[`<ConnectionsMenu />`](/docs/api/workspace/functions/ConnectionsMenu) component is a [canvas widget](/docs/components/canvas.md) to explore and navigate the graph by adding connected entities to the diagram.
+[`<ConnectionsMenu />`](/docs/api/workspace/functions/ConnectionsMenu) component is a [canvas widget](/docs/components/canvas.md#widgets) to explore and navigate the graph by adding connected entities to the diagram.
 
 The component observes [`ConnectionsMenuTopic`](/docs/api/workspace/variables/ConnectionsMenuTopic.md) [command bus topic](/docs/concepts/event-system.md#command-bus).
 
@@ -27,6 +27,7 @@ function Example() {
 
     const target = model.createElement('http://www.w3.org/ns/org#Organization');
     await model.requestElementData([target.iri]);
+    await performLayout({signal});
 
     model.setSelection([target]);
     getCommandBus(Reactodia.ConnectionsMenuTopic)
@@ -37,7 +38,10 @@ function Example() {
     <div className='reactodia-live-editor'>
       <Reactodia.Workspace ref={onMount}
         defaultLayout={defaultLayout}>
-        <Reactodia.DefaultWorkspace search={null} />
+        <Reactodia.DefaultWorkspace
+          search={null}
+          navigator={{expanded: false}}
+        />
       </Reactodia.Workspace>
     </div>
   );
