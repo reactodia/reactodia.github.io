@@ -2,6 +2,8 @@ import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 
+const libraryPathPrefix = process.env.CI ? `.` : '..';
+
 const config: Config = {
   title: 'Reactodia',
   tagline: 'Visual interaction with graph data in a form of a diagram.',
@@ -52,12 +54,12 @@ const config: Config = {
       'docusaurus-plugin-typedoc',
       {
         entryPoints: [
-          '../reactodia-workspace/src/workspace.ts',
-          '../reactodia-workspace/src/layout-sync.ts',
-          '../reactodia-workspace/src/layout.worker.ts',
-          '../reactodia-workspace/src/legacy-styles.tsx',
+          `${libraryPathPrefix}/reactodia-workspace/src/workspace.ts`,
+          `${libraryPathPrefix}/reactodia-workspace/src/layout-sync.ts`,
+          `${libraryPathPrefix}/reactodia-workspace/src/layout.worker.ts`,
+          `${libraryPathPrefix}/reactodia-workspace/src/legacy-styles.tsx`,
         ],
-        tsconfig: '../reactodia-workspace/tsconfig.typings.json',
+        tsconfig: `${libraryPathPrefix}/reactodia-workspace/tsconfig.typings.json`,
         readme: 'none',
         hideGroupHeadings: true,
         excludePrivate: true,
