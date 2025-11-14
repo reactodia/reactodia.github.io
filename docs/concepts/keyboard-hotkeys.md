@@ -29,7 +29,7 @@ Example hotkey strings: `Ctrl+Alt+K`, `Alt+Meta+Q`, `Ctrl+/`, `None+G`.
 
 ## How to define a hotkey
 
-At high level, various Reactodia components provide a prop for a hotkey string to perform a certain action, see [`<ToolbarAction />`](/docs/components/toolbar.md), [`<SelectionAction />`](/docs/components/selection.md):
+At high level, various Reactodia components provide a prop for a hotkey string to perform a certain action, see [`<ToolbarAction />`](/docs/components/toolbar.md), [`<SelectionAction />`](/docs/components/selection.md#selecting-elements) and [`<LinkAction />`](/docs/components/selection.md#selecting-links):
 
 ```tsx
 {/* Default hotkeys for the built-in components: */}

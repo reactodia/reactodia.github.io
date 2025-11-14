@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { HashMap } from '@reactodia/hashmap';
 import * as Reactodia from '@reactodia/workspace';
 import { saveAs } from 'file-saver';
 
@@ -12,8 +13,18 @@ export function ExampleToolbarMenu() {
         onSelect={async file => {
           const preloadedElements = new Map<Reactodia.ElementIri, Reactodia.ElementModel>();
           for (const element of model.elements) {
-            for (const data of Reactodia.iterateEntitiesOf(element)) {
-              preloadedElements.set(data.id, data);
+            for (const entity of Reactodia.iterateEntitiesOf(element)) {
+              preloadedElements.set(entity.id, entity);
+            }
+          }
+
+          const preloadedLinks = new HashMap<Reactodia.LinkKey, Reactodia.LinkModel>(
+            Reactodia.hashLink,
+            Reactodia.equalLinks
+          );
+          for (const link of model.links) {
+            for (const relation of Reactodia.iterateRelationsOf(link)) {
+              preloadedLinks.set(relation, relation);
             }
           }
 
@@ -25,6 +36,7 @@ export function ExampleToolbarMenu() {
               dataProvider: model.dataProvider,
               diagram: diagramLayout,
               preloadedElements,
+              preloadedLinks,
               validateLinks: true,
             });
           } catch (err) {

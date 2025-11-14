@@ -4,7 +4,7 @@ title: <Toolbar />
 
 # Toolbar and menu
 
-[`<Toolbar />`](/docs/api/workspace/functions/Toolbar) component is a [canvas widget](/docs/components/canvas.md) to display a simple toolbar with a an optional dropdown menu.
+[`<Toolbar />`](/docs/api/workspace/functions/Toolbar) component is a [canvas widget](/docs/components/canvas.md#widgets) to display a simple toolbar with a an optional dropdown menu.
 
 ## Toolbar actions
 
@@ -46,44 +46,39 @@ function Example() {
         defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
           actions={null}
-          navigator={null}
-          canvasWidgets={[
-            <Reactodia.Toolbar key='bottom-left'
-              dock='sw'
-              menu={
-                <>
-                  <Reactodia.ToolbarActionClearAll />
-                  <Reactodia.ToolbarActionExport kind='print' />
-                </>
-              }>
-              <Reactodia.ToolbarActionUndo />
-              <Reactodia.ToolbarActionRedo />
-              <Reactodia.ToolbarActionLayout />
-            </Reactodia.Toolbar>,
-            <Reactodia.Toolbar key='top-right'
-              dock='ne'>
-              <Reactodia.ToolbarAction
-                onSelect={() => {
-                  const {overlay} = getContext();
-                  overlay.showDialog({content: <div>🎉</div>});
-                }}>
-                Show a dialog
-              </Reactodia.ToolbarAction>
-            </Reactodia.Toolbar>,
-            <Reactodia.Toolbar key='bottom-right'
-              dock='se'>
-              <Reactodia.ToolbarLanguageSelector
-                languages={[
-                  {code: 'de', label: 'Deutsch'},
-                  {code: 'en', label: 'english'},
-                  {code: 'es', label: 'español'},
-                  {code: 'ru', label: 'русский'},
-                  {code: 'zh', label: '汉语'},
-                ]}
-              />
-            </Reactodia.Toolbar>,
-          ]}
-        />
+          navigator={null}>
+          <Reactodia.Toolbar dock='sw'
+            menu={
+              <>
+                <Reactodia.ToolbarActionClearAll />
+                <Reactodia.ToolbarActionExport kind='print' />
+              </>
+            }>
+            <Reactodia.ToolbarActionUndo />
+            <Reactodia.ToolbarActionRedo />
+            <Reactodia.ToolbarActionLayout />
+          </Reactodia.Toolbar>
+          <Reactodia.Toolbar dock='ne'>
+            <Reactodia.ToolbarAction
+              onSelect={() => {
+                const {overlay} = getContext();
+                overlay.showDialog({content: <div>🎉</div>});
+              }}>
+              Show a dialog
+            </Reactodia.ToolbarAction>
+          </Reactodia.Toolbar>
+          <Reactodia.Toolbar dock='se'>
+            <Reactodia.ToolbarLanguageSelector
+              languages={[
+                {code: 'de', label: 'Deutsch'},
+                {code: 'en', label: 'english'},
+                {code: 'es', label: 'español'},
+                {code: 'ru', label: 'русский'},
+                {code: 'zh', label: '汉语'},
+              ]}
+            />
+          </Reactodia.Toolbar>
+        </Reactodia.DefaultWorkspace>
       </Reactodia.Workspace>
     </div>
   );

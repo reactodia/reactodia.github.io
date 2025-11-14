@@ -14,10 +14,6 @@ Each **element** is identified by a [generated ID](/docs/api/workspace/classes/E
 
 Each **link** is identified by a [generated ID](/docs/api/workspace/classes/Link.md#generateid), has source and target element IDs, and a [link type IRI](/docs/api/workspace/type-aliases/LinkTypeIri.md). In its state it stores path geometry as a [collection of points](/docs/api/workspace/classes/Link.md#vertices) (in [paper coordinates](/docs/concepts/canvas-coordinates)) and an arbitrary persisted [link state](/docs/api/workspace/classes/Link.md#linkstate).
 
-:::note
-Currently there is only one concrete element type besides the data graph ones: [`VoidElement`](/docs/api/workspace/classes/VoidElement.md) which is displayed as nothing (empty point) but can be connected to with the links.
-:::
-
 ## Data graph
 
 While elements and links are considered to be diagram graph nodes and edges, some of them can represent entities and relations from (external) data graph defined by the [`DataProvider`](/docs/concepts/data-provider):
@@ -38,6 +34,25 @@ See how the library uses [IRIs and RDF](/docs/concepts/data-provider#iri-and-rdf
 Basically, a sub-graph of a full external data graph composed of entities and relations forms a diagram on the canvas. By exploring that graph, other entities and relation are added to the diagram content, expanding the view of the data graph and presenting more interconnections throughout the data.
 
 Using the [graph authoring](/docs/concepts/graph-authoring) feature it is possible to work on the changes to the data graph and apply it once ready.
+
+The library provides [default templates](/docs/components/canvas.md#customization) and UI support ([`<VisualAuthoring />`](/docs/components/visual-authoring.md)) for entity elements and relation links.
+
+## Annotations
+
+Additional elements and links can be added to the diagram content to annotate other graph elements:
+
+| Cell type | Description |
+|-----------|-------------|
+| [`AnnotationElement`](/docs/api/workspace/classes/AnnotationElement.md) | Diagram-only annotation element, [exported and imported](#import-and-export) with the diagram. |
+| [`AnnotationLink`](/docs/api/workspace/classes/AnnotationLink.md) | Diagram-only annotation link, [exported and imported](#import-and-export) with the diagram. |
+
+These elements and links behave as normal graph nodes and edges i.e. participate in [graph layout](/docs/concepts/graph-layout.md), can be [selected](/docs/components/selection.md), etc. At the same time, annotation elements and links do not have any data from [data graph](#data-graph), have user-editable content stored in the [`template state`](/docs/api/workspace/classes/Element.md#elementstate) and can be created, changed or deleted independently from the [graph authoring mode](/docs/concepts/graph-authoring.md).
+
+The library provides [default templates](/docs/components/canvas.md#customization) and UI support ([`<AnnotationSupport />`](/docs/components/annotation-support.md)) for annotations.
+
+:::note
+The library also defines utility element type [`VoidElement`](/docs/api/workspace/classes/VoidElement.md) which is displayed as nothing (empty point) but can be connected to with the links.
+:::
 
 ## Manipulating the diagram
 
@@ -142,5 +157,7 @@ function WorkingWithImportExport() {
 ```
 
 :::note
-Currently only [data graph](#data-graph) elements and links (including groups) can be exported and imported.
+**Unstable**: Additional element and link cell types can be imported using `elementCellTypes` and `linkCellTypes` options for [`DataDiagramModel.importLayout()`](/docs/api/workspace/classes/DataDiagramModel.md#importlayout).
+
+See [`SerializableElementCell`](/docs/api/workspace/interfaces/SerializableElementCell.md) and [`SerializableLinkCell`](/docs/api/workspace/interfaces/SerializableLinkCell.md) contracts for diagram cell to be serializable.
 :::

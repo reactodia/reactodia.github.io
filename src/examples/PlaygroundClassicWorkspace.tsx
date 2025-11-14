@@ -53,17 +53,17 @@ export function PlaygroundClassicWorkspace() {
       typeStyleResolver={SemanticTypeStyles}>
       <Reactodia.ClassicWorkspace
         canvas={{
-          elementTemplateResolver: types => {
+          elementTemplateResolver: (types, element) => {
             if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
               return Reactodia.ClassicTemplate;
             }
             return undefined;
           },
-          linkTemplateResolver: type => {
-            if (type === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
-              return Reactodia.DefaultLinkTemplate;
+          linkTemplateResolver: (linkType, link) => {
+            if (linkType === 'http://www.w3.org/2000/01/rdf-schema#subClassOf') {
+              return Reactodia.StandardLinkTemplate;
             }
-            return OntologyLinkTemplates(type);
+            return OntologyLinkTemplates(linkType);
           },
         }}
         toolbar={{

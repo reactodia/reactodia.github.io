@@ -44,10 +44,7 @@ export function PlaygroundStressTest(props: {
       }));
     }
     batch.store();
-    await Promise.all([
-      model.requestElementData(nodes),
-      model.requestLinks(),
-    ]);
+    await model.requestData();
     model.history.reset();
 
     const canvas = view.findAnyCanvas();

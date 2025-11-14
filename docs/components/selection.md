@@ -4,7 +4,7 @@ title: <Selection />, <Halo /> and <HaloLink />
 
 # Halo and Selection
 
-There are several [canvas widget](/docs/components/canvas.md) components which can be used to display actions on the selected diagram elements or links.
+There are several [canvas widget](/docs/components/canvas.md#widgets) components which can be used to display actions on the selected diagram elements or links.
 
 ## Selecting elements
 
@@ -24,8 +24,9 @@ There are several built-in element actions that can be used:
 | [`<SelectionActionAnchor />`](/docs/api/workspace/functions/SelectionActionAnchor.md) | Displays a link to the entity IRI. |
 | [`<SelectionActionConnections />`](/docs/api/workspace/functions/SelectionActionConnections.md) | Opens the [connections menu](/docs/components/connections-menu.md) for the selected entities. |
 | [`<SelectionActionAddToFilter />`](/docs/api/workspace/functions/SelectionActionAddToFilter.md) | Adds the selected entity to the [instances search](/docs/components/instances-search.md) filter. |
-| [`<SelectionActionGroup />`](/docs/api/workspace/functions/SelectionActionGroup.md) | [Groups or ungroups](/docs/api/workspace/classes/DataDiagramModel.md#group) selected elements. |
-| [`<SelectionActionEstablishLink />`](/docs/api/workspace/functions/SelectionActionEstablishLink.md) | Starts [creating a relation](/docs/concepts/graph-authoring.md) to an existing or a new entity by dragging it. |
+| [`<SelectionActionGroup />`](/docs/api/workspace/functions/SelectionActionGroup.md) | [Groups or ungroups](/docs/api/workspace/functions/groupEntities.md) selected elements. |
+| [`<SelectionActionEstablishLink />`](/docs/api/workspace/functions/SelectionActionEstablishLink.md) | Starts creating a [relation](/docs/concepts/graph-authoring.md) or [annotation link](/docs/concepts/graph-model.md#annotations) to an element by dragging it. |
+| [`<SelectionActionAnnotate />`](/docs/api/workspace/functions/SelectionActionAnnotate.md) | Creates a new [annotaion](/docs/api/workspace/classes/AnnotationElement.md) connected to the selected elements. |
 
 ## Selecting links
 
@@ -37,8 +38,8 @@ There are several built-in link actions that can be used:
 | [`<LinkAction />`](/docs/api/workspace/functions/LinkAction.md) | Base component to display an action on the selected link. <br/>[`useLinkActionContext()`](/docs/api/workspace/functions/useLinkActionContext.md) hook can be used to get additional context for the selected link, including path geometry. |
 | [`<LinkActionSpinner />`](/docs/api/workspace/functions/LinkActionSpinner.md) | Displays a loading spinner (useful as building block for other action components). |
 | [`<LinkActionEdit />`](/docs/api/workspace/functions/LinkActionEdit.md) | Starts [editing the relation](/docs/concepts/graph-authoring.md). |
-| [`<LinkActionDelete />`](/docs/api/workspace/functions/LinkActionDelete.md) | Deletes [the relation](/docs/concepts/graph-authoring.md). |
-| [`<LinkActionMoveEndpoint />`](/docs/api/workspace/functions/LinkActionMoveEndpoint.md) | Displays a handle which allows to [change the relation](/docs/concepts/graph-authoring.md) by moving its endpoint (source or target) to another entity. |
+| [`<LinkActionDelete />`](/docs/api/workspace/functions/LinkActionDelete.md) | Deletes the [relation](/docs/concepts/graph-authoring.md) or [annotation link](/docs/concepts/graph-model.md#annotations). |
+| [`<LinkActionMoveEndpoint />`](/docs/api/workspace/functions/LinkActionMoveEndpoint.md) | Displays a handle which allows to change the [relation](/docs/concepts/graph-authoring.md) or [annotation link](/docs/concepts/graph-model.md#annotations) by moving its endpoint (source or target) to another element. |
 | [`<LinkActionRename />`](/docs/api/workspace/functions/LinkActionRename.md) | Starts [renaming a link](/docs/api/workspace/interfaces/RenameLinkProvider.md) (change the label on the diagram only). |
 
 ## Styles
@@ -48,5 +49,8 @@ The component look can be customized using the following CSS properties (see [de
 | Property | Description |
 |----------|-------------|
 | `--reactodia-selection-icon-filter`  | [CSS filter](https://developer.mozilla.org/en-US/docs/Web/CSS/filter) for the element selection action icons. |
+| `--reactodia-selection-link-color`   | Link path highlight color when a link is selected. |
 | `--reactodia-selection-multiple-box-shadow` | Box shadow for the selection rectangle with multiple elements. |
-| `--reactodia-selection-single-box-shadow`  | Box shadow for the selection rectangle with a single element. |
+| `--reactodia-selection-single-box-color` | Rectangle border color for selection with a single element. |
+| `--reactodia-selection-single-box-margin` | Margin from the element bounds for the selection rectange with a single element. |
+| `--reactodia-selection-single-box-shadow` | Box shadow for the selection rectangle with a single element. |

@@ -74,7 +74,10 @@ function Component() {
       const element = model.createElement(iri);
 
       // In other cases the command needs to be executed explicitly
-      batch.history.execute(setElementState(element, {'my:custom:state': 42}));
+      batch.history.execute(setElementState(
+        element,
+        element.elementState.set(MyCustomProperty, 42)
+      ));
     }
 
     batch.store();
@@ -114,7 +117,9 @@ function exchangeElementPositions(
 function resetElementStateForAll(
   elements: readonly Reactodia.ElementElement[]
 ): Command {
-  const commands = elements.map(el => Reactodia.setElementState(el, undefined));
+  const commands = elements.map(el =>
+    Reactodia.setElementState(el, TemplateState.empty)
+  );
   return Command.compound('Reset state for elements', commands);
 }
 ```

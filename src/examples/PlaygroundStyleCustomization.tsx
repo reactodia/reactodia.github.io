@@ -66,13 +66,16 @@ export function PlaygroundStyleCustomization() {
             }
             return undefined;
           },
-          linkTemplateResolver: type => DoubleArrowLinkTemplate,
+          linkTemplateResolver: (linkType, link) => {
+            if (linkType) {
+              return DoubleArrowLinkTemplate;
+            }
+            return undefined;
+          },
         }}
-        canvasWidgets={[
-          <BookDecorations key='book-decorations' />
-        ]}
-        menu={<ExampleToolbarMenu />}
-      />
+        menu={<ExampleToolbarMenu />}>
+        <BookDecorations />
+      </Reactodia.DefaultWorkspace>
     </Reactodia.Workspace>
   );
 }
@@ -114,13 +117,21 @@ function ElementLabelDecoration(props: { target: Reactodia.EntityElement }) {
 }
 
 function BookDecorations() {
-  const {model} = Reactodia.useCanvas();
+  const {canvas, model} = Reactodia.useCanvas();
+
+  // Update decorations when graph content changes
+  Reactodia.useSyncStore(
+    Reactodia.useLayerDebouncedStore(
+      Reactodia.useEventStore(model.events, 'changeCells'),
+      canvas.renderingState
+    ),
+    () => model.cellsVersion
+  );
+
   return model.elements
     .filter(element => element instanceof Reactodia.EntityElement)
     .map(element => <BookDecoration key={element.id} target={element} />);
 }
-
-Reactodia.defineCanvasWidget(BookDecorations, element => ({element, attachment: 'viewport'}));
 
 // External element decoration, i.e. rendered outside the element template
 function BookDecoration(props: { target: Reactodia.EntityElement }) {
@@ -167,7 +178,7 @@ const DoubleArrowLinkTemplate: Reactodia.LinkTemplate = {
     height: 12,
   },
   renderLink: props => (
-    <Reactodia.DefaultLink {...props}
+    <Reactodia.StandardRelation {...props}
       pathProps={{stroke: '#747da8', strokeWidth: 2}}
       primaryLabelProps={{
         style: {color: '#747da8'},

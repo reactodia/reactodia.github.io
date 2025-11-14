@@ -43,18 +43,18 @@ export function PlaygroundGraphAuthoring() {
     await model.importLayout({dataProvider, signal});
 
     if (dataSource.type === 'url') {
-      const elements = [
-        model.createElement('http://www.w3.org/ns/org#Organization'),
-        model.createElement('http://www.w3.org/ns/org#FormalOrganization'),
-        model.createElement('http://www.w3.org/ns/org#hasMember'),
-        model.createElement('http://www.w3.org/ns/org#hasSubOrganization'),
-        model.createElement('http://www.w3.org/ns/org#subOrganizationOf'),
-        model.createElement('http://www.w3.org/ns/org#unitOf'),
+      const entities = [
+        'http://www.w3.org/ns/org#Organization',
+        'http://www.w3.org/ns/org#FormalOrganization',
+        'http://www.w3.org/ns/org#hasMember',
+        'http://www.w3.org/ns/org#hasSubOrganization',
+        'http://www.w3.org/ns/org#subOrganizationOf',
+        'http://www.w3.org/ns/org#unitOf',
       ];
-      await Promise.all([
-        model.requestElementData(elements.map(el => el.iri)),
-        model.requestLinks(),
-      ]);
+      for (const entity of entities) {
+        model.createElement(entity);
+      }
+      await model.requestData();
       await performLayout({signal});
     } else {
       getCommandBus(Reactodia.UnifiedSearchTopic)
@@ -91,7 +91,10 @@ export function PlaygroundGraphAuthoring() {
 
 class RenameSubclassOfProvider extends Reactodia.RenameLinkToLinkStateProvider {
   override canRename(link: Reactodia.Link): boolean {
-      return link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
+      return (
+        link instanceof Reactodia.AnnotationLink ||
+        link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf'
+      );
   }
 }
 

@@ -23,7 +23,9 @@ The library provides the following built-in templates:
 | [`StandardTemplate`](/docs/api/workspace/variables/StandardTemplate.md) | element | Default (fallback) template for an element; supports single entity elements and [entity groups](/docs/concepts/graph-model.md#data-graph).<br />Uses [`StandardEntity`](/docs/api/workspace/functions/StandardEntity.md) and [`StandardEntityGroup`](/docs/api/workspace/functions/StandardEntityGroup.md) components to render elements. |
 | [`ClassicTemplate`](/docs/api/workspace/variables/ClassicTemplate.md) | element | Element template component with classic "look and feel" which was used for elements before v0.8; does not support entity groups.<br />Uses [`ClassicEntity`](/docs/api/workspace/functions/ClassicEntity.md) component to render elements. |
 | [`RoundTemplate`](/docs/api/workspace/variables/RoundTemplate.md) | element | Basic element template with an round (elliptical) shape; does not support entity groups.<br />Uses [`RoundEntity`](/docs/api/workspace/functions/RoundEntity.md) component to render elements. |
-| [`DefaultLinkTemplate`](/docs/api/workspace/variables/DefaultLinkTemplate.md) | link | Default (fallback) template for a link; supports single relation links and [relation groups](/docs/concepts/graph-model.md#data-graph).<br />Uses [`DefaultLink`](/docs/api/workspace/functions/DefaultLink.md) component to render links which uses [`LinkPath`](/docs/api/workspace/functions/LinkPath.md), [`LinkLabel`](/docs/api/workspace/functions/LinkLabel.md) and [`LinkVertices`](/docs/api/workspace/functions/LinkVertices.md) components inside to display the link connection itself, the labels and vertices (to change link geometry). |
+| [`StandardLinkTemplate`](/docs/api/workspace/variables/StandardLinkTemplate.md) | link | Default (fallback) template for a link; supports single relation links and [relation groups](/docs/concepts/graph-model.md#data-graph).<br />Uses [`StandardRelation`](/docs/api/workspace/functions/StandardRelation.md) component to render links which uses [`LinkPath`](/docs/api/workspace/functions/LinkPath.md), [`LinkLabel`](/docs/api/workspace/functions/LinkLabel.md) and [`LinkVertices`](/docs/api/workspace/functions/LinkVertices.md) components inside to display the link connection itself, the labels and vertices (to change link geometry). |
+| [`NoteTemplate`](/docs/api/workspace/variables/NoteTemplate.md) | element | Default template for [annotation elements](/docs/concepts/graph-model.md#annotations).<br />Uses [`NoteAnnotation`](/docs/api/workspace/functions/NoteAnnotation.md) component to render a user-resizable note with editable text content and style. |
+| [`NoteLinkTemplate`](/docs/api/workspace/variables/NoteLinkTemplate.md) | link | Default template for [annotation links](/docs/concepts/graph-model.md#annotations).<br />Uses [`NoteLink`](/docs/api/workspace/functions/NoteLink.md) component to render a [basic link](/docs/api/workspace/functions/BasicLink.md) with an optional label if the link was [renamed](/docs/api/workspace/interfaces/RenameLinkProvider.md). |
 
 Additionally, it is possible to override how the link are routed (how default path geometry is computed) on the canvas by providing `linkRouter` ([`LinkRouter`](/docs/api/workspace/interfaces/LinkRouter.md)) prop to the `<Canvas />`. By default, the [`DefaultLinkRouter`](/docs/api/workspace/classes/DefaultLinkRouter.md) is used which moves apart multiple links between same elements and displays self-links (where target is equal to source) as loops.
 
@@ -81,25 +83,63 @@ function NonWidgetComponent {
 }
 ```
 
-## Canvas widgets
+## Widgets
 
-Canvas widget is an instance of any React component type which is marked by [defineCanvasWidget()](/docs/api/workspace/functions/defineCanvasWidget) function with metadata such as its attachment layer i.e. where the component should be displayed in relation to other canvas content.
+Canvas widget is any React component placed as a child to [`<Canvas />`](/docs/api/workspace/functions/Canvas).
 
 There are multiple canvas layers to place widgets on, from top one to the bottom:
 
-| Layer name     | [Coordinate type](/docs/concepts/canvas-coordinates.md) | Description |
-|----------------|-------------------|-------------|
-| `viewport`     | client (viewport) | Topmost layer, does not scale or scroll with the diagram. |
-| `overElements` | paper             | Displayed over both elements and links, scales and scrolls with the diagram. |
-| `overLinks`    | paper             | Displayed under elements but over links, scales and scrolls with the diagram. |
+| Layer name         | [Coordinate type](/docs/concepts/canvas-coordinates.md) | Is scaled | Is scrolled | Description |
+|--------------------|-------------------|---|---|-------------|
+| `viewport`         | client (viewport) | ❌ | ❌ | Top layer, placed over all diagram content and other layers. |
+| `overElements`     | scrollable pane   | ❌ | ✔ | Placed over both elements and links. |
+| `overLinks`        | scrollable pane   | ❌ | ✔ | Placed under elements but over links (including its geometry and labels). |
+| `overLinkGeometry` | scrollable pane   | ❌ | ✔ | Placed under link labels but over link geometry (paths). |
+| `underlay`         | scrollable pane   | ❌ | ✔ | Bottom layer, placed under all diagram content and other layers. |
 
-### Example: custom viewport widget
+By default, every child component (widget) is placed at `viewport` layer over canvas viewport. However, [`<CanvasPlaceAt />`](/docs/api/workspace/functions/CanvasPlaceAt.md) can be used to display its children at a different layer:
+
+```tsx
+function MyWidget() {
+  return (
+    <>
+      <div>
+        {/* This will be displayer over viewport */}
+      </div>
+      <Reactodia.CanvasPlaceAt layer='overLinkGeometry'>
+        {/* ... render additonal link decorations ... */}
+      </Reactodia.CanvasPlaceAt>
+      <Reactodia.CanvasPlaceAt layer='underlay'>
+        {/* ... render additional background content */}
+      </Reactodia.CanvasPlaceAt>
+    </>
+  );
+}
+
+...
+return (
+  <Reactodia.Workspace ref={onMount}
+    defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceRoot>
+      <Reactodia.Canvas>
+        <MyWidget />
+      </Reactodia.Canvas>
+    </Reactodia.WorkspaceRoot>
+  </Reactodia.Workspace>
+);
+```
+
+:::warning
+`<CanvasPlaceAt />` cannot be nested into itself, otherwise an error will be thrown.
+:::
+
+### Example: simple viewport widget
 
 ```tsx live noInline
-function CustomSelectAllWidget() {
+function SelectAllButton() {
   const {model} = Reactodia.useWorkspace();
   return (
-    <Reactodia.ViewportDock dock='ne'>
+    <Reactodia.ViewportDock dock='n'>
       <button type='button'
         className='reactodia-btn reactodia-btn-default'
         onClick={() => model.setSelection([...model.elements])}>
@@ -109,10 +149,109 @@ function CustomSelectAllWidget() {
   );
 }
 
-Reactodia.defineCanvasWidget(
-  CustomSelectAllWidget,
-  element => ({element, attachment: 'viewport'})
-);
+function Example() {
+  const {defaultLayout} = Reactodia.useWorker(Layouts);
+
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+    const {model, view, performLayout} = context;
+    model.createElement('http://example.com/entity1');
+    model.createElement('http://example.com/entity2');
+    model.createLinks({
+      sourceId: 'http://example.com/entity1',
+      targetId: 'http://example.com/entity2',
+      linkTypeId: 'http://example.com/connectedTo',
+      properties: {},
+    });
+    await performLayout({signal});
+  }, []);
+
+  return (
+    <div className='reactodia-live-editor'>
+      <Reactodia.Workspace ref={onMount}
+        defaultLayout={defaultLayout}>
+        <Reactodia.WorkspaceRoot>
+          <Reactodia.Canvas>
+            <Reactodia.Halo />
+            <Reactodia.HaloLink />
+            <Reactodia.Selection />
+            <SelectAllButton />
+          </Reactodia.Canvas>
+        </Reactodia.WorkspaceRoot>
+      </Reactodia.Workspace>
+    </div>
+  );
+}
+
+render(<Example />);
+```
+
+### Example: placing components at [canvas coordinates](/docs/concepts/canvas-coordinates.md)
+
+When placing a component at non-`viewport` layer, it is usually neccessary to position it based on other [diagram cells](/docs/concepts/graph-model.md). In that cases the widget needs to subscribe to canvas content and transform changes (including canvas total size, scale and origin point).
+
+```tsx live noInline
+function OverlayAndUnderlay() {
+  const {canvas, model} = Reactodia.useCanvas();
+
+  // Update on canvas transform changes (change scale, size or origin)
+  Reactodia.useSyncStore(
+    Reactodia.useLayerDebouncedStore(
+      Reactodia.useEventStore(canvas.events, 'changeTransform'),
+      canvas.renderingState
+    ),
+    () => canvas.metrics.getTransform()
+  );
+
+  // Track average of element centers
+  const p = Reactodia.useSyncStoreWithComparator(
+    Reactodia.useLayerDebouncedStore(
+      useAllElementBoundsStore(),
+      canvas.renderingState
+    ),
+    () => Reactodia.calculateAveragePosition(
+      model.elements,
+      canvas.renderingState
+    ),
+    (a, b) => Reactodia.Vector.equals(a, b)
+  );
+
+  const {x, y} = canvas.metrics.paperToScrollablePaneCoords(p.x, p.y);
+
+  const style: React.CSSProperties = {
+    position: 'absolute',
+    left: x - 50,
+    top: y - 50,
+    width: 100,
+    height: 100,
+    pointerEvents: 'none',
+  };
+
+  return (
+    <>
+      <Reactodia.CanvasPlaceAt layer='underlay'>
+        <div style={{...style, background: 'cornflowerblue'}} />
+      </Reactodia.CanvasPlaceAt>
+      <Reactodia.CanvasPlaceAt layer='overElements'>
+        <div style={{...style, border: '2px dashed violet'}} />
+      </Reactodia.CanvasPlaceAt>
+    </>
+  );
+}
+
+function useAllElementBoundsStore(): Reactodia.SyncStore {
+  const {canvas, model} = Reactodia.useCanvas();
+  return React.useCallback<Reactodia.SyncStore>(onChange => {
+    const listener = new Reactodia.EventObserver();
+    listener.listen(model.events, 'changeCells', onChange);
+    listener.listen(model.events, 'elementEvent', ({data}) => {
+      if (data.changePosition) {
+        onChange();
+      }
+    });
+    listener.listen(canvas.renderingState.events, 'changeElementSize', onChange);
+    return () => listener.stopListening();
+  }, [model.events, canvas.renderingState.events]);
+}
 
 function Example() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
@@ -135,9 +274,9 @@ function Example() {
       <Reactodia.Workspace ref={onMount}
         defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
-          search={null}
-          canvasWidgets={[<CustomSelectAllWidget key='select-all' />]}
-        />
+          search={null}>
+          <OverlayAndUnderlay />
+        </Reactodia.DefaultWorkspace>
       </Reactodia.Workspace>
     </div>
   );

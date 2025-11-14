@@ -82,6 +82,8 @@ function Component() {
 
 In the above example, [`Reactodia.useFrameDebouncedStore()`](/docs/api/workspace/functions/useFrameDebouncedStore.md) hook is used to debounce React component updates due to triggered events from the event store to only once each rendered frame based on [`requestAnimationFrame()`](https://developer.mozilla.org/en-US/docs/Web/API/Window/requestAnimationFrame).
 
+Alternatively, [`Reactodia.useLayerDebouncedStore()`](/docs/api/workspace/functions/useLayerDebouncedStore.md) can be used for debounce store updates until the next canvas layer update or explicit [`RenderingState.syncUpdate()`](/docs/api/workspace/interfaces/RenderingState.md#syncupdate) call to force all layers to be rendered in order (e.g. to read element sizes or other dependent rendering state).
+
 ## Making an observable
 
 To create an observable instance it would be enough to implement the [`Events`](/docs/api/workspace/interfaces/Events) interface. An easiest way to do it would be to use [`EventSource`](/docs/api/workspace/classes/EventSource):

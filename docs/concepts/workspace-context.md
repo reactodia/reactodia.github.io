@@ -53,17 +53,15 @@ function MyWidget() {
   // Use workspace context
 }
 
-Reactodia.defineCanvasWidget(MyWidget, element => ({element, attachment: 'viewport'}));
-
 function Example() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
   return (
       <Reactodia.Workspace ref={onMount}
         defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
-          search={null}
-          canvasWidgets={[<MyWidget key='my-widget' />]}
-        />
+          search={null}>
+          <MyWidget />
+        </Reactodia.DefaultWorkspace>
       </Reactodia.Workspace>
   );
 }
