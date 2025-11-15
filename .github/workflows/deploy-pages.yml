@@ -11,13 +11,22 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout this repository
+      uses: actions/checkout@v4
+    - name: Checkout @reactodia/workspace
+      uses: actions/checkout@v4
+      with:
+        repository: reactodia/reactodia-workspace
+        path: ./reactodia-workspace
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
         node-version: 22.x
         cache: 'npm'
-    - run: npm ci
+    - name: Install dependencies for this repository
+      run: npm ci
+    - name: Install dependencies for @reactodia/workspace
+      run: cd ./reactodia-workspace && npm ci
     - run: npm run typecheck
     - run: npm run build
     - name: Archive build artifacts

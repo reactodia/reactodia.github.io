@@ -13,28 +13,24 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [22.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout this repository
+      uses: actions/checkout@v4
     - name: Checkout @reactodia/workspace
       uses: actions/checkout@v4
       with:
         repository: reactodia/reactodia-workspace
         path: ./reactodia-workspace
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 22.x
         cache: 'npm'
-    - name: Install dependencies
+    - name: Install dependencies for this repository
       run: npm ci
-    - name: Install dependencies for library
+    - name: Install dependencies for @reactodia/workspace
       run: cd ./reactodia-workspace && npm ci
     - name: Typecheck
       run: npm run typecheck
-    - name: Build
-      run: npm run build
+    - name: Test build
+      run: npm run build -- --no-minify
