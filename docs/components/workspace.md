@@ -34,7 +34,6 @@ function Example() {
       await model.createNewDiagram({dataProvider, signal});
       model.createElement('http://example.com/entity');
       const canvas = view.findAnyCanvas();
-      canvas.renderingState.syncUpdate();
       canvas.zoomToFit();
   }, []);
 

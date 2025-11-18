@@ -49,7 +49,6 @@ export function PlaygroundStressTest(props: {
 
     const canvas = view.findAnyCanvas();
     if (canvas) {
-      canvas.renderingState.syncUpdate();
       canvas.zoomToFit();
     }
   }, []);

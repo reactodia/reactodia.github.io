@@ -1,6 +1,6 @@
 {
   "name": "@reactodia/reactodia.github.io",
-  "version": "0.31.0",
+  "version": "0.31.1",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -21,7 +21,7 @@
     "@easyops-cn/docusaurus-search-local": "^0.51.0",
     "@mdx-js/react": "^3.1.0",
     "@reactodia/hashmap": "^0.2.1",
-    "@reactodia/workspace": "^0.31.0",
+    "@reactodia/workspace": "^0.31.1",
     "clsx": "^2.1.1",
     "n3": "^1.17.2",
     "prism-react-renderer": "^2.4.1",
