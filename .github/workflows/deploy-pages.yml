@@ -7,6 +7,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  reactodia_workspace_ref: 'v0.31.2'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -17,6 +20,7 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: reactodia/reactodia-workspace
+        ref: "${{ env.reactodia_workspace_ref }}"
         path: ./reactodia-workspace
     - name: Setup Node.js
       uses: actions/setup-node@v4
