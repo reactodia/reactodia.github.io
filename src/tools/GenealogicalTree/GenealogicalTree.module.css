@@ -1,0 +1,20 @@
+.workspace {
+    /* Reactodia workspace */
+}
+
+.marriage[class] {
+    width: var(--genealogical-tree-element-width, 90px);
+    height: var(--genealogical-tree-element-height, 90px);
+}
+
+.workspace :global(.reactodia-standard-element)[class] {
+    min-width: 210px;
+}
+
+.workspace :global(.reactodia-standard-element__label)[class] {
+    white-space: unset;
+}
+
+.workspace :global(.reactodia-standard-element__pinned-props) :global(.reactodia-standard-element__properties) {
+    overflow-y: visible;
+}
