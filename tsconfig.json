@@ -4,7 +4,8 @@
   "compilerOptions": {
     "target": "ES2022",
     "lib": ["DOM", "ES2022"],
-    "baseUrl": "."
+    "baseUrl": ".",
+    "strict": true
   },
   "exclude": [
     "./reactodia-workspace"

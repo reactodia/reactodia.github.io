@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { HashMap } from '@reactodia/hashmap';
 import * as Reactodia from '@reactodia/workspace';
-import { saveAs } from 'file-saver';
 
 export function ExampleToolbarMenu() {
   const {model, editor, overlay} = Reactodia.useWorkspace();
@@ -56,8 +55,16 @@ export function ExampleToolbarMenu() {
           const diagramLayout = model.exportLayout();
           const layoutString = JSON.stringify(diagramLayout);
           const blob = new Blob([layoutString], {type: 'application/json'});
+          const blobUrl = URL.createObjectURL(blob);
           const timestamp = new Date().toISOString().replaceAll(/[Z\s:-]/g, '');
-          saveAs(blob, `reactodia-diagram-${timestamp}.json`);
+          try {
+            const downloadLink = document.createElement('a');
+            downloadLink.href = blobUrl;
+            downloadLink.download = `reactodia-diagram-${timestamp}.json`;
+            downloadLink.click();
+          } finally {
+            URL.revokeObjectURL(blobUrl);
+          }
         }}>
         Save diagram to file
       </Reactodia.ToolbarActionSave>
