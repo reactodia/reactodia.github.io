@@ -9,11 +9,12 @@ export default async function importRawSource(context, opts) {
 
     configureWebpack(config, isServer, utils) {
       return {
+        devtool: 'source-map',
         module: {
           rules: [
             {
               test: /\.js$/,
-              enforce: "pre",
+              enforce: 'pre',
               use: [
                 {
                   loader: 'source-map-loader',
