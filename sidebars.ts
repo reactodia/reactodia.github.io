@@ -24,11 +24,15 @@ const typedocItems: SidebarItems = JSON.parse(
 );
 
 function findSidebarCategory(items: SidebarItems, label: string): SidebarCategory {
-  return items.find((item): item is SidebarCategory =>
+  const category = items.find((item): item is SidebarCategory =>
     typeof item === 'object' &&
     item.type === 'category' &&
     item.label === label
   );
+  if (!category) {
+    throw new Error(`Cannot find sidebar category "${label}"`);
+  }
+  return category;
 }
 
 const sidebars: SidebarsConfig = {
