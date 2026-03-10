@@ -10,7 +10,7 @@ on:
     branches: [ "main" ]
 
 env:
-  reactodia_workspace_ref: 'v0.31.2'
+  reactodia_workspace_ref: 'v0.32.0'
 
 jobs:
   build:

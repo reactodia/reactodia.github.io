@@ -164,11 +164,9 @@ function BookDecoration(props: { target: Reactodia.EntityElement }) {
 // Custom link template
 const DoubleArrowLinkTemplate: Reactodia.LinkTemplate = {
   markerSource: {
-    fill: '#4b4a67',
-    stroke: '#4b4a67',
-    d: 'M0,3a3,3 0 1,0 6,0a3,3 0 1,0 -6,0',
-    width: 6,
-    height: 6,
+    ...Reactodia.LinkMarkerDiamond,
+    fill: 'var(--reactodia-canvas-background-color)',
+    strokeWidth: 1,
   },
   markerTarget: {
     fill: '#4b4a67',
