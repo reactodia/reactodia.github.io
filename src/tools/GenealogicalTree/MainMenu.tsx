@@ -12,13 +12,15 @@ export function MainMenu(props: {
       <Reactodia.ToolbarActionOpen
         fileAccept='.zip'
         onSelect={async file => {
-          const task = overlay.startTask({title: 'Loading a graph from file'});
+          const task = overlay.startTask({
+            title: t.text('genealogical_tree.task_loading_package'),
+          });
           try {
             const bytes = await file.bytes();
             onOpen(bytes);
           } catch (err) {
             task.setError(new Error(
-              'Failed to load specified graph file.',
+              t.text('genealogical_tree.task_loading_package_failed'),
               { cause: err }
             ));
           } finally {

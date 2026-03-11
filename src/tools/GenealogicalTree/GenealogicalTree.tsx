@@ -9,7 +9,9 @@ import { GenealogicalMetadataProvider } from './GenealogicalMetadataProvider';
 import { sh } from './OwlShaclSchema';
 import { fhkb, rdfs, schema, genealogy } from './Vocabularies';
 import { MainMenu } from './MainMenu';
+import { OpenPackageSettings } from './OpenPackageSettings';
 
+import enTranslation from './translations/en.translation.json';
 import GenealogicalSchemaTurtle from './GenealogicalSchema.ttl?raw';
 import styles from './GenealogicalTree.module.css';
 
@@ -61,7 +63,7 @@ export function PlaygroundGenealogicalTree() {
       try {
         sourcePackage = await GenealogicalPackage.loadFromBytes(dataSource.bytes, {signal});
       } catch (err) {
-        throw new Error('Failed to open genealogical package', {cause: err});
+        throw new Error(t.text('genealogical_tree.init_failed_to_load_package'), {cause: err});
       }
     } else {
       sourcePackage = GenealogicalPackage.createEmpty();
@@ -129,10 +131,7 @@ export function PlaygroundGenealogicalTree() {
       renameLinkProvider={renameLinkProvider}
       translations={[
         {
-          'genealogical_tree': {
-            'action_open_from_file': 'Open from file',
-            'action_save_to_file': 'Apply changes and save to file',
-          },
+          ...enTranslation,
           'visual_authoring': {
             'property.load_error.text': '⚠ Failed to load variants',
           },
@@ -165,6 +164,9 @@ export function PlaygroundGenealogicalTree() {
           </>
         }
         canvas={{
+          zoomOptions: {
+            requireCtrl: false,
+          },
           elementTemplateResolver: types => {
             if (types.includes(fhkb.Marriage)) {
               return MarriageTemplate;
@@ -196,8 +198,11 @@ export function PlaygroundGenealogicalTree() {
             }
             return null;
           }
-        }}
-      />
+        }}>
+        <Reactodia.Toolbar dock='ne'>
+          <OpenPackageSettings />
+        </Reactodia.Toolbar>
+      </Reactodia.DefaultWorkspace>
     </Reactodia.Workspace>
   );
 }
@@ -338,8 +343,7 @@ const ParentLinkTemplate: Reactodia.LinkTemplate = {
   ...Reactodia.StandardLinkTemplate,
   markerTarget: {
     ...Reactodia.LinkMarkerArrowhead,
-    fill: '#4b4a67',
-    stroke: '#4b4a67',
+    stroke: 'context-stroke',
   },
   renderLink: props => (
     <Reactodia.StandardRelation {...props}
@@ -359,10 +363,6 @@ const ParentLinkTemplate: Reactodia.LinkTemplate = {
 
 const OtherLinkTemplate: Reactodia.LinkTemplate = {
   ...Reactodia.StandardLinkTemplate,
-  markerTarget: {
-    ...Reactodia.LinkMarkerArrowhead,
-    fill: 'var(--reactodia-color-emphasis-600)',
-  },
   renderLink: props => (
     <Reactodia.StandardRelation {...props}
       pathProps={{

@@ -2,7 +2,7 @@ import * as Reactodia from '@reactodia/workspace';
 
 type VocabularyKeyType<K extends string> =
   K extends Capitalize<K>
-    ? Reactodia.ElementTypeIri
+    ? Reactodia.ElementIri & Reactodia.ElementTypeIri
     : Reactodia.LinkTypeIri & Reactodia.PropertyTypeIri;
 
 type Vocabulary<Keys extends string[]> = { $namespace: string } & {
@@ -30,7 +30,7 @@ export const fhkb = vocabulary('http://www.example.com/genealogy.owl#', [
   'hasSex',
 ]);
 
-export const rdfs = vocabulary('http://www.w3.org/2000/01/rdf-schema#', [
+export const rdfs = vocabulary(Reactodia.rdfs.$namespace, [
   'comment',
 ]);
 
@@ -52,13 +52,18 @@ export const schema = vocabulary(Reactodia.schema.$namespace, [
   'uploadDate',
 ]);
 
-export const xsd = vocabulary('http://www.w3.org/2001/XMLSchema', [
+export const xsd = vocabulary(Reactodia.xsd.$namespace, [
+  'boolean',
   'date',
   'dateTime',
   'decimal',
+  'string',
 ]);
 
 export const genealogy = vocabulary('http://reactodia.github.io/genealogy/', [
+  'ActiveSettings',
   'DataOrigin',
   'SchemaOrigin',
+  'PackageSettings',
+  'defaultNamespaceBase',
 ]);

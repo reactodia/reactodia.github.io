@@ -102,11 +102,13 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
       canModifyEntity: async (entity, options) => {
         const shacl = await this.getSchema();
         for (const type of entity.types) {
-          if (shacl.shapes.has(type)) {
+          const shapes = shacl.shapes.get(type);
+          if (shapes) {
+            const singleton = shapes.some(shape => shape.singleton);
             return {
-              canChangeType: true,
+              canChangeIri: !singleton,
               canEdit: true,
-              canDelete: true,
+              canDelete: !singleton,
             };
           }
         }
@@ -141,7 +143,10 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
       },
       filterConstructibleTypes: async (types, {signal}) => {
         const shacl = await this.getSchema();
-        return new Set(Array.from(types).filter(type => shacl.shapes.has(type)));
+        return new Set(Array.from(types).filter(type => {
+          const shapes = shacl.shapes.get(type);
+          return shapes && shapes.every(shape => !shape.singleton && (shape.userCreatable ?? true));
+        }));
       },
     });
     this.schemaProvider = schemaProvider;
