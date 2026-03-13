@@ -6,6 +6,16 @@
     border: 2px dashed var(--reactodia-border-color-base);
 }
 
+.reactodia-property-input-file[data-reactodia-drag-state="accept"] {
+    background-color: var(--reactodia-color-success-contrast-background);
+    border-color: var(--reactodia-color-success);
+}
+
+.reactodia-property-input-file[data-reactodia-drag-state="reject"] {
+    background-color: var(--reactodia-color-danger-contrast-background);
+    border-color: var(--reactodia-color-danger);
+}
+
 .reactodia-property-input-file__input {
     display: none;
 }

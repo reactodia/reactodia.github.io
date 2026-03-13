@@ -1,12 +1,14 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 
+import { fhkb, schema } from './Vocabularies';
+
 export function MainMenu(props: {
   onOpen: (bytes: Uint8Array) => void;
   onSave: () => Promise<Blob>;
 }) {
   const {onOpen, onSave} = props;
-  const {overlay, translation: t} = Reactodia.useWorkspace();
+  const {model, overlay, translation: t} = Reactodia.useWorkspace();
   return (
     <>
       <Reactodia.ToolbarActionOpen
@@ -46,6 +48,29 @@ export function MainMenu(props: {
         }}>
         {t.text('genealogical_tree.action_save_to_file')}
       </Reactodia.ToolbarActionSave>
+      <Reactodia.ToolbarAction
+        onSelect={() => {
+          const batch = model.history.startBatch('Reset pinned properties');
+          try {
+            for (const element of model.elements) {
+              if (element instanceof Reactodia.EntityElement && element.data.types.includes(fhkb.Person)) {
+                batch.history.execute(Reactodia.setElementState(
+                  element,
+                  element.elementState
+                    .set(Reactodia.TemplateProperties.PinnedProperties, {
+                      ...element.elementState.get(Reactodia.TemplateProperties.PinnedProperties),
+                      [schema.birthDate]: true,
+                      [schema.deathDate]: true,
+                    })
+                ));
+              }
+            }
+          } finally {
+            batch.store();
+          }
+        }}>
+        Reset pinned properties
+      </Reactodia.ToolbarAction>
       <Reactodia.ToolbarActionClearAll />
       <Reactodia.ToolbarActionExport kind='exportRaster' />
       <Reactodia.ToolbarActionExport kind='exportSvg' />

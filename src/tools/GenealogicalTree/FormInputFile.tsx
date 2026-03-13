@@ -115,6 +115,7 @@ export interface FormInputFileProps extends Reactodia.FormInputMultiProps {
    * for the file selection.
    */
   fileAccept?: string;
+  allowDrop?: (item: DataTransferItem) => boolean;
   getFileKind?: (fileIri: string, fileEntity: Reactodia.ElementModel | undefined) => FormInputFileKind;
   uploader: FileUploadProvider;
 }
@@ -124,13 +125,21 @@ export type FormInputFileKind = 'default' | 'image';
 const CLASS_NAME = 'reactodia-property-input-file';
 
 export function FormInputFile(props: FormInputFileProps) {
-  const {fileAccept, getFileKind, uploader, shape, factory, values, updateValues} = props;
+  const {fileAccept, allowDrop, getFileKind, uploader, shape, factory, values, updateValues} = props;
   const {model} = Reactodia.useWorkspace();
 
   const inputRef = React.useRef<HTMLInputElement | null>(null);
+  useDisallowDropOutsideZone(window);
 
   const [operation, setOperation] = React.useState<AbortController>();
-  const onSelect = async (files: File[]) => {
+  const onSelect = async (allFiles: File[]) => {
+    const allowedCount = (shape.maxCount ?? Infinity) - values.length;
+    if (allowedCount <= 0) {
+      return;
+    }
+
+    const files = Number.isFinite(allowedCount) ? allFiles.slice(0, shape.maxCount) : allFiles;
+
     const controller = new AbortController();
     setOperation(controller);
     let uploaded: UploadedFile[];
@@ -165,6 +174,7 @@ export function FormInputFile(props: FormInputFileProps) {
 
   return (
     <DropZone className={CLASS_NAME}
+      allowDrop={allowDrop}
       onSelect={onSelect}>
       {values.map((v, i) => {
         const data = uploader.getFileMetadata(v.value) ?? entities.get(v.value);
@@ -267,14 +277,70 @@ function FileItem(props: {
 
 function DropZone(props: {
   className?: string;
+  allowDrop?: (item: DataTransferItem) => void;
   onSelect: (files: File[]) => void;
   children?: React.ReactNode;
 }) {
-  const {className, onSelect, children} = props;
+  const {className, allowDrop, onSelect, children} = props;
+  const [dragState, setDragState] = React.useState<'accept' | 'reject' | undefined>();
   return (
     <div className={className}
-      data-reactodia-drop-zone>
+      data-reactodia-drop-zone
+      data-reactodia-drag-state={dragState}
+      onDragOver={e => {
+        const items = Array.from(e.dataTransfer.items).filter(item => item.kind === 'file');
+        if (items.length > 0) {
+          e.preventDefault();
+          const accept = items.some(item => !allowDrop || allowDrop(item));
+          e.dataTransfer.dropEffect = accept ? 'copy' : 'none';
+          setDragState(accept ? 'accept' : 'reject');
+        }
+      }}
+      onDragLeave={() => setDragState(undefined)}
+      onDragEnd={() => setDragState(undefined)}
+      onDrop={e => {
+        e.preventDefault();
+        const files = Array.from(e.dataTransfer.items)
+          .filter(item => !allowDrop || allowDrop(item))
+          .map(item => item.getAsFile())
+          .filter(file => file !== null);
+        if (files.length > 0) {
+          onSelect(files);
+        }
+        setDragState(undefined);
+      }}>
       {children}
     </div>
   );
+}
+
+function isDropZone(node: Node): boolean {
+  let current: Node | null = node;
+  while (current) {
+    if (current instanceof HTMLElement && current.hasAttribute('data-reactodia-drop-zone')) {
+      return true;
+    }
+    current = current.parentNode;
+  }
+  return false;
+}
+
+function useDisallowDropOutsideZone(
+  topLevel: Pick<HTMLElement, 'addEventListener' | 'removeEventListener'>
+): void {
+  React.useEffect(() => {
+    const handler = (e: DragEvent) => {
+      if (e.dataTransfer) {
+        const items = Array.from(e.dataTransfer.items).filter(item => item.kind === 'file');
+        if (items.length > 0) {
+          e.preventDefault();
+          if (!(e.target instanceof Node && isDropZone(e.target))) {
+            e.dataTransfer.dropEffect = 'none';
+          }
+        }
+      }
+    };
+    topLevel.addEventListener('dragover', handler);
+    return () => topLevel.removeEventListener('dragover', handler);
+  }, [topLevel]);
 }

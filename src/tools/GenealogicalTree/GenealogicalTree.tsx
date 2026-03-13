@@ -2,14 +2,16 @@ import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 import * as N3 from 'n3';
 
-import { GenealogicalPackage } from './GenealogicalPackage';
 import { FileType, FormInputFile, InMemoryFileUploader } from './FormInputFile';
 import { FormInputSelect } from './FormInputSelect';
 import { GenealogicalMetadataProvider } from './GenealogicalMetadataProvider';
-import { sh } from './OwlShaclSchema';
-import { fhkb, rdfs, schema, genealogy } from './Vocabularies';
+import { GenealogicalPackage } from './GenealogicalPackage';
+import { GenealogicalValidationProvider } from './GenealogicalValidationProvider';
+import { MarriageTemplate } from './GraphTemplates';
 import { MainMenu } from './MainMenu';
 import { OpenPackageSettings } from './OpenPackageSettings';
+import { sh, getSinglePropertyValue, termAsString } from './OwlShaclSchema';
+import { fhkb, rdfs, schema, genealogy } from './Vocabularies';
 
 import enTranslation from './translations/en.translation.json';
 import GenealogicalSchemaTurtle from './GenealogicalSchema.ttl?raw';
@@ -49,14 +51,25 @@ export function PlaygroundGenealogicalTree() {
     }
     return provider;
   });
-  const [metadataProvider] = React.useState(() => new GenealogicalMetadataProvider({schemaProvider}));
+  const [metadataProvider] = React.useState(() => new GenealogicalMetadataProvider({
+    schemaProvider,
+    defaultNamespaceBase: GenealogicalPackage.DEFAULT_NAMESPACE_BASE,
+  }));
+  const [validationProvider] = React.useState(() => new GenealogicalValidationProvider());
   const [renameLinkProvider] = React.useState(() => new RenameGenealogicalLinksProvider());
 
   const {onMount, getContext} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, editor, overlay, translation: t, getCommandBus, performLayout} = context;
 
     metadataProvider.loadSchema({signal});
+    editor.setAuthoringState(Reactodia.AuthoringState.empty);
     editor.setAuthoringMode(true);
+
+    const listener = new Reactodia.EventObserver();
+    listener.listen(editor.events, 'changeAuthoringState', () => {
+      metadataProvider.updateSettings(editor.authoringState);
+    });
+    signal.addEventListener('abort', () => listener.stopListening());
 
     let sourcePackage: GenealogicalPackage;
     if (dataSource) {
@@ -78,7 +91,7 @@ export function PlaygroundGenealogicalTree() {
       providers: [
         {
           provider: schemaProvider,
-          origin: mainProvider.factory.namedNode(genealogy.SchemaOrigin),
+          origin: schemaProvider.factory.namedNode(genealogy.SchemaOrigin),
         },
         {
           provider: mainProvider,
@@ -86,6 +99,19 @@ export function PlaygroundGenealogicalTree() {
         },
       ],
     });
+
+    await metadataProvider.loadSettings({mainProvider, signal});
+    metadataProvider.updateSettings(editor.authoringState);
+    validationProvider.setProvider(mainProvider);
+
+    const initialSettings = metadataProvider.getSettings();
+    const defaultLanguage = termAsString(getSinglePropertyValue(
+      initialSettings, genealogy.defaultLanguage
+    ));
+    if (defaultLanguage) {
+      model.setLanguage(defaultLanguage);
+    }
+
     const locale = new GenealogicalLocaleProvider({
       model,
       translation: t,
@@ -122,12 +148,21 @@ export function PlaygroundGenealogicalTree() {
           .trigger('focus', { sectionKey: 'elementTypes' });
       }
     }
+
+    const allEntities = new Set<Reactodia.ElementIri>();
+    for (const element of model.elements) {
+      for (const entity of Reactodia.iterateEntitiesOf(element)) {
+        allEntities.add(entity.id);
+      }
+    }
+    editor.revalidateEntities(allEntities);
   }, [dataSource]);
 
   return (
     <Reactodia.Workspace ref={onMount}
       defaultLayout={defaultLayout}
       metadataProvider={metadataProvider}
+      validationProvider={validationProvider}
       renameLinkProvider={renameLinkProvider}
       translations={[
         {
@@ -316,29 +351,6 @@ class RenameGenealogicalLinksProvider extends Reactodia.RenameLinkToLinkStatePro
   }
 }
 
-const MarriageTemplate: Reactodia.ElementTemplate = {
-  ...Reactodia.RoundTemplate,
-  renderElement: props => <MarriageEntity {...props} />,
-  supports: {
-    ...Reactodia.RoundTemplate.supports,
-    [Reactodia.TemplateProperties.ElementSize]: true,
-  },
-};
-
-function MarriageEntity(props: Reactodia.TemplateProps) {
-  const size = props.element.elementState.get(Reactodia.TemplateProperties.ElementSize);
-  const style = {
-    '--genealogical-tree-element-width': size ? `${size.width}px` : undefined,
-    '--genealogical-tree-element-height': size ? `${size.height}px` : undefined,
-  } as React.CSSProperties;
-  return (
-    <Reactodia.RoundEntity {...props}
-      className={styles.marriage}
-      style={style}
-    />
-  );
-}
-
 const ParentLinkTemplate: Reactodia.LinkTemplate = {
   ...Reactodia.StandardLinkTemplate,
   markerTarget: {
@@ -397,6 +409,7 @@ function FormInputImage(props: Reactodia.FormInputMultiProps) {
     <FormInputFile {...props}
       uploader={mainProvider.uploader}
       fileAccept='.jpg,.jpeg,.png,.svg,.gif'
+      allowDrop={item => Boolean(item.type.match("^image/"))}
       getFileKind={url => /.\.(?:jpg|jpeg|png|svg|gif)$/.test(url) ? 'image' : 'default'}
     />
   );

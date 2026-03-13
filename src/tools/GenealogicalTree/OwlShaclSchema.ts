@@ -164,9 +164,9 @@ async function loadShapeData(
   }));
   return {
     properties,
-    subjectTemplate: termAsString(getSingleValue(shapeElement, r_shapes.subjectTemplate)),
-    singleton: termAsBoolean(getSingleValue(shapeElement, r_shapes.singleton)),
-    userCreatable: termAsBoolean(getSingleValue(shapeElement, r_shapes.userCreatable)),
+    subjectTemplate: termAsString(getSinglePropertyValue(shapeElement, r_shapes.subjectTemplate)),
+    singleton: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.singleton)),
+    userCreatable: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.userCreatable)),
   };
 }
 
@@ -206,12 +206,12 @@ async function loadPropertyData(
     nodeKind,
     class_,
     datatype,
-    minCount: termAsNumeric(getSingleValue(propertyElement, sh.minCount)),
-    maxCount: termAsNumeric(getSingleValue(propertyElement, sh.maxCount)),
+    minCount: termAsNumber(getSinglePropertyValue(propertyElement, sh.minCount)),
+    maxCount: termAsNumber(getSinglePropertyValue(propertyElement, sh.maxCount)),
   };
 }
 
-function getSingleValue(
+export function getSinglePropertyValue(
   element: ElementModel,
   propertyIri: PropertyTypeIri
 ): Rdf.NamedNode | Rdf.Literal | undefined {
@@ -224,7 +224,7 @@ function getSingleValue(
   return undefined;
 }
 
-function termAsNumeric(term: Rdf.NamedNode | Rdf.Literal | undefined): number | undefined {
+export function termAsNumber(term: Rdf.NamedNode | Rdf.Literal | undefined): number | undefined {
   if (term && term.termType === 'Literal') {
     const value = Number(term.value);
     if (Number.isFinite(value)) {
@@ -234,14 +234,14 @@ function termAsNumeric(term: Rdf.NamedNode | Rdf.Literal | undefined): number | 
   return undefined;
 }
 
-function termAsString(term: Rdf.NamedNode | Rdf.Literal | undefined): string | undefined {
+export function termAsString(term: Rdf.NamedNode | Rdf.Literal | undefined): string | undefined {
   if (term && term.termType === 'Literal' && term.datatype.value === xsd.string) {
     return term.value;
   }
   return undefined;
 }
 
-function termAsBoolean(term: Rdf.NamedNode | Rdf.Literal | undefined): boolean | undefined {
+export function termAsBoolean(term: Rdf.NamedNode | Rdf.Literal | undefined): boolean | undefined {
   if (term && term.termType === 'Literal' && term.datatype.value === xsd.boolean) {
     return (
       term.value === 'true' ? true :
