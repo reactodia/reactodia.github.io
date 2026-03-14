@@ -1,3 +1,4 @@
+@prefix dash: <http://datashapes.org/dash#> .
 @prefix fhkb: <http://www.example.com/genealogy.owl#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -111,25 +112,30 @@ reactodia:sourceProvider a owl:DatatypeProperty;
     r_shapes:subjectTemplate "marriage_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
-    ] ;
-    sh:property [
-        sh:path rdfs:comment ;
+        sh:order 1 ;
     ] ;
     sh:property [
         sh:path schema:startDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 2 ;
     ] ;
     sh:property [
         sh:path schema:endDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 3 ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:order 4 ;
     ] ;
     sh:property [
         sh:path fhkb:hasPartner ;
 		sh:class fhkb:Person ;
 		sh:nodeKind sh:IRI ;
         sh:minCount 2 ;
+        dash:reifiableBy :commonPropertyShape ;
     ] .
 
 :PersonShape a sh:NodeShape ;
@@ -137,60 +143,72 @@ reactodia:sourceProvider a owl:DatatypeProperty;
     r_shapes:subjectTemplate "person_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
-    ] ;
-    sh:property [
-        sh:path rdfs:comment ;
-    ] ;
-    sh:property [
-        sh:path schema:thumbnailUrl ;
-        sh:maxCount 1 ;
+        sh:order 1 ;
     ] ;
     sh:property [
         sh:path fhkb:hasSex ;
         sh:maxCount 1 ;
 		sh:nodeKind sh:IRI ;
+        sh:order 2 ;
     ] ;
     sh:property [
         sh:path schema:birthDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 3 ;
     ] ;
     sh:property [
         sh:path schema:deathDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 4 ;
+    ] ;
+    sh:property [
+        sh:path schema:thumbnailUrl ;
+        sh:maxCount 1 ;
+        sh:order 5 ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:order 6 ;
     ] ;
     sh:property [
         sh:path fhkb:hasParent ;
 		sh:class fhkb:Person ;
 		sh:nodeKind sh:IRI ;
+        dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path fhkb:hasGodparent ;
 		sh:class fhkb:Person ;
 		sh:nodeKind sh:IRI ;
+        dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path schema:relatedTo ;
 		sh:class fhkb:Person ;
 		sh:nodeKind sh:IRI ;
+        dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path schema:birthPlace ;
 		sh:class schema:Place ;
 		sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
+        dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path schema:deathPlace ;
 		sh:class schema:Place ;
 		sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
+        dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path schema:homeLocation ;
 		sh:class schema:Place ;
 		sh:nodeKind sh:IRI ;
+        dash:reifiableBy :homeLocationShape ;
     ] .
 
 :PlaceShape a sh:NodeShape ;
@@ -198,72 +216,79 @@ reactodia:sourceProvider a owl:DatatypeProperty;
     r_shapes:subjectTemplate "place_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
-    ] ;
-    sh:property [
-        sh:path rdfs:comment ;
-    ] ;
-    sh:property [
-        sh:path schema:thumbnailUrl ;
+        sh:order 1 ;
     ] ;
     sh:property [
         sh:path schema:address ;
 		sh:datatype xsd:string ;
+        sh:order 2 ;
     ] ;
     sh:property [
         sh:path schema:latitude ;
 		sh:datatype xsd:decimal ;
         sh:maxCount 1 ;
+        sh:order 3 ;
     ] ;
     sh:property [
         sh:path schema:longitude ;
 		sh:datatype xsd:decimal ;
         sh:maxCount 1 ;
+        sh:order 4 ;
+    ] ;
+    sh:property [
+        sh:path schema:thumbnailUrl ;
+        sh:order 5 ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:order 6 ;
     ] .
 
 :FileShape a sh:NodeShape ;
     sh:targetClass reactodia:File ;
-    r_shapes:userCreatable false ;
+    r_shapes:canCreate false ;
     sh:property [
         sh:path rdfs:label ;
+        sh:order 1 ;
     ] .
 
 :PackageSettingsShape a sh:NodeShape ;
     sh:targetClass :PackageSettings ;
-    r_shapes:singleton true ;
-    sh:property [
-        sh:path :defaultLanguage ;
-        sh:datatype xsd:string ;
-        sh:maxCount 1 ;
-    ] ;
+    r_shapes:canCreate false ;
+    r_shapes:canDelete false ;
     sh:property [
         sh:path :defaultNamespaceBase ;
         sh:datatype xsd:string ;
         sh:minCount 1 ;
         sh:maxCount 1 ;
+        sh:order 1 ;
+    ] ;
+    sh:property [
+        sh:path :defaultLanguage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+        sh:order 2 ;
+        sh:defaultValue "en" ;
     ] .
 
 :commonPropertyShape a sh:NodeShape ;
-    r_shapes:targetProperty
-        fhkb:hasGodparent,
-        fhkb:hasParent,
-        fhkb:hasPartner,
-        schema:birthPlace,
-        schema:deathPlace,
-        schema:homeLocation,
-        schema:relatedTo ;
     sh:property [
         sh:path rdfs:comment ;
     ] .
 
 :homeLocationShape a sh:NodeShape ;
-    r_shapes:targetProperty schema:homeLocation ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
     sh:property [
         sh:path schema:startDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 1 ;
     ] ;
     sh:property [
         sh:path schema:endDate ;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
+        sh:order 2 ;
     ] .

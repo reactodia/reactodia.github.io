@@ -116,12 +116,12 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
         for (const type of entity.types) {
           const shapes = shacl.shapes.get(type);
           if (shapes) {
-            const userCreatable = shapes.every(shape => shape.userCreatable ?? true);
-            const singleton = shapes.some(shape => shape.singleton);
+            const canCreate = shapes.every(shape => shape.canCreate ?? true);
+            const canDelete = shapes.every(shape => shape.canDelete ?? true);
             return {
-              canChangeIri: userCreatable && !singleton,
+              canChangeIri: canCreate && canDelete,
               canEdit: true,
-              canDelete: !singleton,
+              canDelete: canDelete,
             };
           }
         }
@@ -129,12 +129,19 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
       },
       canModifyRelation: async (link, source, target, options) => {
         const shacl = await this.getSchema();
-        if (shacl.shapes.has(link.linkTypeId)) {
-          return {
-            canChangeType: true,
-            canEdit: true,
-            canDelete: true,
-          };
+        for (const type of source.types) {
+          const shapes = shacl.shapes.get(type);
+          if (shapes) {
+            for (const shape of shapes) {
+              if (shape.properties.some(property => property.path === link.linkTypeId)) {
+                return {
+                  canChangeType: true,
+                  canEdit: true,
+                  canDelete: true,
+                };
+              }
+            }
+          }
         }
         return {};
       },
@@ -147,18 +154,26 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
         }
         return {properties};
       },
-      getRelationShape: async (linkType, {signal}) => {
+      getRelationShape: async (linkType, source, target, {signal}) => {
         const shacl = await this.getSchema();
         const properties = new Map<Reactodia.PropertyTypeIri, Reactodia.MetadataPropertyShape>();
-        const shapes = shacl.shapes.get(linkType) ?? [];
-        this.collectPropertyShapes(properties, shapes);
+        for (const type of source.types) {
+          const typeShapes = shacl.shapes.get(type) ?? [];
+          for (const typeShape of typeShapes) {
+            for (const property of typeShape.properties) {
+              if (property.path === linkType && property.reifiableBy) {
+                this.collectPropertyShapes(properties, property.reifiableBy);
+              }
+            }
+          }
+        }
         return {properties};
       },
       filterConstructibleTypes: async (types, {signal}) => {
         const shacl = await this.getSchema();
         return new Set(Array.from(types).filter(type => {
           const shapes = shacl.shapes.get(type);
-          return shapes && shapes.every(shape => !shape.singleton && (shape.userCreatable ?? true));
+          return shapes && shapes.every(shape => shape.canCreate ?? true);
         }));
       },
     });
@@ -211,10 +226,21 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
         if (property.datatype || !property.class_) {
           properties.set(property.path, {
             valueShape: property.nodeKind?.value === sh.IRI || property.nodeKind?.value === sh.BlankNodeOrIRI
-              ? { termType: 'NamedNode' }
-              : { termType: 'Literal', datatype: property.datatype },
+              ? {
+                termType: 'NamedNode',
+                defaultValue: property.defaultValue?.termType === 'NamedNode'
+                  ? property.defaultValue : undefined,
+              }
+              : {
+                termType: 'Literal',
+                datatype: property.datatype,
+                uniqueLang: property.uniqueLang,
+                defaultValue: property.defaultValue?.termType === 'Literal'
+                  ? property.defaultValue : undefined,
+              },
             minCount: property.minCount,
             maxCount: property.maxCount,
+            order: property.order,
           });
         }
       }
