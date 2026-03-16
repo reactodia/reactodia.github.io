@@ -16,7 +16,6 @@ The [`WorkspaceContext`](/docs/api/workspace/interfaces/WorkspaceContext) contai
 | `view`        | [`SharedCanvasState`](/docs/api/workspace/classes/SharedCanvasState.md) | Stores common state and settings for all [canvases](/docs/components/canvas.md) in the workspace. |
 | `editor`      | [`EditorController`](/docs/api/workspace/classes/EditorController.md) | Stores, modifies and validates changes from the visual graph authoring.<br/>See [graph authoring](/docs/concepts/graph-authoring). |
 | `overlay`     | [`OverlayController`](/docs/api/workspace/classes/OverlayController.md) | Controls UI overlays for the canvases, including dialogs and tasks. |
-| `translation` | [`Translation`](/docs/api/workspace/interfaces/Translation.md) | Provides a translation for UI text strings.<br/>See [i18n](/docs/concepts/i18n). |
 
 ## Getting the workspace context
 
@@ -68,5 +67,5 @@ function Example() {
 ```
 
 :::note
-The library also uses separate context for [i18n](/docs/concepts/i18n) (which is accessible by [`useTranslation()`](/docs/api/workspace/functions/useTranslation.md) hook and `translation` property of the workspace context) and a nested context for the [`Canvas`](/docs/components/canvas.md).
+The library also uses separate context for [i18n](/docs/concepts/i18n) (accessible with [`useTranslation()`](/docs/api/workspace/functions/useTranslation.md) hook) and a nested context for the [`Canvas`](/docs/components/canvas.md) (accessible with [`useCanvas()`](/docs/api/workspace/functions/useCanvas.md) hook).
 :::
