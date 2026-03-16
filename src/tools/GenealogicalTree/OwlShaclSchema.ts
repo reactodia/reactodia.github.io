@@ -14,30 +14,36 @@ export const sh = vocabulary('http://www.w3.org/ns/shacl#', [
   'NodeShape',
   'class',
   'datatype',
+  'defaultValue',
   'maxCount',
   'minCount',
   'nodeKind',
+  'order',
   'path',
   'property',
   'targetClass',
+  'uniqueLang',
+]);
+
+export const dash = vocabulary('http://datashapes.org/dash#', [
+  'reifiableBy',
 ]);
 
 export const r_shapes = vocabulary('urn:reactodia:shapes:', [
-  'singleton',
+  'canCreate',
+  'canDelete',
   'subjectTemplate',
-  'targetProperty',
-  'userCreatable',
 ]);
 
 export interface OwlShaclSchema {
-  readonly shapes: ReadonlyMap<ElementTypeIri | LinkTypeIri, ShaclShape[]>;
+  readonly shapes: ReadonlyMap<ElementTypeIri, readonly ShaclShape[]>;
 }
 
 export interface ShaclShape {
   readonly properties: readonly ShaclProperty[];
   readonly subjectTemplate?: string | undefined;
-  readonly singleton?: boolean;
-  readonly userCreatable?: boolean;
+  readonly canCreate?: boolean;
+  readonly canDelete?: boolean;
 }
 
 export interface ShaclProperty {
@@ -45,8 +51,12 @@ export interface ShaclProperty {
   readonly nodeKind?: Rdf.NamedNode | undefined;
   readonly class_?: Rdf.NamedNode | undefined;
   readonly datatype?: Rdf.NamedNode | undefined;
+  readonly defaultValue?: Rdf.NamedNode | Rdf.Literal | undefined;
+  readonly uniqueLang?: boolean | undefined;
   readonly minCount?: number | undefined;
   readonly maxCount?: number | undefined;
+  readonly order?: number | undefined;
+  readonly reifiableBy?: readonly ShaclShape[];
 }
 
 export async function loadOwlShaclSchema(params: {
@@ -54,34 +64,27 @@ export async function loadOwlShaclSchema(params: {
   signal: AbortSignal;
 }): Promise<OwlShaclSchema> {
   const {schemaProvider, signal} = params;
-  const [{elementTypes}, linkTypes] = await Promise.all([
-    schemaProvider.knownElementTypes({signal}),
-    schemaProvider.knownLinkTypes({signal}),
-  ]);
+  const {elementTypes} = await schemaProvider.knownElementTypes({signal});
 
-  const targetToShapeIri = new Map<ElementTypeIri | LinkTypeIri, Set<ElementIri>>();
+  const targetToShapeIri = new Map<ElementTypeIri, Set<ElementIri>>();
   for (const type of elementTypes) {
-    targetToShapeIri.set(type.id, new Set());
-  }
-  for (const type of linkTypes) {
     targetToShapeIri.set(type.id, new Set());
   }
 
   const allShapeIris = new Set<ElementIri>();
-  const addShape = (targetIri: ElementTypeIri | LinkTypeIri, shapeIri: ElementIri) => {
+  const addShape = (targetIri: ElementTypeIri, shapeIri: ElementIri) => {
     targetToShapeIri.get(targetIri)?.add(shapeIri);
     allShapeIris.add(shapeIri);
   };
 
   await Promise.all([
     loadImplicitClassShapes(elementTypes.map(type => type.id), schemaProvider, addShape, signal),
-    ...elementTypes.map(type => loadTargetShapes(type.id, sh.targetClass, schemaProvider, addShape, signal)),
-    ...linkTypes.map(type => loadTargetShapes(type.id, r_shapes.targetProperty, schemaProvider, addShape, signal)),
+    ...elementTypes.map(type => loadTargetShapes(type.id, schemaProvider, addShape, signal)),
   ]);
 
   const shapeElements = await schemaProvider.elements({elementIds: Array.from(allShapeIris)});
 
-  const shapes = new Map<ElementTypeIri | LinkTypeIri, ShaclShape[]>();
+  const shapes = new Map<ElementTypeIri, ShaclShape[]>();
   await Promise.all(Array.from(targetToShapeIri, async ([targetIri, shapeIris]) => {
     if (shapeIris.size > 0) {
       const targetShapes = await Promise.all(Array.from(
@@ -122,15 +125,14 @@ async function loadImplicitClassShapes(
 }
 
 async function loadTargetShapes(
-  targetIri: ElementTypeIri | LinkTypeIri,
-  targetProperty: typeof sh.targetClass | typeof r_shapes.targetProperty,
+  targetIri: ElementTypeIri,
   schemaProvider: DataProvider,
-  addShape: (targetIri: ElementTypeIri | LinkTypeIri, shapeIri: ElementIri) => void,
+  addShape: (targetIri: ElementTypeIri, shapeIri: ElementIri) => void,
   signal: AbortSignal | undefined
 ): Promise<void> {
   const connected = await schemaProvider.lookup({
     refElementId: targetIri as ElementIri,
-    refElementLinkId: targetProperty,
+    refElementLinkId: sh.targetClass,
     linkDirection: 'in',
     signal,
   });
@@ -165,8 +167,8 @@ async function loadShapeData(
   return {
     properties,
     subjectTemplate: termAsString(getSinglePropertyValue(shapeElement, r_shapes.subjectTemplate)),
-    singleton: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.singleton)),
-    userCreatable: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.userCreatable)),
+    canCreate: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.canCreate)),
+    canDelete: termAsBoolean(getSinglePropertyValue(shapeElement, r_shapes.canDelete)),
   };
 }
 
@@ -179,6 +181,8 @@ async function loadPropertyData(
   let nodeKind: Rdf.NamedNode | undefined;
   let class_: Rdf.NamedNode | undefined;
   let datatype: Rdf.NamedNode | undefined;
+  let defaultValue: Rdf.NamedNode | Rdf.Literal | undefined;
+  const reifiableBy: ElementModel[] = [];
 
   const connected = await schemaProvider.lookup({
     refElementId: propertyElement.id,
@@ -193,21 +197,37 @@ async function loadPropertyData(
       nodeKind = node;
     } else if (outLinks.has(sh.datatype)) {
       datatype = node;
+    } else if (outLinks.has(sh.defaultValue)) {
+      defaultValue = node;
     } else if (outLinks.has(sh.class)) {
       class_ = node;
+    } else if (outLinks.has(dash.reifiableBy)) {
+      reifiableBy.push(element);
     }
   }
 
   if (!path) {
     return undefined;
   }
+
+  let reifiableByShapes: ShaclShape[] | undefined;
+  if (reifiableBy.length > 0) {
+    reifiableByShapes = await Promise.all(reifiableBy.map(shapeElement =>
+      loadShapeData(shapeElement, schemaProvider, signal)
+    ));
+  }
+
   return {
     path: path.value,
     nodeKind,
     class_,
     datatype,
+    defaultValue: defaultValue ?? getSinglePropertyValue(propertyElement, sh.defaultValue),
+    uniqueLang: termAsBoolean(getSinglePropertyValue(propertyElement, sh.uniqueLang)),
     minCount: termAsNumber(getSinglePropertyValue(propertyElement, sh.minCount)),
     maxCount: termAsNumber(getSinglePropertyValue(propertyElement, sh.maxCount)),
+    order: termAsNumber(getSinglePropertyValue(propertyElement, sh.order)),
+    reifiableBy: reifiableByShapes,
   };
 }
 
