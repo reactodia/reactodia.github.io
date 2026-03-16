@@ -1,0 +1,240 @@
+@prefix fhkb: <http://www.example.com/genealogy.owl#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix reactodia: <urn:reactodia:> .
+@prefix r_shapes: <urn:reactodia:shapes:> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix schema: <http://schema.org/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix : <http://reactodia.github.io/genealogy/> .
+
+fhkb:Female rdfs:label "female"@en, "женщина"@ru .
+
+fhkb:Male rdfs:label "male"@en, "мужчина"@ru .
+
+fhkb:Marriage a owl:Class;
+    rdfs:label "Marriage"@en, "Брак"@ru .
+
+fhkb:Person a owl:Class;
+    rdfs:label "Person"@en, "Человек"@ru .
+
+fhkb:hasGodparent a owl:ObjectProperty;
+    rdfs:label "has godparent"@en, "имеет крёстного(ую)"@ru .
+
+fhkb:hasParent a owl:ObjectProperty;
+    rdfs:label "has parent"@en, "имеет родителя"@ru .
+
+fhkb:hasPartner a owl:ObjectProperty;
+    rdfs:label "has marriage partner"@en, "супруг(а)"@ru .
+
+fhkb:hasSex a owl:ObjectProperty;
+    rdfs:label "has sex"@en, "пол"@ru .
+
+rdfs:comment a owl:DatatypeProperty;
+    rdfs:label "comment"@en, "комментарий"@ru .
+
+rdfs:label a owl:DatatypeProperty;
+    rdfs:label "label"@en, "имя/название"@ru .
+
+schema:Place a owl:Class;
+    rdfs:label "Place"@en, "Место"@ru .
+
+schema:address a owl:DatatypeProperty;
+    rdfs:label "address"@en, "адрес"@ru .
+
+schema:birthDate a owl:DatatypeProperty;
+    rdfs:label "birth date"@en, "дата рождения"@ru .
+
+schema:birthPlace a owl:ObjectProperty;
+    rdfs:label "birth place"@en, "место рождения"@ru .
+
+schema:deathDate a owl:DatatypeProperty;
+    rdfs:label "death date"@en, "дата смерти"@ru .
+
+schema:deathPlace a owl:ObjectProperty;
+    rdfs:label "death place"@en, "место смерти"@ru .
+
+schema:encodingFormat a owl:DatatypeProperty;
+    rdfs:label "file type"@en, "тип файла"@ru .
+
+schema:endDate a owl:DatatypeProperty;
+    rdfs:label "end date"@en, "дата окончания"@ru .
+
+schema:fileSize a owl:DatatypeProperty;
+    rdfs:label "file size"@en, "размер файла"@ru .
+
+schema:homeLocation a owl:ObjectProperty;
+    rdfs:label "home location"@en, "место жительства"@ru .
+
+schema:latitude a owl:DatatypeProperty;
+    rdfs:label "latitude"@en, "широта"@ru .
+
+schema:longitude a owl:DatatypeProperty;
+    rdfs:label "longitude"@en, "долгота"@ru .
+
+schema:relatedTo a owl:ObjectProperty;
+    rdfs:label "related to"@en, "связан с"@ru .
+
+schema:startDate a owl:DatatypeProperty;
+    rdfs:label "start date"@en, "дата начала"@ru .
+
+schema:thumbnailUrl a owl:DatatypeProperty;
+    rdfs:label "main image"@en, "основное изображение"@ru .
+
+schema:uploadDate a owl:DatatypeProperty;
+    rdfs:label "upload date"@en, "дата загрузки"@ru .
+
+reactodia:File a owl:Class;
+    rdfs:label "File"@en, "Файл"@ru .
+
+reactodia:sourceProvider a owl:DatatypeProperty;
+    rdfs:label "source"@en, "источник"@ru .
+
+:DataOrigin rdfs:label "user data"@en, "данные пользователя"@ru .
+:SchemaOrigin rdfs:label "schema"@en, "схема"@ru .
+
+:MarriageShape a sh:NodeShape ;
+    sh:targetClass fhkb:Marriage ;
+    r_shapes:subjectTemplate "marriage/{{hex:8}}" ;
+    sh:property [
+        sh:path rdfs:label ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
+    sh:property [
+        sh:path schema:startDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] ;
+    sh:property [
+        sh:path schema:endDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] ;
+    sh:property [
+        sh:path fhkb:hasPartner ;
+		sh:class fhkb:Person ;
+		sh:nodeKind sh:IRI ;
+    ] .
+
+:PersonShape a sh:NodeShape ;
+    sh:targetClass fhkb:Person ;
+    r_shapes:subjectTemplate "person/{{hex:8}}" ;
+    sh:property [
+        sh:path rdfs:label ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
+    sh:property [
+        sh:path schema:thumbnailUrl ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path fhkb:hasSex ;
+        sh:maxCount 1 ;
+		sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:birthDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] ;
+    sh:property [
+        sh:path schema:deathDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] ;
+    sh:property [
+        sh:path fhkb:hasParent ;
+		sh:class fhkb:Person ;
+		sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path fhkb:hasGodparent ;
+		sh:class fhkb:Person ;
+		sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:relatedTo ;
+		sh:class fhkb:Person ;
+		sh:nodeKind sh:IRI ;
+    ] ;
+    sh:property [
+        sh:path schema:birthPlace ;
+		sh:class schema:Place ;
+		sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:deathPlace ;
+		sh:class schema:Place ;
+		sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:homeLocation ;
+		sh:class schema:Place ;
+		sh:nodeKind sh:IRI ;
+    ] .
+
+:PlaceShape a sh:NodeShape ;
+    sh:targetClass schema:Place ;
+    r_shapes:subjectTemplate "place/{{hex:8}}" ;
+    sh:property [
+        sh:path rdfs:label ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
+    sh:property [
+        sh:path schema:thumbnailUrl ;
+    ] ;
+    sh:property [
+        sh:path schema:address ;
+		sh:datatype xsd:string ;
+    ] ;
+    sh:property [
+        sh:path schema:latitude ;
+		sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+    ] ;
+    sh:property [
+        sh:path schema:longitude ;
+		sh:datatype xsd:decimal ;
+        sh:maxCount 1 ;
+    ] .
+
+:FileShape a sh:NodeShape ;
+    sh:targetClass reactodia:File ;
+    sh:property [
+        sh:path rdfs:label ;
+    ] .
+
+:commonPropertyShape a sh:NodeShape ;
+    r_shapes:targetProperty
+        fhkb:hasGodparent,
+        fhkb:hasParent,
+        fhkb:hasPartner,
+        schema:birthPlace,
+        schema:deathPlace,
+        schema:homeLocation,
+        schema:relatedTo ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] .
+
+:homeLocationShape a sh:NodeShape ;
+    r_shapes:targetProperty schema:homeLocation ;
+    sh:property [
+        sh:path schema:startDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] ;
+    sh:property [
+        sh:path schema:endDate ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:date ;
+    ] .
