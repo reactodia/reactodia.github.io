@@ -5,7 +5,7 @@ import * as N3 from 'n3';
 
 import { applyRdfChanges } from './ApplyRdfChanges';
 import { InMemoryFileUploader } from './FormInputFile';
-import { fhkb, rdfs, schema, xsd } from './Vocabularies';
+import { genealogy, fhkb, rdfs, schema, xsd } from './Vocabularies';
 
 export class GenealogicalPackage {
   private static readonly FILE_IRI_PREFIX = 'urn:reactodia:genealogical-package:file:';
@@ -27,8 +27,21 @@ export class GenealogicalPackage {
   }
 
   static createEmpty(): GenealogicalPackage {
+    const factory = Reactodia.Rdf.DefaultDataFactory;
     const controller = new AbortController();
-    return new GenealogicalPackage(undefined, [], [], controller.signal);
+    const graph: Reactodia.Rdf.Quad[] = [
+      factory.quad(
+        factory.namedNode(genealogy.ActiveSettings),
+        factory.namedNode(Reactodia.rdf.type),
+        factory.namedNode(genealogy.PackageSettings),
+      ),
+      factory.quad(
+        factory.namedNode(genealogy.ActiveSettings),
+        factory.namedNode(genealogy.defaultNamespaceBase),
+        factory.literal('http://reactodia.github.io/genealogy/'),
+      ),
+    ];
+    return new GenealogicalPackage(undefined, graph, [], controller.signal);
   }
 
   static async loadFromBytes(bytes: Uint8Array, options: { signal: AbortSignal }): Promise<GenealogicalPackage> {

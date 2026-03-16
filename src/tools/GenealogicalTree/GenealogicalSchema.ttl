@@ -94,6 +94,12 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 :DataOrigin rdfs:label "user data"@en, "данные пользователя"@ru .
 :SchemaOrigin rdfs:label "schema"@en, "схема"@ru .
 
+:PackageSettings a owl:Class ;
+    rdfs:label "Package Settings"@en, "Настройки пакета"@ru .
+
+:defaultNamespaceBase a owl:DatatypeProperty ;
+    rdfs:label "default namespace"@en, "пространстро имён по-умолчанию"@ru .
+
 :MarriageShape a sh:NodeShape ;
     sh:targetClass fhkb:Marriage ;
     r_shapes:subjectTemplate "marriage/{{hex:8}}" ;
@@ -209,8 +215,19 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 
 :FileShape a sh:NodeShape ;
     sh:targetClass reactodia:File ;
+    r_shapes:userCreatable false ;
     sh:property [
         sh:path rdfs:label ;
+    ] .
+
+:PackageSettingsShape a sh:NodeShape ;
+    sh:targetClass :PackageSettings ;
+    r_shapes:singleton true ;
+    sh:property [
+        sh:path :defaultNamespaceBase ;
+        sh:datatype xsd:string ;
+        sh:minCount 1 ;
+        sh:maxCount 1 ;
     ] .
 
 :commonPropertyShape a sh:NodeShape ;

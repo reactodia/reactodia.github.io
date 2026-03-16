@@ -1,6 +1,8 @@
-import { Rdf, DataProvider, ElementIri, ElementTypeIri, LinkTypeIri, PropertyTypeIri, ElementModel, xsd } from '@reactodia/workspace';
+import {
+  Rdf, DataProvider, ElementIri, ElementTypeIri, LinkTypeIri, PropertyTypeIri, ElementModel,
+} from '@reactodia/workspace';
 
-import { vocabulary } from './Vocabularies';
+import { vocabulary, xsd } from './Vocabularies';
 
 export const sh = vocabulary('http://www.w3.org/ns/shacl#', [
   'BlankNode',
@@ -21,8 +23,10 @@ export const sh = vocabulary('http://www.w3.org/ns/shacl#', [
 ]);
 
 export const r_shapes = vocabulary('urn:reactodia:shapes:', [
+  'singleton',
   'subjectTemplate',
   'targetProperty',
+  'userCreatable',
 ]);
 
 export interface OwlShaclSchema {
@@ -32,6 +36,8 @@ export interface OwlShaclSchema {
 export interface ShaclShape {
   readonly properties: readonly ShaclProperty[];
   readonly subjectTemplate?: string | undefined;
+  readonly singleton?: boolean;
+  readonly userCreatable?: boolean;
 }
 
 export interface ShaclProperty {
@@ -159,6 +165,8 @@ async function loadShapeData(
   return {
     properties,
     subjectTemplate: termAsString(getSingleValue(shapeElement, r_shapes.subjectTemplate)),
+    singleton: termAsBoolean(getSingleValue(shapeElement, r_shapes.singleton)),
+    userCreatable: termAsBoolean(getSingleValue(shapeElement, r_shapes.userCreatable)),
   };
 }
 
@@ -229,6 +237,17 @@ function termAsNumeric(term: Rdf.NamedNode | Rdf.Literal | undefined): number | 
 function termAsString(term: Rdf.NamedNode | Rdf.Literal | undefined): string | undefined {
   if (term && term.termType === 'Literal' && term.datatype.value === xsd.string) {
     return term.value;
+  }
+  return undefined;
+}
+
+function termAsBoolean(term: Rdf.NamedNode | Rdf.Literal | undefined): boolean | undefined {
+  if (term && term.termType === 'Literal' && term.datatype.value === xsd.boolean) {
+    return (
+      term.value === 'true' ? true :
+      term.value === 'false' ? false :
+      undefined
+    );
   }
   return undefined;
 }
