@@ -2,11 +2,6 @@
     /* Reactodia workspace */
 }
 
-.marriage[class] {
-    width: var(--genealogical-tree-element-width, 90px);
-    height: var(--genealogical-tree-element-height, 90px);
-}
-
 .workspace :global(.reactodia-standard-element)[class] {
     min-width: 210px;
 }

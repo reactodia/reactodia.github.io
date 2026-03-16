@@ -9,6 +9,9 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix : <http://reactodia.github.io/genealogy/> .
 
+# Genealogical Ontology is based on Family History Knowledge Base (FHKB):
+# https://oboacademy.github.io/obook/tutorial/fhkb/
+
 fhkb:Female rdfs:label "female"@en, "женщина"@ru .
 
 fhkb:Male rdfs:label "male"@en, "мужчина"@ru .
@@ -97,12 +100,15 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 :PackageSettings a owl:Class ;
     rdfs:label "Package Settings"@en, "Настройки пакета"@ru .
 
+:defaultLanguage a owl:DatatypeProperty ;
+    rdfs:label "default language"@en, "язык по-умолчанию"@ru .
+
 :defaultNamespaceBase a owl:DatatypeProperty ;
     rdfs:label "default namespace"@en, "пространстро имён по-умолчанию"@ru .
 
 :MarriageShape a sh:NodeShape ;
     sh:targetClass fhkb:Marriage ;
-    r_shapes:subjectTemplate "marriage/{{hex:8}}" ;
+    r_shapes:subjectTemplate "marriage_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
     ] ;
@@ -123,11 +129,12 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:path fhkb:hasPartner ;
 		sh:class fhkb:Person ;
 		sh:nodeKind sh:IRI ;
+        sh:minCount 2 ;
     ] .
 
 :PersonShape a sh:NodeShape ;
     sh:targetClass fhkb:Person ;
-    r_shapes:subjectTemplate "person/{{hex:8}}" ;
+    r_shapes:subjectTemplate "person_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
     ] ;
@@ -188,7 +195,7 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 
 :PlaceShape a sh:NodeShape ;
     sh:targetClass schema:Place ;
-    r_shapes:subjectTemplate "place/{{hex:8}}" ;
+    r_shapes:subjectTemplate "place_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
     ] ;
@@ -223,6 +230,11 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 :PackageSettingsShape a sh:NodeShape ;
     sh:targetClass :PackageSettings ;
     r_shapes:singleton true ;
+    sh:property [
+        sh:path :defaultLanguage ;
+        sh:datatype xsd:string ;
+        sh:maxCount 1 ;
+    ] ;
     sh:property [
         sh:path :defaultNamespaceBase ;
         sh:datatype xsd:string ;

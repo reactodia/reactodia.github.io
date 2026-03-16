@@ -1,7 +1,10 @@
 import * as Reactodia from '@reactodia/workspace';
 
-import { loadOwlShaclSchema, type OwlShaclSchema, type ShaclShape, sh } from './OwlShaclSchema';
-import { fhkb, schema } from './Vocabularies';
+import {
+  loadOwlShaclSchema, type OwlShaclSchema, type ShaclShape, sh,
+  getSinglePropertyValue, termAsString,
+} from './OwlShaclSchema';
+import { genealogy, fhkb, schema } from './Vocabularies';
 
 export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider {
   private readonly literalLanguages: ReadonlyArray<string> =
@@ -12,13 +15,17 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
     new Error('OWL-SHACL schema should be loaded first')
   );
 
-  private readonly subjectBase = 'http://reactodia.github.io/genealogy/';
+  private readonly defaultNamespaceBase: string;
   private readonly defaultSubjectTemplate = `{{hex:8}}`;
+  private loadedSettings =
+    Reactodia.EntityElement.placeholderData(genealogy.ActiveSettings);
+  private unsavedSettings: Reactodia.ElementModel | undefined;
 
   constructor(providerOptions: {
     schemaProvider: Reactodia.DataProvider;
+    defaultNamespaceBase: string;
   }) {
-    const {schemaProvider} = providerOptions;
+    const {schemaProvider, defaultNamespaceBase} = providerOptions;
     const {factory} = schemaProvider;
     super({
       getLiteralLanguages: () => this.literalLanguages,
@@ -39,9 +46,14 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
           });
         }
 
+        const settings = this.getSettings();
+        const namespaceBase = termAsString(
+          getSinglePropertyValue(settings, genealogy.defaultNamespaceBase)
+        ) ?? this.defaultNamespaceBase;
+
         return {
           data: {
-            id: `${this.subjectBase}${generateSubject(subjectTemplate)}`,
+            id: `${namespaceBase}${generateSubject(subjectTemplate)}`,
             types: [type],
             properties: {
               [Reactodia.rdfs.label]: [
@@ -104,9 +116,10 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
         for (const type of entity.types) {
           const shapes = shacl.shapes.get(type);
           if (shapes) {
+            const userCreatable = shapes.every(shape => shape.userCreatable ?? true);
             const singleton = shapes.some(shape => shape.singleton);
             return {
-              canChangeIri: !singleton,
+              canChangeIri: userCreatable && !singleton,
               canEdit: true,
               canDelete: !singleton,
             };
@@ -150,6 +163,7 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
       },
     });
     this.schemaProvider = schemaProvider;
+    this.defaultNamespaceBase = defaultNamespaceBase;
   }
 
   private async getSchema(): Promise<OwlShaclSchema> {
@@ -162,6 +176,30 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
       schemaProvider: this.schemaProvider,
       signal: params.signal,
     });
+  }
+
+  getSettings(): Reactodia.ElementModel {
+    return this.unsavedSettings ?? this.loadedSettings;
+  }
+
+  async loadSettings(params: {
+    mainProvider: Reactodia.DataProvider;
+    signal: AbortSignal;
+  }): Promise<void> {
+    const {mainProvider, signal} = params;
+    const elements = await mainProvider.elements({
+      elementIds: [genealogy.ActiveSettings],
+      signal,
+    });
+    const settings = elements.get(genealogy.ActiveSettings);
+    if (settings) {
+      this.loadedSettings = settings;
+    }
+  }
+
+  updateSettings(fromState: Reactodia.AuthoringState): void {
+    const event = fromState.elements.get(genealogy.ActiveSettings);
+    this.unsavedSettings = event && event.type !== 'entityDelete' ? event.data : undefined;
   }
 
   private collectPropertyShapes(

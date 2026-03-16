@@ -10,11 +10,14 @@ import { genealogy, fhkb, rdfs, schema, xsd } from './Vocabularies';
 export class GenealogicalPackage {
   private static readonly FILE_IRI_PREFIX = 'urn:reactodia:genealogical-package:file:';
 
+  static readonly DEFAULT_NAMESPACE_BASE = 'http://reactodia.github.io/genealogy-graph/';
+
   private readonly imageNameToUrl = new Map<string, string>();
 
   private constructor(
     readonly diagram: Reactodia.SerializedDiagram | undefined,
     readonly graph: readonly Reactodia.Rdf.Quad[],
+    private readonly prefixes: Readonly<Record<string, string>>,
     private readonly entries: zip.Entry[],
     private readonly signal: AbortSignal,
   ) {
@@ -38,10 +41,10 @@ export class GenealogicalPackage {
       factory.quad(
         factory.namedNode(genealogy.ActiveSettings),
         factory.namedNode(genealogy.defaultNamespaceBase),
-        factory.literal('http://reactodia.github.io/genealogy/'),
+        factory.literal(GenealogicalPackage.DEFAULT_NAMESPACE_BASE),
       ),
     ];
-    return new GenealogicalPackage(undefined, graph, [], controller.signal);
+    return new GenealogicalPackage(undefined, graph, {}, [], controller.signal);
   }
 
   static async loadFromBytes(bytes: Uint8Array, options: { signal: AbortSignal }): Promise<GenealogicalPackage> {
@@ -66,16 +69,19 @@ export class GenealogicalPackage {
     }
 
     let graph: Reactodia.Rdf.Quad[] = [];
+    let prefixes: Record<string, string> = Object.create(null);
     if (graphEntry) {
       const graphTurtle = await graphEntry.getData(new zip.TextWriter());
       try {
-        graph = new N3.Parser().parse(graphTurtle);
+        graph = new N3.Parser().parse(graphTurtle, null, (prefix, node) => {
+          prefixes[prefix] = node.value;
+        });
       } catch (err) {
         throw new Error('Failed to parse serialized graph "graph.ttl"', {cause: err});
       }
     }
 
-    return new GenealogicalPackage(diagram, graph, entries, signal);
+    return new GenealogicalPackage(diagram, graph, prefixes, entries, signal);
   }
 
   async resolveFileUrl(iri: string): Promise<string | undefined> {
@@ -150,11 +156,23 @@ export class GenealogicalPackage {
       return q;
     });
     quads.sort(Reactodia.Rdf.compareTerms);
+
+    let defaultNamespace = GenealogicalPackage.DEFAULT_NAMESPACE_BASE;
+    for (const {object: term} of dataset.iterateMatches(
+      factory.namedNode(genealogy.ActiveSettings),
+      factory.namedNode(genealogy.defaultNamespaceBase),
+      null
+    )) {
+      defaultNamespace = term.value;
+      break;
+    }
     const graphTurtle = await serializeToTurtleString(quads, {
+      ...this.prefixes,
       'fhkb': fhkb.$namespace,
       'rdfs': rdfs.$namespace,
       'schema': schema.$namespace,
       'xsd': xsd.$namespace,
+      '': defaultNamespace,
     });
 
     const fileRenames = new Map<string, string>();

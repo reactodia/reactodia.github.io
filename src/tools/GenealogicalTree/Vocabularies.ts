@@ -65,5 +65,6 @@ export const genealogy = vocabulary('http://reactodia.github.io/genealogy/', [
   'DataOrigin',
   'SchemaOrigin',
   'PackageSettings',
+  'defaultLanguage',
   'defaultNamespaceBase',
 ]);
