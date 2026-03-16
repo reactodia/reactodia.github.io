@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 
-import { fhkb, schema } from './Vocabularies';
+import { schema } from './Vocabularies';
 
 export function MainMenu(props: {
   onOpen: (bytes: Uint8Array) => void;
@@ -53,7 +53,7 @@ export function MainMenu(props: {
           const batch = model.history.startBatch('Reset pinned properties');
           try {
             for (const element of model.elements) {
-              if (element instanceof Reactodia.EntityElement && element.data.types.includes(fhkb.Person)) {
+              if (element instanceof Reactodia.EntityElement && element.data.types.includes(schema.Person)) {
                 batch.history.execute(Reactodia.setElementState(
                   element,
                   element.elementState

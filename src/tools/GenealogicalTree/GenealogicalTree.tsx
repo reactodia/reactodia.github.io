@@ -11,7 +11,7 @@ import { MarriageTemplate } from './GraphTemplates';
 import { MainMenu } from './MainMenu';
 import { OpenPackageSettings } from './OpenPackageSettings';
 import { sh, getSinglePropertyValue, termAsString } from './OwlShaclSchema';
-import { fhkb, rdfs, schema, genealogy } from './Vocabularies';
+import { genealogy, rdfs, schema } from './Vocabularies';
 
 import enTranslation from './translations/en.translation.json';
 import GenealogicalSchemaTurtle from './GenealogicalSchema.ttl?raw';
@@ -129,7 +129,7 @@ export function PlaygroundGenealogicalTree() {
     if (!sourcePackage.diagram) {
       const task = overlay.startTask();
       try {
-        await Promise.all([fhkb.Person, fhkb.Marriage, schema.Place].map(async (type) => {
+        await Promise.all([schema.Person, genealogy.Marriage, schema.Place].map(async (type) => {
           const items = await mainProvider.lookup({elementTypeId: type});
           for (const {element} of items) {
             model.createElement(element.id);
@@ -203,12 +203,12 @@ export function PlaygroundGenealogicalTree() {
             requireCtrl: false,
           },
           elementTemplateResolver: types => {
-            if (types.includes(fhkb.Marriage)) {
+            if (types.includes(genealogy.Marriage)) {
               return MarriageTemplate;
             }
           },
           linkTemplateResolver: type => {
-            if (type === fhkb.hasParent) {
+            if (type === schema.parent) {
               return ParentLinkTemplate;
             } else if (type) {
               return OtherLinkTemplate;
@@ -226,7 +226,7 @@ export function PlaygroundGenealogicalTree() {
           inputResolver: (property, inputProps) => {
             if (property === rdfs.comment) {
               return <Reactodia.FormInputList {...inputProps} valueInput={MultilineTextInput} />;
-            } else if (property === fhkb.hasSex) {
+            } else if (property === schema.gender) {
               return <Reactodia.FormInputList {...inputProps} valueInput={FormInputSex} />;
             } else if (property === Reactodia.schema.thumbnailUrl) {
               return <FormInputImage {...inputProps} />;
@@ -259,7 +259,7 @@ class GenealogicalDataProvider extends Reactodia.RdfDataProvider {
     }
   ) {
     super({
-      datatypePredicates: [fhkb.hasSex, Reactodia.schema.thumbnailUrl],
+      datatypePredicates: [schema.gender, Reactodia.schema.thumbnailUrl],
     });
     const {uploader} = options;
     this.uploader = uploader;
@@ -394,8 +394,8 @@ const OtherLinkTemplate: Reactodia.LinkTemplate = {
 function FormInputSex(props: Reactodia.FormInputSingleProps) {
   const {model} = Reactodia.useWorkspace();
   const variants = React.useMemo(() => [
-    model.dataProvider.factory.namedNode(fhkb.Male),
-    model.dataProvider.factory.namedNode(fhkb.Female),
+    model.dataProvider.factory.namedNode(schema.Male),
+    model.dataProvider.factory.namedNode(schema.Female),
   ], []);
   return (
     <FormInputSelect {...props} variants={variants} />

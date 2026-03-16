@@ -1,7 +1,7 @@
 import * as Reactodia from '@reactodia/workspace';
 
 import { getSinglePropertyValue } from './OwlShaclSchema';
-import { fhkb } from './Vocabularies';
+import { genealogy, schema } from './Vocabularies';
 
 export class GenealogicalValidationProvider implements Reactodia.ValidationProvider {
   private dataProvider = new Reactodia.EmptyDataProvider();
@@ -9,16 +9,16 @@ export class GenealogicalValidationProvider implements Reactodia.ValidationProvi
   async validate(e: Reactodia.ValidationEvent): Promise<Reactodia.ValidationResult> {
     const {target, state, translation: t, signal} = e;
     const validations: (Reactodia.ValidatedElement | Reactodia.ValidatedLink)[] = [];
-    if (target.types.includes(fhkb.Marriage)) {
+    if (target.types.includes(genealogy.Marriage)) {
       const items = await this.dataProvider.lookup({refElementId: target.id, linkDirection: 'out', signal});
       const partners = new Set<Reactodia.ElementIri>();
       for (const item of items) {
-        if (item.outLinks.has(fhkb.hasPartner)) {
+        if (item.outLinks.has(genealogy.hasPartner)) {
           partners.add(item.element.id);
         }
       }
       for (const {type, data} of state.links.values()) {
-        if (data.sourceId === target.id && data.linkTypeId === fhkb.hasPartner) {
+        if (data.sourceId === target.id && data.linkTypeId === genealogy.hasPartner) {
           if (type === 'relationAdd') {
             partners.add(data.targetId);
           } else if (type === 'relationDelete') {
@@ -34,17 +34,17 @@ export class GenealogicalValidationProvider implements Reactodia.ValidationProvi
           message: t.text('genealogical_tree.validation.marriage_partner_count'),
         });
       }
-    } else if (target.types.includes(fhkb.Person)) {
+    } else if (target.types.includes(schema.Person)) {
       const event = state.elements.get(target.id);
       if (!event || event.type !== 'entityDelete') {
         const data = event?.data ?? target;
-        const sex = getSinglePropertyValue(data, fhkb.hasSex);
-        if (!sex) {
+        const gender = getSinglePropertyValue(data, schema.gender);
+        if (!gender) {
           validations.push({
             type: 'element',
             target: target.id,
             severity: 'warning',
-            propertyType: fhkb.hasSex,
+            propertyType: schema.gender,
             message: t.text('genealogical_tree.validation.missing_property_value'),
           });
         }

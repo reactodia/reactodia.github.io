@@ -1,5 +1,4 @@
 @prefix dash: <http://datashapes.org/dash#> .
-@prefix fhkb: <http://www.example.com/genealogy.owl#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
@@ -8,38 +7,32 @@
 @prefix sh: <http://www.w3.org/ns/shacl#> .
 @prefix schema: <http://schema.org/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix : <http://reactodia.github.io/genealogy/> .
+@prefix : <http://reactodia.github.io/genealogy#> .
 
 # Genealogical Ontology is based on Family History Knowledge Base (FHKB):
 # https://oboacademy.github.io/obook/tutorial/fhkb/
 
-fhkb:Female rdfs:label "female"@en, "женщина"@ru .
-
-fhkb:Male rdfs:label "male"@en, "мужчина"@ru .
-
-fhkb:Marriage a owl:Class;
+:Marriage a owl:Class;
     rdfs:label "Marriage"@en, "Брак"@ru .
 
-fhkb:Person a owl:Class;
-    rdfs:label "Person"@en, "Человек"@ru .
-
-fhkb:hasGodparent a owl:ObjectProperty;
+:hasGodparent a owl:ObjectProperty;
     rdfs:label "has godparent"@en, "имеет крёстного(ую)"@ru .
 
-fhkb:hasParent a owl:ObjectProperty;
-    rdfs:label "has parent"@en, "имеет родителя"@ru .
-
-fhkb:hasPartner a owl:ObjectProperty;
+:hasPartner a owl:ObjectProperty;
     rdfs:label "has marriage partner"@en, "супруг(а)"@ru .
-
-fhkb:hasSex a owl:ObjectProperty;
-    rdfs:label "has sex"@en, "пол"@ru .
 
 rdfs:comment a owl:DatatypeProperty;
     rdfs:label "comment"@en, "комментарий"@ru .
 
 rdfs:label a owl:DatatypeProperty;
     rdfs:label "label"@en, "имя/название"@ru .
+
+schema:Female rdfs:label "female"@en, "женщина"@ru .
+
+schema:Male rdfs:label "male"@en, "мужчина"@ru .
+
+schema:Person a owl:Class;
+    rdfs:label "Person"@en, "Человек"@ru .
 
 schema:Place a owl:Class;
     rdfs:label "Place"@en, "Место"@ru .
@@ -68,6 +61,9 @@ schema:endDate a owl:DatatypeProperty;
 schema:fileSize a owl:DatatypeProperty;
     rdfs:label "file size"@en, "размер файла"@ru .
 
+schema:gender a owl:ObjectProperty;
+    rdfs:label "gender"@en, "пол"@ru .
+
 schema:homeLocation a owl:ObjectProperty;
     rdfs:label "home location"@en, "место жительства"@ru .
 
@@ -76,6 +72,9 @@ schema:latitude a owl:DatatypeProperty;
 
 schema:longitude a owl:DatatypeProperty;
     rdfs:label "longitude"@en, "долгота"@ru .
+
+schema:parent a owl:ObjectProperty;
+    rdfs:label "has parent"@en, "имеет родителя"@ru .
 
 schema:relatedTo a owl:ObjectProperty;
     rdfs:label "related to"@en, "связан с"@ru .
@@ -108,7 +107,7 @@ reactodia:sourceProvider a owl:DatatypeProperty;
     rdfs:label "default namespace"@en, "пространстро имён по-умолчанию"@ru .
 
 :MarriageShape a sh:NodeShape ;
-    sh:targetClass fhkb:Marriage ;
+    sh:targetClass :Marriage ;
     r_shapes:subjectTemplate "marriage_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
@@ -131,22 +130,22 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:order 4 ;
     ] ;
     sh:property [
-        sh:path fhkb:hasPartner ;
-		sh:class fhkb:Person ;
+        sh:path :hasPartner ;
+		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
         sh:minCount 2 ;
         dash:reifiableBy :commonPropertyShape ;
     ] .
 
 :PersonShape a sh:NodeShape ;
-    sh:targetClass fhkb:Person ;
+    sh:targetClass schema:Person ;
     r_shapes:subjectTemplate "person_{{hex:8}}" ;
     sh:property [
         sh:path rdfs:label ;
         sh:order 1 ;
     ] ;
     sh:property [
-        sh:path fhkb:hasSex ;
+        sh:path schema:gender ;
         sh:maxCount 1 ;
 		sh:nodeKind sh:IRI ;
         sh:order 2 ;
@@ -173,20 +172,20 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:order 6 ;
     ] ;
     sh:property [
-        sh:path fhkb:hasParent ;
-		sh:class fhkb:Person ;
+        sh:path schema:parent ;
+		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
         dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
-        sh:path fhkb:hasGodparent ;
-		sh:class fhkb:Person ;
+        sh:path :hasGodparent ;
+		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
         dash:reifiableBy :commonPropertyShape ;
     ] ;
     sh:property [
         sh:path schema:relatedTo ;
-		sh:class fhkb:Person ;
+		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
         dash:reifiableBy :commonPropertyShape ;
     ] ;

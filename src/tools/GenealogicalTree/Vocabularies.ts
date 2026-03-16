@@ -19,15 +19,16 @@ export function vocabulary<const Keys extends string[]>(prefix: string, keys: Ke
 }
 
 // Based on https://github.com/blokhin/genealogical-trees/blob/master/data/header.ttl
-export const fhkb = vocabulary('http://www.example.com/genealogy.owl#', [
-  'Female',
-  'Male',
+export const genealogy = vocabulary('http://reactodia.github.io/genealogy#', [
+  'ActiveSettings',
+  'DataOrigin',
   'Marriage',
-  'Person',
+  'SchemaOrigin',
+  'PackageSettings',
+  'defaultLanguage',
+  'defaultNamespaceBase',
   'hasGodparent',
   'hasPartner',
-  'hasParent',
-  'hasSex',
 ]);
 
 export const rdfs = vocabulary(Reactodia.rdfs.$namespace, [
@@ -35,6 +36,9 @@ export const rdfs = vocabulary(Reactodia.rdfs.$namespace, [
 ]);
 
 export const schema = vocabulary(Reactodia.schema.$namespace, [
+  'Female',
+  'Male',
+  'Person',
   'Place',
   'address',
   'birthDate',
@@ -44,9 +48,11 @@ export const schema = vocabulary(Reactodia.schema.$namespace, [
   'encodingFormat',
   'endDate',
   'fileSize',
+  'gender',
   'homeLocation',
   'latitude',
   'longitude',
+  'parent',
   'relatedTo',
   'startDate',
   'uploadDate',
@@ -58,13 +64,4 @@ export const xsd = vocabulary(Reactodia.xsd.$namespace, [
   'dateTime',
   'decimal',
   'string',
-]);
-
-export const genealogy = vocabulary('http://reactodia.github.io/genealogy/', [
-  'ActiveSettings',
-  'DataOrigin',
-  'SchemaOrigin',
-  'PackageSettings',
-  'defaultLanguage',
-  'defaultNamespaceBase',
 ]);

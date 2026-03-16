@@ -5,7 +5,7 @@ import * as N3 from 'n3';
 
 import { applyRdfChanges } from './ApplyRdfChanges';
 import { InMemoryFileUploader } from './FormInputFile';
-import { genealogy, fhkb, rdfs, schema, xsd } from './Vocabularies';
+import { genealogy, rdfs, schema, xsd } from './Vocabularies';
 
 export class GenealogicalPackage {
   private static readonly FILE_IRI_PREFIX = 'urn:reactodia:genealogical-package:file:';
@@ -168,7 +168,7 @@ export class GenealogicalPackage {
     }
     const graphTurtle = await serializeToTurtleString(quads, {
       ...this.prefixes,
-      'fhkb': fhkb.$namespace,
+      'genealogy': genealogy.$namespace,
       'rdfs': rdfs.$namespace,
       'schema': schema.$namespace,
       'xsd': xsd.$namespace,

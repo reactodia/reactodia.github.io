@@ -4,7 +4,7 @@ import {
   loadOwlShaclSchema, type OwlShaclSchema, type ShaclShape, sh,
   getSinglePropertyValue, termAsString,
 } from './OwlShaclSchema';
-import { genealogy, fhkb, schema } from './Vocabularies';
+import { genealogy, schema } from './Vocabularies';
 
 export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider {
   private readonly literalLanguages: ReadonlyArray<string> =
@@ -39,7 +39,7 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
         const typeLabel = t.selectLabel(typeInfo.get(type)?.label ?? [], language);
 
         let elementState = Reactodia.TemplateState.empty;
-        if (type === fhkb.Person) {
+        if (type === schema.Person) {
           elementState = elementState.set(Reactodia.TemplateProperties.PinnedProperties, {
             [schema.birthDate]: true,
             [schema.deathDate]: true,
