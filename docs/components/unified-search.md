@@ -100,9 +100,15 @@ function SearchWithNpm() {
     },
   ], []);
 
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+    const {getCommandBus} = context;
+    getCommandBus(Reactodia.UnifiedSearchTopic)
+      .trigger('focus', { sectionKey: 'entities' });
+  }, []);
+
   return (
     <div className='reactodia-live-editor'>
-      <Reactodia.Workspace defaultLayout={defaultLayout}>
+      <Reactodia.Workspace ref={onMount} defaultLayout={defaultLayout}>
         <Reactodia.DefaultWorkspace
           mainToolbar={{dock: 'n'}}
           navigator={{expanded: false}}

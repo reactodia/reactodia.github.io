@@ -10,6 +10,10 @@ const ReactLiveScope = {
     const {Reactodia} = require('./_reactodia');
     return Reactodia;
   },
+  get Forms() {
+    const {Forms} = require('./_forms');
+    return Forms;
+  },
   get N3() {
     const {N3} = require('./_n3');
     return N3;

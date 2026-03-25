@@ -7,13 +7,17 @@ const owl = vocabulary('http://www.w3.org/2002/07/owl#', [
   'ObjectProperty',
 ]);
 
-const rdfs = vocabulary('http://www.w3.org/2000/01/rdf-schema#', [
+export const rdfs = vocabulary('http://www.w3.org/2000/01/rdf-schema#', [
   'comment',
   'domain',
   'range',
   'seeAlso',
   'subClassOf',
   'subPropertyOf',
+]);
+
+export const example = vocabulary('http://www.example.com/', [
+  'workflowStatus',
 ]);
 
 const SIMULATED_DELAY: number = 50; /* ms */
@@ -149,18 +153,22 @@ export class ExampleMetadataProvider extends Reactodia.BaseMetadataProvider {
             valueShape: {termType: 'Literal'},
             order: 1,
           });
-          properties.set(rdfs.comment, {
+          properties.set(example.workflowStatus, {
             valueShape: {termType: 'Literal'},
             order: 2,
+          });
+          properties.set(rdfs.comment, {
+            valueShape: {termType: 'Literal'},
+            order: 3,
           });
           properties.set(Reactodia.schema.thumbnailUrl, {
             valueShape: {termType: 'NamedNode'},
             maxCount: 1,
-            order: 3,
+            order: 4,
           });
           properties.set(rdfs.seeAlso, {
             valueShape: {termType: 'NamedNode'},
-            order: 4,
+            order: 5,
           });
         }
         return {properties};
@@ -169,8 +177,13 @@ export class ExampleMetadataProvider extends Reactodia.BaseMetadataProvider {
         await Reactodia.delay(SIMULATED_DELAY, {signal});
         const properties = new Map<Reactodia.PropertyTypeIri, Reactodia.MetadataPropertyShape>();
         if (this.editableRelations.has(linkType)) {
+          properties.set(example.workflowStatus, {
+            valueShape: {termType: 'Literal'},
+            order: 1,
+          });
           properties.set(rdfs.comment, {
             valueShape: {termType: 'Literal'},
+            order: 2,
           });
         }
         return {properties};

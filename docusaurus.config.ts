@@ -55,6 +55,7 @@ const config: Config = {
       {
         entryPoints: [
           `${libraryPathPrefix}/reactodia-workspace/src/workspace.ts`,
+          `${libraryPathPrefix}/reactodia-workspace/src/forms/index.ts`,
           `${libraryPathPrefix}/reactodia-workspace/src/layout-sync.ts`,
           `${libraryPathPrefix}/reactodia-workspace/src/layout.worker.ts`,
           `${libraryPathPrefix}/reactodia-workspace/src/legacy-styles.tsx`,
