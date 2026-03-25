@@ -79,6 +79,10 @@ const sidebars: SidebarsConfig = {
       collapsed: false,
     },
     {
+      ...findSidebarCategory(typedocItems, 'forms'),
+      label: '/forms',
+    },
+    {
       ...findSidebarCategory(typedocItems, 'layout-sync'),
       label: '/layout-sync',
     },

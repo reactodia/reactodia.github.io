@@ -1,5 +1,5 @@
 ---
-title: <FormInput* />
+title: <Forms.Input* />
 ---
 
 # Form input components
@@ -8,8 +8,10 @@ Reactodia provides basic built-in components to edit entity or relation properti
 
 | Form input component | Description |
 |----------------------|-------------|
-| [`<FormInputList />`](/docs/api/workspace/variables/FormInputList.md) | Form input to edit multiple values in a list of specified single value inputs. |
-| [`<FormInputText />`](/docs/api/workspace/functions/FormInputText.md) | Form input to edit a single value as a plain string with an optional language. |
+| [`<Forms.InputList />`](/docs/api/forms/functions/InputList.md) | Form input to edit multiple values in a list of specified single value inputs. |
+| [`<Forms.InputText />`](/docs/api/forms/functions/InputText.md) | Form input to edit a single value as a plain string with an optional language. |
+| [`<Forms.InputSelect />`](/docs/api/forms/functions/InputSelect.md) | Form input to select a value from a predefined list of variants. |
+| [`<Forms.InputFile />`](/docs/api/forms/functions/InputFile.md) | Form input to upload files and display previously uploaded files. |
 
 :::warning
 Currently form input components are considered **unstable** so there might be breaking changes in their API in the future.
@@ -60,10 +62,17 @@ function Example() {
             search={null}
             navigator={{expanded: false}}
             visualAuthoring={{
-              inputResolver: (property, inputProps) =>
-                property === RDF_COMMENT
-                  ? <Reactodia.FormInputList {...inputProps} valueInput={MultilineTextInput} />
-                  : undefined,
+              propertyEditor: options => (
+                <Reactodia.DefaultPropertyEditor options={options}
+                  resolveInput={(property, inputProps) => (
+                    <Forms.InputList {...inputProps}
+                      valueInput={
+                        property === RDF_COMMENT ? MultilineTextInput : Forms.InputText
+                      }
+                    />
+                  )}
+                />
+              ),
             }}
           />
       </Reactodia.Workspace>
@@ -72,7 +81,7 @@ function Example() {
 }
 
 function MultilineTextInput(props: Reactodia.FormInputSingleProps) {
-  return <Reactodia.FormInputText {...props} multiline />;
+  return <Forms.InputText {...props} multiline />;
 }
 
 render(<Example />);

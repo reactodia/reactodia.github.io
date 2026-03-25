@@ -139,3 +139,158 @@ function ExampleRdfProviderProvisionFromJGF() {
   );
 }
 ```
+
+## Loading data from a data provider
+
+When exploring the graph data, Reactodia components track which data needs to be loaded and requests to fetch it based on currently displayed [diagram content](/docs/concepts/graph-model#diagram-content). For example, when an [`EntityElement`](/docs/api/workspace/classes/EntityElement.md) is added to the canvas and rendered with the[default template](/docs/components/canvas.md#customization), the library will load corresponding entity types to display correct labels.
+
+The library includes a number of hooks and methods to simplify data loading from a custom component which are listed below.
+
+### Request data for entities and/or relations on the canvas
+
+After adding one or more [`EntityElement`](/docs/api/workspace/classes/EntityElement.md) elements to the canvas e.g. with [`model.createElement()`](/docs/api/workspace/classes/DataDiagramModel.md#createelement) (see [Manipulating the diagram](/docs/concepts/graph-model.md#manipulating-the-diagram)), it is necessary to call one or several of the following methods to initiate loading entity data and relations between them:
+
+| Method          | Description |
+|-----------------|-------------|
+| [`model.requestData()`](/docs/api/workspace/classes/DataDiagramModel.md#requestdata) | Requests to load all non-loaded ([placeholder](/docs/api/workspace/classes/EntityElement.md#isplaceholderdata)) entity elements and links connected to them. |
+| [`model.requestElementData()`](/docs/api/workspace/classes/DataDiagramModel.md#requestelementdata) | Requests to load (or reload) data for the specified set of entities. |
+| [`model.requestLinks()`](/docs/api/workspace/classes/DataDiagramModel.md#requestlinks) | Requests to load (or reload) all relations connected to the specified sets of entities. |
+
+It is also possible to use [`requestElementData()`](/docs/api/workspace/functions/requestElementData.md) and [`restoreLinksBetweenElements()`](/docs/api/workspace/functions/restoreLinksBetweenElements.md) command effects to re-request the data on [undo/redo](/docs/concepts/command-history.md) if needed.
+
+### Manually request data for entity, relation or property types
+
+In some cases it is easier to manually trigger a request to load data for an entity, relation or property type:
+
+| Method          | Description |
+|-----------------|-------------|
+| [`model.createElementType()`](/docs/api/workspace/classes/DataDiagramModel.md#createelementtype) | Requests to load an entity type if it has not been loaded yet. <br/> [`model.getElementType()`](/docs/api/workspace/classes/DataDiagramModel.md#getelementtype) can be used to get the placeholder or loaded data. |
+| [`model.createLinkType()`](/docs/api/workspace/classes/DataDiagramModel.md#createlinktype) | Requests to load a relation type if it has not been loaded yet. <br/> [`model.getLinkType()`](/docs/api/workspace/classes/DataDiagramModel.md#getlinktype) can be used to get the placeholder or loaded data. |
+| [`model.createPropertyType()`](/docs/api/workspace/classes/DataDiagramModel.md#createpropertytype) | Requests to load a property type if it has not been loaded yet. <br/> [`model.getPropertyType()`](/docs/api/workspace/classes/DataDiagramModel.md#getpropertytype) can be used to get the placeholder or loaded data. |
+
+#### Example: manual request and subscription for an entity type
+
+```ts
+function MyElementTypeBadge(props: { elementTypeIri }) {
+  const {elementTypeIri} = props;
+  const {model} = Reactodia.useWorkspace();
+  const t = Reactodia.useTranslation();
+  const language = Reactodia.useObservedProperty(
+    model.events, 'changeLanguage', () => model.language
+  );
+
+  const [elementType, setElementType] = React.useState<Reactodia.ElementType>();
+  React.useEffect(() => {
+    setElementType(model.createElementType(elementTypeIri));
+  }, [elementTypeIri]);
+
+  const data = Reactodia.useSyncStore(
+    Reactodia.useEventStore(elementType?.events, 'changeData'),
+    () => elementType?.data
+  );
+  return (
+    <div className="my-badge">
+      {t.formatLabel(data?.label, elementTypeIri, language)}
+    </div>
+  );
+}
+```
+
+:::note
+When requesting the data manually, make sure to subscribe to created instances to re-render when the data loads via [`useObservedProperty()`](/docs/api/workspace/functions/useObservedProperty.md), [`useEventStore()`](/docs/api/workspace/functions/useEventStore.md) or manual [event subscription](/docs/concepts/event-system.md).
+:::
+
+### `useKeyedSyncStore()`
+
+[`useKeyedSyncStore`](/docs/api/workspace/functions/useKeyedSyncStore.md) hook allows to subscribe to a set of targets and fetch the data for each:
+
+| Store           | Description |
+|-----------------|-------------|
+| [`subscribeElementTypes`](/docs/api/workspace/variables/subscribeElementTypes.md) | Subscribe and fetch entity types. |
+| [`subscribeLinkTypes`](/docs/api/workspace/variables/subscribeLinkTypes.md) | Subscribe and fetch relation types. |
+| [`subscribeElementTypes`](/docs/api/workspace/variables/subscribePropertyTypes.md) | Subscribe and fetch property types. |
+
+#### Example: subscribe to property types from an [element template](/docs/components/canvas.md#customization)
+
+```ts
+function MyElement(props: Reactodia.TemplateProps) {
+  const {model} = Reactodia.useWorkspace();
+  const t = Reactodia.useTranslation();
+  const language = Reactodia.useObservedProperty(
+    model.events, 'changeLanguage', () => model.language
+  );
+
+  const data = props.element instanceof Reactodia.EntityElement
+    ? props.element.data : undefined;
+  // Select only properties with at least one value
+  const properties = Object.entries(data?.properties ?? {})
+    .filter(([iri, values]) => values.length > 0);
+  // Subscribe and fetch property types
+  Reactodia.useKeyedSyncStore(
+    Reactodia.subscribePropertyTypes,
+    properties.map(([iri]) => iri),
+    model
+  );
+
+  return (
+    <ul>
+      {properties.map(([iri, values])) => {
+        // Get property type to display
+        const property = model.getPropertyType(iri);
+        return (
+          <li>
+              {t.formatLabel(property?.data?.label, iri, language)}{': '}
+              {values.map(v => v.value).join(', ')}
+          </li>
+        );
+      }}
+    </ul>
+  );
+}
+```
+
+### `useProvidedEntities()`
+
+[`useProvidedEntities`](/docs/api/workspace/functions/useProvidedEntities.md) hook allows to loads entity data for a target set of IRIs even when the entities are not displayed on the canvas at all.
+
+#### Example: load entity variants for a [select input](/docs/components/form-input.md)
+
+```ts
+function MyInputForShape(props: Forms.InputSingleProps) {
+  const {factory} = props;
+  const {model} = Reactodia.useWorkspace();
+
+  const {data: entities} = Reactodia.useProvidedEntities(
+    model.dataProvider,
+    [shapes.Square, shapes.Circle, shapes.Triangle]
+  );
+  const language = Reactodia.useObservedProperty(
+    model.events, 'changeLanguage', () => model.language
+  );
+  const variants = React.useMemo(
+    () => Array.from(entities.values(), (item): Forms.InputSelectVariant => ({
+      value: factory.namedNode(item.id),
+      label: model.locale.formatEntityLabel(item, language),
+    })),
+    [entities, language, factory]
+  );
+
+  return (
+    <Forms.InputSelect {...props} variants={variants} />
+  );
+}
+```
+
+## Data Locale
+
+It is possible to customize how library components display graph data by supplying a custom [`DataLocaleProvider`](/docs/api/workspace/interfaces/DataLocaleProvider.md) when calling [model.importLayout()](/docs/api/workspace/classes/DataDiagramModel.md#importlayout).
+
+Data locale provider can be used to alter the following behavior:
+ - [locale.selectEntityLabel()](/docs/api/workspace/interfaces/DataLocaleProvider.md#selectentitylabel) and [locale.formatEntityLabel()](/docs/api/workspace/interfaces/DataLocaleProvider.md#formatentitylabel) to select or format default entity label from its properties (by default it looks for `rdfs:label` property values);
+ - [locale.selectEntityImageUrl()](/docs/api/workspace/interfaces/DataLocaleProvider.md#selectentityimageurl) to select default entity thumbnail image IRI from its properties (by default it looks for `schema:thumbnailUrl` property value);
+ - [locale.prepareAnchor()](/docs/api/workspace/interfaces/DataLocaleProvider.md#prepareanchor) to provide props for an anchor (`<a>` link) to a resource IRI;
+ - [locale.resolveAssetUrl()](/docs/api/workspace/interfaces/DataLocaleProvider.md#resolveasseturl) to resolve an IRI/URL to referenced data asset for display or download, e.g. an image (thumbnail) or a downloadable file.
+
+:::tip
+It is possible to extend [`DefaultDataLocaleProvider`](/docs/api/workspace/classes/DefaultDataLocaleProvider.md) to slightly alter its behavior instead of implementing the full [`DataLocaleProvider`](/docs/api/workspace/interfaces/DataLocaleProvider.md) interface.
+:::

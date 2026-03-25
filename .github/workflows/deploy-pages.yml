@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  reactodia_workspace_ref: 'v0.33.0'
+  reactodia_workspace_ref: 'v0.34.0'
 
 jobs:
   build:
