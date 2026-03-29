@@ -1,0 +1,13 @@
+{
+    "$schema": "./schema.json",
+    "genealogical_tree": {
+        "action_open_from_file": "Open package from file",
+        "action_open_settings": "Open package settings",
+        "action_save_to_file": "Apply changes and save to file",
+        "init_failed_to_load_package": "Failed to open genealogical package",
+        "task_loading_package": "Loading a package from file",
+        "task_loading_package_failed": "Failed to load specified file.",
+        "validation.marriage_partner_count": "Marriage should have at least two partners",
+        "validation.missing_property_value": "missing property value"
+    }
+}

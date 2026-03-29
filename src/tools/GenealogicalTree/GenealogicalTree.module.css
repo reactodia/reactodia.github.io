@@ -1,0 +1,15 @@
+.workspace {
+    /* Reactodia workspace */
+}
+
+.workspace :global(.reactodia-standard-element)[class] {
+    min-width: 210px;
+}
+
+.workspace :global(.reactodia-standard-element__label)[class] {
+    white-space: unset;
+}
+
+.workspace :global(.reactodia-standard-element__pinned-props) :global(.reactodia-standard-element__properties) {
+    overflow-y: visible;
+}

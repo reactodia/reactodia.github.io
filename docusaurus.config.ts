@@ -124,6 +124,13 @@ const config: Config = {
           ]
         },
         {
+          label: 'Tools',
+          position: 'left',
+          items: [
+            {to: '/tools/genealogical-tree-editor', label: 'Genealogical Tree Editor'},
+          ]
+        },
+        {
           href: 'https://github.com/reactodia/reactodia-workspace',
           label: 'GitHub',
           position: 'right',

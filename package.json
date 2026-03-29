@@ -22,6 +22,7 @@
     "@mdx-js/react": "^3.1.0",
     "@reactodia/hashmap": "^0.2.1",
     "@reactodia/workspace": "^0.34.1",
+    "@zip.js/zip.js": "^2.8.23",
     "clsx": "^2.1.1",
     "n3": "^1.17.2",
     "prism-react-renderer": "^2.4.1",
