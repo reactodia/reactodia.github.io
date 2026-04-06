@@ -16,6 +16,8 @@ import enTranslation from './translations/en.translation.json';
 import GenealogicalSchemaTurtle from './GenealogicalSchema.ttl?raw';
 import styles from './GenealogicalTree.module.css';
 
+const PERSON_ICON: string = require('!!url-loader!@vscode/codicons/src/icons/person.svg').default;
+
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
 ));
@@ -163,6 +165,15 @@ export function PlaygroundGenealogicalTree() {
       metadataProvider={metadataProvider}
       validationProvider={validationProvider}
       renameLinkProvider={renameLinkProvider}
+      typeStyleResolver={types => {
+        if (types.includes(schema.Male)) {
+          return {color: '#01baef', icon: PERSON_ICON, iconMonochrome: true};
+        } else if (types.includes(schema.Female)) {
+          return {color: '#f48da7ff', icon: PERSON_ICON, iconMonochrome: true};
+        } else if (types.includes(schema.Person)) {
+          return {color: '#b5d2cb', icon: PERSON_ICON, iconMonochrome: true};
+        }
+      }}
       translations={[
         {
           ...enTranslation,
@@ -187,7 +198,7 @@ export function PlaygroundGenealogicalTree() {
 
                 const updatedPackage = await mainProvider.sourcePackage.exportWith({
                   dataProvider: mainProvider,
-                  authoringState,
+                  authoringState: mainProvider.cleanupAuthoring(authoringState),
                   diagram: model.exportLayout(),
                   uploader: mainProvider.uploader,
                 });
@@ -225,7 +236,7 @@ export function PlaygroundGenealogicalTree() {
                 if (property === rdfs.comment) {
                   return <Forms.InputList {...inputProps} valueInput={MultilineTextInput} />;
                 } else if (property === schema.gender) {
-                  return <Forms.InputList {...inputProps} valueInput={FormInputSex} />;
+                  return <Forms.InputList {...inputProps} valueInput={FormInputGender} />;
                 } else if (property === Reactodia.schema.thumbnailUrl) {
                   return <FormInputImage {...inputProps} />;
                 }
@@ -263,6 +274,46 @@ class GenealogicalDataProvider extends Reactodia.RdfDataProvider {
     this.uploader = uploader;
     this.addGraph(sourcePackage.graph);
     this._dataset.addAll(sourcePackage.graph);
+  }
+
+  async elements(params: {
+    elementIds: ReadonlyArray<Reactodia.ElementIri>;
+    signal?: AbortSignal;
+  }): Promise<Map<Reactodia.ElementIri, Reactodia.ElementModel>> {
+    const result = await super.elements(params);
+    return new Map(
+      Array.from(result).map(([iri, entity]) => [iri, this.transformEntity(entity)])
+    );
+  }
+
+  async lookup(params: Reactodia.DataProviderLookupParams): Promise<Reactodia.DataProviderLookupItem[]> {
+    const result = await super.lookup(params);
+    return result.map(item => ({
+      ...item,
+      element: this.transformEntity(item.element),
+    }));
+  }
+
+  private transformEntity(entity: Reactodia.ElementModel): Reactodia.ElementModel {
+    if (entity.types.includes(schema.Person)) {
+      const genderValues = Object.hasOwn(entity.properties, schema.gender)
+        ? entity.properties[schema.gender] : undefined;
+      const gender = genderValues && genderValues.length === 1 ? genderValues[0] : undefined;
+      if (gender && gender.termType === 'NamedNode') {
+        if (gender.value === schema.Male) {
+          const types = [...entity.types, schema.Male].sort();
+          return {...entity, types};
+        } else if (gender.value === schema.Female) {
+          const types = [...entity.types, schema.Female].sort();
+          return {...entity, types};
+        }
+      }
+    }
+    return entity;
+  }
+
+  cleanupAuthoring(state: Reactodia.AuthoringState): Reactodia.AuthoringState {
+    return state;
   }
 }
 
@@ -356,7 +407,7 @@ const OtherLinkTemplate: Reactodia.LinkTemplate = {
   ),
 };
 
-function FormInputSex(props: Forms.InputSingleProps) {
+function FormInputGender(props: Forms.InputSingleProps) {
   const {factory} = props;
   const {model} = Reactodia.useWorkspace();
 
