@@ -1,0 +1,14 @@
+button.action {
+    display: flex;
+}
+
+.indicator {
+    display: block;
+    padding-top: -5px;
+    margin-top: -8px;
+    margin-left: -5px;
+    font-size: 20px;
+    line-height: 14px;
+    color: var(--reactodia-color-info);
+    margin-right: -5px;
+}
