@@ -12,6 +12,9 @@ function SimpleExample() {
   const GRAPH_DATA = 'https://reactodia.github.io/resources/orgOntology.ttl';
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, performLayout} = context;
@@ -35,8 +38,8 @@ function SimpleExample() {
 
   return (
     <div className='reactodia-live-editor'>
-      <Reactodia.Workspace ref={onMount}
-        defaultLayout={defaultLayout}>
+      <Reactodia.WorkspaceProvider workspace={workspace}
+        onMount={onMount}>
         <Reactodia.DefaultWorkspace />
       </Reactodia.Workspace>
     </div>

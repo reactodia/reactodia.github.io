@@ -49,7 +49,7 @@ const onClick = async () => {
 
 ## Default layout configuration
 
-`defaultLayout` is the required prop for the top-level [`<Workspace>`](/docs/components/workspace.md) component and Reactodia provides two approaches to get a good default layout function:
+`defaultLayout` is the required prop for [`createWorkspace()`](/docs/components/workspace.md) or the top-level [`<Workspace>`](/docs/components/workspace.md) component and Reactodia provides two approaches to get a good default layout function:
 
 ### Layout via Web Workers
 

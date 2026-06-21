@@ -22,8 +22,21 @@ Currently form input components are considered **unstable** so there might be br
 ```tsx live noInline
 function Example() {
   const GRAPH_DATA = 'https://reactodia.github.io/resources/orgOntology.ttl';
+  const RDF_COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment';
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+    metadataProvider: new Reactodia.BaseMetadataProvider({
+      canModifyEntity: () => ({canEdit: true}),
+      getEntityShape: types => ({
+        properties: new Map([
+          [Reactodia.rdfs.label, {valueShape: {termType: 'Literal'}}],
+          [RDF_COMMENT, {valueShape: {termType: 'Literal'}}],
+        ])
+      }),
+    }),
+  }));
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, editor, getCommandBus, performLayout} = context;
@@ -41,23 +54,10 @@ function Example() {
         .trigger('editEntity', {target: element});
   }, []);
 
-  const RDF_COMMENT = 'http://www.w3.org/2000/01/rdf-schema#comment';
-
-  const [metadataProvider] = React.useState(() => new Reactodia.BaseMetadataProvider({
-    canModifyEntity: () => ({canEdit: true}),
-    getEntityShape: types => ({
-      properties: new Map([
-        [Reactodia.rdfs.label, {valueShape: {termType: 'Literal'}}],
-        [RDF_COMMENT, {valueShape: {termType: 'Literal'}}],
-      ])
-    }),
-  }));
-
   return (
     <div className='reactodia-live-editor'>
-      <Reactodia.Workspace ref={onMount}
-        metadataProvider={metadataProvider}
-        defaultLayout={defaultLayout}>
+      <Reactodia.WorkspaceProvider workspace={workspace}
+        onMount={onMount}>
           <Reactodia.DefaultWorkspace
             search={null}
             navigator={{expanded: false}}
@@ -75,7 +75,7 @@ function Example() {
               ),
             }}
           />
-      </Reactodia.Workspace>
+      </Reactodia.WorkspaceProvider>
     </div>
   );
 }

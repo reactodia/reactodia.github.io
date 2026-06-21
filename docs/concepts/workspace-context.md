@@ -19,32 +19,38 @@ The [`WorkspaceContext`](/docs/api/workspace/interfaces/WorkspaceContext) contai
 
 ## Getting the workspace context
 
-The [`WorkspaceContext`](/docs/api/workspace/interfaces/WorkspaceContext) instance can be acquired in two ways.
-The first one is from the result of `useLoadedWorkspace()` hook which is used for initialization of the [`Workspace`](/docs/components/workspace.md) component:
+The [`WorkspaceContext`](/docs/api/workspace/interfaces/WorkspaceContext) instance can be acquired in multiple ways.
+
+At the top level it is directly available when creating the workspace with [`createWorkspace()`](/docs/api/workspace/functions/createWorkspace.md):
 
 ```tsx
 function Example() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
-  const {onMount, getContext} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-      /* ... */
+  // `workspace` is a workspace context instance
+
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+    // The context is also available via `context`
   }, []);
 
   const onSomething = () => {
-    const {model, editor, /* etc */} = getContext();
+    const {model, editor, /* etc */} = workspace;
     // Use workspace context
   };
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       {/* ... */}
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 ```
 
-The second way is to use [`useWorkspace()`](/docs/api/workspace/functions/useWorkspace) hook inside the [`Workspace`](/docs/components/workspace.md) component itself, e.g. a canvas widget:
+There is also a [`useWorkspace()`](/docs/api/workspace/functions/useWorkspace) hook to get the context from children rendered inside the [`Workspace`](/docs/components/workspace.md) or [`WorkspaceProvider`](/docs/components/workspace.md) components, e.g. a canvas widget:
 
 ```tsx
 function MyWidget() {

@@ -131,7 +131,7 @@ The diagram layout (which includes cell positions and states) can be exported (s
 
 ```tsx
 function WorkingWithImportExport() {
-    const {model, onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+    const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
         const {model} = context;
 
         // Import a diagram layout on mount
