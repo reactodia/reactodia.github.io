@@ -3,17 +3,21 @@ import * as Reactodia from '@reactodia/workspace';
 import * as Forms from '@reactodia/workspace/forms';
 import * as N3 from 'n3';
 
+import { GenealogicalPropertyEditor } from './FormInputs';
 import {
   GenealogicalDataProvider, GenealogicalLocaleProvider, findGenealogicalProvider,
 } from './GenealogicalDataProvider';
 import { GenealogicalMetadataProvider } from './GenealogicalMetadataProvider';
 import { GenealogicalPackage } from './GenealogicalPackage';
 import { GenealogicalValidationProvider } from './GenealogicalValidationProvider';
-import { MarriageTemplate, ParentLinkTemplate, OtherLinkTemplate } from './GraphTemplates';
+import {
+  PersonTemplate, MarriageTemplate,
+  ParentLinkTemplate, HasPartnerLinkTemplate, RelatedToLinkTemplate, OtherLinkTemplate,
+} from './GraphTemplates';
 import { MainMenu } from './MainMenu';
 import { OpenPackageSettings } from './OpenPackageSettings';
 import { sh, getSinglePropertyValue, termAsString } from './OwlShaclSchema';
-import { genealogy, rdfs, schema } from './Vocabularies';
+import { genealogy, schema } from './Vocabularies';
 
 import enTranslation from './translations/en.translation.json';
 import GenealogicalSchemaTurtle from './GenealogicalSchema.ttl?raw';
@@ -87,9 +91,10 @@ export function ToolGenealogicalTree() {
   const [dataSource, setDataSource] = React.useState<DataSource>();
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-    const {model, editor, overlay, translation: t, getCommandBus, performLayout} = context;
+    const {model, view, editor, overlay, translation: t, getCommandBus, performLayout} = context;
     const metadataProvider = editor.metadataProvider as GenealogicalMetadataProvider;
     const validationProvider = editor.validationProvider as GenealogicalValidationProvider;
+    const renameLinkProvider = view.renameLinkProvider as RenameGenealogicalLinksProvider;
 
     metadataProvider.loadSchema({signal});
     editor.setAuthoringState(Reactodia.AuthoringState.empty);
@@ -133,6 +138,7 @@ export function ToolGenealogicalTree() {
     await metadataProvider.loadSettings({mainProvider, signal});
     metadataProvider.updateSettings(editor.authoringState);
     validationProvider.setProvider(mainProvider);
+    renameLinkProvider.setWorkspace(workspace);
 
     const initialSettings = metadataProvider.getSettings();
     const defaultLanguage = termAsString(getSinglePropertyValue(
@@ -151,12 +157,12 @@ export function ToolGenealogicalTree() {
     await model.importLayout({
       dataProvider,
       locale,
-      diagram: sourcePackage.diagram,
+      diagram: sourcePackage.diagrams.get('urn:reactodia:genealogical-package:diagram:main'),
       validateLinks: true,
       signal,
     });
 
-    if (!sourcePackage.diagram) {
+    if (sourcePackage.diagrams.size === 0) {
       const task = overlay.startTask();
       try {
         await Promise.all([schema.Person, genealogy.Marriage, schema.Place].map(async (type) => {
@@ -208,7 +214,9 @@ export function ToolGenealogicalTree() {
                 const updatedPackage = await mainProvider.sourcePackage.exportWith({
                   dataProvider: mainProvider,
                   authoringState: mainProvider.cleanupAuthoring(authoringState),
-                  diagram: model.exportLayout(),
+                  diagrams: new Map([
+                    ['main', model.exportLayout()]
+                  ]),
                   uploader: mainProvider.uploader,
                 });
                 setDataSource({bytes: await updatedPackage.bytes()});
@@ -219,13 +227,19 @@ export function ToolGenealogicalTree() {
         }
         canvas={{
           elementTemplateResolver: types => {
-            if (types.includes(genealogy.Marriage)) {
+            if (types.includes(schema.Person)) {
+              return PersonTemplate;
+            } else if (types.includes(genealogy.Marriage)) {
               return MarriageTemplate;
             }
           },
           linkTemplateResolver: type => {
             if (type === schema.parent) {
               return ParentLinkTemplate;
+            } else if (type === schema.relatedTo) {
+              return RelatedToLinkTemplate;
+            } else if (type === genealogy.hasPartner) {
+              return HasPartnerLinkTemplate;
             } else if (type) {
               return OtherLinkTemplate;
             }
@@ -239,20 +253,7 @@ export function ToolGenealogicalTree() {
           { code: 'zh', label: '汉语' },
         ]}
         visualAuthoring={{
-          propertyEditor: options => (
-            <Reactodia.DefaultPropertyEditor options={options}
-              resolveInput={(property, inputProps) => {
-                if (property === rdfs.comment) {
-                  return <Forms.InputList {...inputProps} valueInput={MultilineTextInput} />;
-                } else if (property === schema.gender) {
-                  return <Forms.InputList {...inputProps} valueInput={FormInputGender} />;
-                } else if (property === Reactodia.schema.thumbnailUrl) {
-                  return <FormInputImage {...inputProps} />;
-                }
-                return <Forms.InputList {...inputProps} valueInput={Forms.InputText} />;
-              }}
-            />
-          ),
+          propertyEditor: options => <GenealogicalPropertyEditor options={options} />,
         }}>
         <Reactodia.Toolbar dock='ne'>
           <OpenPackageSettings />
@@ -263,62 +264,66 @@ export function ToolGenealogicalTree() {
 }
 
 class RenameGenealogicalLinksProvider extends Reactodia.RenameLinkToLinkStateProvider {
+  private workspace: Reactodia.WorkspaceContext | undefined;
+
+  setWorkspace(context: Reactodia.WorkspaceContext | undefined) {
+    this.workspace = context;
+  }
+
   override canRename(link: Reactodia.Link): boolean {
     return (
       link instanceof Reactodia.AnnotationLink ||
       link.typeId === schema.relatedTo
     );
   }
-}
 
-function FormInputGender(props: Forms.InputSingleProps) {
-  const {factory} = props;
-  const {model} = Reactodia.useWorkspace();
-
-  let provider: Reactodia.DataProvider | undefined;
-  if (model.dataProvider instanceof Reactodia.CompositeDataProvider) {
-    provider = model.dataProvider.providers
-      .find(p => p.origin?.value === genealogy.SchemaOrigin)?.provider;
+  getLabel(link: Reactodia.Link): string | undefined {
+    if (link instanceof Reactodia.RelationLink && link.data.linkTypeId === schema.relatedTo) {
+      if (!this.workspace) {
+        return undefined;
+      }
+      const {model, editor, translation: t} = this.workspace;
+      const event = editor.authoringState?.links.get(link.data);
+      const data = event?.data ?? link.data;
+      const labels = data.properties[Reactodia.rdfs.label];
+      if (labels) {
+        const literals = labels.filter(v => v.termType === 'Literal');
+        if (literals.length > 0) {
+          return t.formatLabel(literals, '', model.language);
+        }
+      }
+    } else {
+      return super.getLabel(link);
+    }
   }
 
-  const {data: entities} = Reactodia.useProvidedEntities(provider, [schema.Male, schema.Female]);
-  const language = Reactodia.useObservedProperty(
-    model.events, 'changeLanguage', () => model.language
-  );
-  const variants = React.useMemo(
-    () => Array.from(entities.values(), (item): Forms.InputSelectVariant => ({
-      value: factory.namedNode(item.id),
-      label: model.locale.formatEntityLabel(item, language),
-    })),
-    [entities, language, factory]
-  );
-
-  return (
-    <Forms.InputSelect {...props} variants={variants} />
-  );
-}
-
-function FormInputImage(props: Forms.InputMultiProps) {
-  const {values} = props;
-  const {model} = Reactodia.useWorkspace();
-  const mainProvider = findGenealogicalProvider(model.dataProvider);
-  if (!mainProvider) {
-    throw new Error('Failed to find main provider');
+  setLabel(link: Reactodia.Link, label: string): void {
+    if (link instanceof Reactodia.RelationLink && link.data.linkTypeId === schema.relatedTo) {
+      if (!this.workspace) {
+        return;
+      }
+      const {model, editor, translation: t} = this.workspace;
+      const event = editor.authoringState?.links.get(link.data);
+      const data = event?.data ?? link.data;
+      const labels = data.properties[Reactodia.rdfs.label] ?? [];
+      const previous = this.getLabel(link);
+      const current = t.selectLabel(
+        labels
+          .filter(v => v.value === previous)
+          .filter(v => v.termType === 'Literal'),
+        model.language
+      );
+      editor.changeRelation(data, {
+        ...data,
+        properties: {
+          [Reactodia.rdfs.label]: [
+            ...labels.filter(v => v !== current),
+            model.factory.literal(label, current?.language)
+          ]
+        }
+      });
+    } else {
+      return super.setLabel(link, label);
+    }
   }
-  const {data: fileMetadata} = Reactodia.useProvidedEntities(
-    mainProvider,
-    values.filter(v => v.termType === 'NamedNode').map(v => v.value)
-  );
-  return (
-    <Forms.InputFile {...props}
-      uploader={mainProvider.uploader}
-      fileAccept='.jpg,.jpeg,.png,.svg,.gif'
-      fileMetadata={fileMetadata}
-      allowDrop={item => /^image\//.test(item.type)}
-    />
-  );
-}
-
-function MultilineTextInput(props: Forms.InputSingleProps) {
-  return <Forms.InputText {...props} multiline />;
 }

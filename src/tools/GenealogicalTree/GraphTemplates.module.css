@@ -9,6 +9,10 @@
     text-align: center;
 }
 
+.marriageEnded {
+    border-style: dashed;
+}
+
 .marriageInfo {
     position: absolute;
     bottom: 0;
@@ -20,4 +24,20 @@
     max-width: 160px;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.person {
+    display: contents;
+}
+
+.personDeceased :global(.reactodia-standard-element__thumbnail) {
+    position: relative;
+}
+
+.personDeceased :global(.reactodia-standard-element__thumbnail)::after {
+    content: '🪦';
+    position: absolute;
+    font-size: 16px;
+    top: -8px;
+    left: -8px;
 }

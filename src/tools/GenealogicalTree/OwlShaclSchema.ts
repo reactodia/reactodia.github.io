@@ -232,11 +232,11 @@ async function loadPropertyData(
 }
 
 export function getSinglePropertyValue(
-  element: ElementModel,
+  data: { readonly properties: Record<string, ReadonlyArray<Rdf.NamedNode | Rdf.Literal>> },
   propertyIri: PropertyTypeIri
 ): Rdf.NamedNode | Rdf.Literal | undefined {
-  if (Object.hasOwn(element.properties, propertyIri)) {
-    const values = element.properties[propertyIri];
+  if (Object.hasOwn(data.properties, propertyIri)) {
+    const values = data.properties[propertyIri];
     if (values.length === 1) {
       return values[0];
     }
