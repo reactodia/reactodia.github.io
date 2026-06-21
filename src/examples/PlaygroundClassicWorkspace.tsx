@@ -1,9 +1,12 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
-import { SemanticTypeStyles, makeOntologyLinkTemplates } from '@reactodia/workspace/legacy-styles';
+import {
+  SemanticTypeStyles, makeOntologyLinkTemplates,
+} from '@reactodia/workspace/legacy-styles';
 import * as N3 from 'n3';
 
 import { ExampleToolbarMenu } from './ExampleCommon';
+import { ExampleMetadataProvider, ExampleValidationProvider } from './ExampleMetadata';
 
 const OntologyLinkTemplates = makeOntologyLinkTemplates(Reactodia);
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
@@ -16,6 +19,13 @@ type TurtleDataSource =
 
 export function PlaygroundClassicWorkspace() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+    metadataProvider: new ExampleMetadataProvider(),
+    validationProvider: new ExampleValidationProvider(),
+    renameLinkProvider: new RenameSubclassOfProvider(),
+    typeStyleResolver: SemanticTypeStyles,
+  }));
 
   const [dataSource, setDataSource] = React.useState<TurtleDataSource>({
     type: 'url',
@@ -48,9 +58,8 @@ export function PlaygroundClassicWorkspace() {
   }, [dataSource]);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      typeStyleResolver={SemanticTypeStyles}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.ClassicWorkspace
         canvas={{
           elementTemplateResolver: (types, element) => {
@@ -75,8 +84,17 @@ export function PlaygroundClassicWorkspace() {
           )
         }}
       />
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
+}
+
+class RenameSubclassOfProvider extends Reactodia.RenameLinkToLinkStateProvider {
+  override canRename(link: Reactodia.Link): boolean {
+    return (
+      link instanceof Reactodia.AnnotationLink ||
+      link.typeId === 'http://www.w3.org/2000/01/rdf-schema#subClassOf'
+    );
+  }
 }
 
 function ToolbarActionOpenTurtleGraph(props: {

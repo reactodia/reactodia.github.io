@@ -179,6 +179,7 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
     });
     this.schemaProvider = schemaProvider;
     this.defaultNamespaceBase = defaultNamespaceBase;
+    this.loadedSchema.catch(() => {/* Silence initial rejected or cancelled task */});
   }
 
   private async getSchema(): Promise<OwlShaclSchema> {
@@ -186,7 +187,7 @@ export class GenealogicalMetadataProvider extends Reactodia.BaseMetadataProvider
   }
 
   loadSchema(params: { signal: AbortSignal }) {
-    this.loadedSchema.catch(() => {/* Silence initial rejected or cancelled task */});
+    this.loadedSchema.catch(() => {/* Silence previous load operation */});
     this.loadedSchema = loadOwlShaclSchema({
       schemaProvider: this.schemaProvider,
       signal: params.signal,

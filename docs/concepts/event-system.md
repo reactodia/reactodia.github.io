@@ -165,4 +165,4 @@ function OtherComponent() {
 }
 ```
 
-Each Reactodia [`<Workspace />`](/docs/components/workspace.md) instance maintains its own command buses for each topic not connected to other workspaces in any way.
+Each [workspace context](/docs/concepts/workspace-context.md) instance maintains its own command buses for each topic not connected to other workspaces in any way.

@@ -32,8 +32,6 @@ interface DataSource {
 export function ToolGenealogicalTree() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
 
-  const [dataSource, setDataSource] = React.useState<DataSource>();
-
   const [schemaProvider] = React.useState(() => {
     const provider = new (class extends Reactodia.RdfDataProvider {
       override async knownElementTypes(params: { signal?: AbortSignal; }): Promise<Reactodia.ElementTypeGraph> {
@@ -55,17 +53,45 @@ export function ToolGenealogicalTree() {
     }
     return provider;
   });
-  const [metadataProvider] = React.useState(() => new GenealogicalMetadataProvider({
-    schemaProvider,
-    defaultNamespaceBase: GenealogicalPackage.DEFAULT_NAMESPACE_BASE,
+
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+    translation: new Reactodia.DefaultTranslation({
+      bundles: [
+        {
+          ...enTranslation,
+          'visual_authoring': {
+            'property.load_error.text': '⚠ Failed to load variants',
+          },
+        },
+        Reactodia.DefaultTranslationBundle,
+      ],
+    }),
+    metadataProvider: new GenealogicalMetadataProvider({
+      schemaProvider,
+      defaultNamespaceBase: GenealogicalPackage.DEFAULT_NAMESPACE_BASE,
+    }),
+    validationProvider: new GenealogicalValidationProvider(),
+    renameLinkProvider: new RenameGenealogicalLinksProvider(),
+    typeStyleResolver: types => {
+      if (types.includes(schema.Male)) {
+        return {color: '#01baef', icon: PERSON_ICON, iconMonochrome: true};
+      } else if (types.includes(schema.Female)) {
+        return {color: '#f48da7ff', icon: PERSON_ICON, iconMonochrome: true};
+      } else if (types.includes(schema.Person)) {
+        return {color: '#b5d2cb', icon: PERSON_ICON, iconMonochrome: true};
+      }
+    },
   }));
-  const [validationProvider] = React.useState(() => new GenealogicalValidationProvider());
-  const [renameLinkProvider] = React.useState(() => new RenameGenealogicalLinksProvider());
 
-  const {onMount, getContext} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
+  const [dataSource, setDataSource] = React.useState<DataSource>();
+
+  const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, editor, overlay, translation: t, getCommandBus, performLayout} = context;
+    const metadataProvider = editor.metadataProvider as GenealogicalMetadataProvider;
+    const validationProvider = editor.validationProvider as GenealogicalValidationProvider;
 
-      metadataProvider.loadSchema({signal});
+    metadataProvider.loadSchema({signal});
     editor.setAuthoringState(Reactodia.AuthoringState.empty);
     editor.setAuthoringMode(true);
 
@@ -75,43 +101,43 @@ export function ToolGenealogicalTree() {
     });
     signal.addEventListener('abort', () => listener.stopListening());
 
-      let sourcePackage: GenealogicalPackage;
-      if (dataSource) {
-        try {
-          sourcePackage = await GenealogicalPackage.loadFromBytes(dataSource.bytes, {signal});
-        } catch (err) {
-          throw new Error(t.text('genealogical_tree.init_failed_to_load_package'), {cause: err});
-        }
-      } else {
-        sourcePackage = GenealogicalPackage.createEmpty();
+    let sourcePackage: GenealogicalPackage;
+    if (dataSource) {
+      try {
+        sourcePackage = await GenealogicalPackage.loadFromBytes(dataSource.bytes, {signal});
+      } catch (err) {
+        throw new Error(t.text('genealogical_tree.init_failed_to_load_package'), {cause: err});
       }
+    } else {
+      sourcePackage = GenealogicalPackage.createEmpty();
+    }
 
-      const uploader = new Forms.MemoryFileUploader({
-        factory: Reactodia.Rdf.DefaultDataFactory,
-        disposeSignal: signal,
-      });
-      const mainProvider = new GenealogicalDataProvider(sourcePackage, {uploader, signal});
-      const dataProvider = new Reactodia.CompositeDataProvider({
-        providers: [
-          {
-            provider: schemaProvider,
-            origin: schemaProvider.factory.namedNode(genealogy.SchemaOrigin),
-          },
-          {
-            provider: mainProvider,
-            origin: mainProvider.factory.namedNode(genealogy.DataOrigin),
-          },
-        ],
-      });
+    const uploader = new Forms.MemoryFileUploader({
+      factory: Reactodia.Rdf.DefaultDataFactory,
+      disposeSignal: signal,
+    });
+    const mainProvider = new GenealogicalDataProvider(sourcePackage, {uploader, signal});
+    const dataProvider = new Reactodia.CompositeDataProvider({
+      providers: [
+        {
+          provider: schemaProvider,
+          origin: schemaProvider.factory.namedNode(genealogy.SchemaOrigin),
+        },
+        {
+          provider: mainProvider,
+          origin: mainProvider.factory.namedNode(genealogy.DataOrigin),
+        },
+      ],
+    });
 
-      await metadataProvider.loadSettings({mainProvider, signal});
-      metadataProvider.updateSettings(editor.authoringState);
-      validationProvider.setProvider(mainProvider);
+    await metadataProvider.loadSettings({mainProvider, signal});
+    metadataProvider.updateSettings(editor.authoringState);
+    validationProvider.setProvider(mainProvider);
 
-  const initialSettings = metadataProvider.getSettings();
-  const defaultLanguage = termAsString(getSinglePropertyValue(
-    initialSettings, genealogy.defaultLanguage
-  ));
+    const initialSettings = metadataProvider.getSettings();
+    const defaultLanguage = termAsString(getSinglePropertyValue(
+      initialSettings, genealogy.defaultLanguage
+    ));
     if (defaultLanguage) {
       model.setLanguage(defaultLanguage);
     }
@@ -163,51 +189,31 @@ export function ToolGenealogicalTree() {
   }, [dataSource]);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      metadataProvider={metadataProvider}
-      validationProvider={validationProvider}
-      renameLinkProvider={renameLinkProvider}
-      typeStyleResolver={types => {
-        if (types.includes(schema.Male)) {
-          return {color: '#01baef', icon: PERSON_ICON, iconMonochrome: true};
-        } else if (types.includes(schema.Female)) {
-          return {color: '#f48da7ff', icon: PERSON_ICON, iconMonochrome: true};
-        } else if (types.includes(schema.Person)) {
-          return {color: '#b5d2cb', icon: PERSON_ICON, iconMonochrome: true};
-        }
-      }}
-      translations={[
-        {
-          ...enTranslation,
-          'visual_authoring': {
-            'property.load_error.text': '⚠ Failed to load variants',
-          },
-        }
-      ]}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         className={styles.workspace}
         menu={
           <>
             <MainMenu
-                onOpen={bytes => setDataSource({bytes})}
-                onSave={async () => {
-                  const {model, editor} = getContext();
-                  const mainProvider = findGenealogicalProvider(model.dataProvider);
+              onOpen={bytes => setDataSource({bytes})}
+              onSave={async () => {
+                const {model, editor} = workspace;
+                const mainProvider = findGenealogicalProvider(model.dataProvider);
 
-                  // Capture authoring state before finalizing the diagram
-                  const authoringState = editor.authoringState;
-                  editor.applyAuthoringChanges();
+                // Capture authoring state before finalizing the diagram
+                const authoringState = editor.authoringState;
+                editor.applyAuthoringChanges();
 
-                  const updatedPackage = await mainProvider.sourcePackage.exportWith({
-                    dataProvider: mainProvider,
-                    authoringState: mainProvider.cleanupAuthoring(authoringState),
-                    diagram: model.exportLayout(),
-                    uploader: mainProvider.uploader,
-                  });
-                  setDataSource({bytes: await updatedPackage.bytes()});
-                  return updatedPackage;
-                }}
+                const updatedPackage = await mainProvider.sourcePackage.exportWith({
+                  dataProvider: mainProvider,
+                  authoringState: mainProvider.cleanupAuthoring(authoringState),
+                  diagram: model.exportLayout(),
+                  uploader: mainProvider.uploader,
+                });
+                setDataSource({bytes: await updatedPackage.bytes()});
+                return updatedPackage;
+              }}
             />
           </>
         }
@@ -252,7 +258,7 @@ export function ToolGenealogicalTree() {
           <OpenPackageSettings />
         </Reactodia.Toolbar>
       </Reactodia.DefaultWorkspace>
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 

@@ -13,6 +13,9 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
 
 export function PlaygroundSparql() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const [connectionSettings, setConnectionSettings] = React.useState(
     (): SparqlConnectionSettings | undefined => {
@@ -49,8 +52,8 @@ export function PlaygroundSparql() {
   }, [connectionSettings]);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         menu={<ExampleToolbarMenu />}
         languages={[
@@ -72,6 +75,6 @@ export function PlaygroundSparql() {
           />
         </Reactodia.Toolbar>
       </Reactodia.DefaultWorkspace>
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }

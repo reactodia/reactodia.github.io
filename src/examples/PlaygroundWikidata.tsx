@@ -9,6 +9,9 @@ const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
 
 export function PlaygroundWikidata() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, getCommandBus} = context;
@@ -53,8 +56,8 @@ export function PlaygroundWikidata() {
   }, []);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         menu={
           <>
@@ -71,7 +74,7 @@ export function PlaygroundWikidata() {
           { code: 'zh', label: '汉语' },
         ]}
       />
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 

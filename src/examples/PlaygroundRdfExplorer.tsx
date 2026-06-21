@@ -14,6 +14,9 @@ type TurtleDataSource =
 
 export function PlaygroundRdfExplorer() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const [dataSource, setDataSource] = React.useState<TurtleDataSource>({
     type: 'url',
@@ -45,8 +48,8 @@ export function PlaygroundRdfExplorer() {
   }, [dataSource]);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         menu={
           <>
@@ -67,7 +70,7 @@ export function PlaygroundRdfExplorer() {
           {code: 'zh', label: '汉语'},
         ]}
       />
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 

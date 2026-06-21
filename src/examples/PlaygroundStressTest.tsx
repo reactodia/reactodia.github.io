@@ -15,6 +15,9 @@ export function PlaygroundStressTest(props: {
   const {nodeCount = 500, edgesPerNode = 2, propertiesPerEdge = 0} = props;
 
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
     const {model, view} = context;
@@ -54,14 +57,15 @@ export function PlaygroundStressTest(props: {
   }, []);
 
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}>
+    <Reactodia.WorkspaceProvider
+      workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         menu={<ExampleToolbarMenu />}
         search={null}
         navigator={{expanded: false}}
       />
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 

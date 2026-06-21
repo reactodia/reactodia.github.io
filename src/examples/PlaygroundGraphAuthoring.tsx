@@ -3,10 +3,10 @@ import * as Reactodia from '@reactodia/workspace';
 import * as Forms from '@reactodia/workspace/forms';
 import * as N3 from 'n3';
 
+import { ExampleToolbarMenu } from './ExampleCommon';
 import {
   ExampleMetadataProvider, ExampleValidationProvider, rdfs, example,
 } from './ExampleMetadata';
-import { ExampleToolbarMenu } from './ExampleCommon';
 
 const Layouts = Reactodia.defineLayoutWorker(() => new Worker(
   new URL('@reactodia/workspace/layout.worker', import.meta.url)
@@ -18,6 +18,12 @@ type TurtleDataSource =
 
 export function PlaygroundGraphAuthoring() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+    metadataProvider: new ExampleMetadataProvider(),
+    validationProvider: new ExampleValidationProvider(),
+    renameLinkProvider: new RenameSubclassOfProvider(),
+  }));
 
   const [dataSource, setDataSource] = React.useState<TurtleDataSource>({
     type: 'url',
@@ -73,16 +79,9 @@ export function PlaygroundGraphAuthoring() {
     }
   }, [dataSource]);
 
-  const [metadataProvider] = React.useState(() => new ExampleMetadataProvider());
-  const [validationProvider] = React.useState(() => new ExampleValidationProvider());
-  const [renameLinkProvider] = React.useState(() => new RenameSubclassOfProvider());
-
   return (
-    <Reactodia.Workspace ref={onMount}
-      defaultLayout={defaultLayout}
-      metadataProvider={metadataProvider}
-      validationProvider={validationProvider}
-      renameLinkProvider={renameLinkProvider}>
+    <Reactodia.WorkspaceProvider workspace={workspace}
+      onMount={onMount}>
       <Reactodia.DefaultWorkspace
         menu={
           <>
@@ -119,7 +118,7 @@ export function PlaygroundGraphAuthoring() {
           ),
         }}
       />
-    </Reactodia.Workspace>
+    </Reactodia.WorkspaceProvider>
   );
 }
 

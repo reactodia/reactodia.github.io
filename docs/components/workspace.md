@@ -4,7 +4,9 @@ title: <Workspace />
 
 # Workspace Components
 
-[`<Workspace />`](/docs/api/workspace/classes/Workspace) is a top-level component which establishes [workspace context](/docs/api/workspace/interfaces/WorkspaceContext), which stores graph data and provides means to display and interact with the diagram.
+The recommended way to display a workspace is to use [`createWorkspace()`](/docs/api/workspace/functions/createWorkspace.md) to create new [workspace context](/docs/api/workspace/interfaces/WorkspaceContext), which stores graph data and provides means to display and interact with the diagram. Then the context can be provided to child components with [`<WorkspaceProvider>`](/docs/api/workspace/functions/WorkspaceProvider.md).
+
+Alternatively, [`<Workspace />`](/docs/api/workspace/classes/Workspace) can be used as a top-level utility component which both creates and provides the context.
 
 ## Hooks
 
@@ -12,9 +14,9 @@ title: <Workspace />
 
 [`useWorkspace()`](/docs/api/workspace/functions/useWorkspace) hook can be used from inside `<Workspace />` child components to access workspace context; see [workspace context](/docs/concepts/workspace-context.md) for details.
 
-## Workspace Layout
+## `<WorkspaceRoot>` and built-in layouts
 
-The UI of the workspace is defined by the child components provided to the `<Workspace />`:
+The UI of the workspace is composed of various components which use provided [workspace context](/docs/api/workspace/interfaces/WorkspaceContext):
 
 Default built-in layout is provided as [`<DefaultWorkspace />`](/docs/api/workspace/functions/DefaultWorkspace) component which includes the [unified search](/docs/components/unified-search.md), main menu and action [toolbars](/docs/components/toolbar.md) and all built-in [canvas widgets](/docs/components/canvas.md#widgets).
 
@@ -27,24 +29,27 @@ When providing a custom workspace layout it is required to use [`<WorkspaceRoot 
 ```tsx live
 function Example() {
   const {defaultLayout} = Reactodia.useWorker(Layouts);
+  const [workspace] = React.useState(() => Reactodia.createWorkspace({
+    defaultLayout,
+  }));
 
   const {onMount} = Reactodia.useLoadedWorkspace(async ({context, signal}) => {
-      const {model, view} = context;
-      const dataProvider = new Reactodia.EmptyDataProvider();
-      await model.createNewDiagram({dataProvider, signal});
-      model.createElement('http://example.com/entity');
-      const canvas = view.findAnyCanvas();
-      canvas.zoomToFit();
+    const {model, view} = context;
+    const dataProvider = new Reactodia.EmptyDataProvider();
+    await model.createNewDiagram({dataProvider, signal});
+    model.createElement('http://example.com/entity');
+    const canvas = view.findAnyCanvas();
+    canvas.zoomToFit();
   }, []);
 
   return (
     <div className='reactodia-live-editor'>
-      <Reactodia.Workspace ref={onMount}
-        defaultLayout={defaultLayout}>
+      <Reactodia.WorkspaceProvider workspace={workspace}
+        onMount={onMount}>
         <Reactodia.WorkspaceRoot>
           <Reactodia.Canvas />
         </Reactodia.WorkspaceRoot>
-      </Reactodia.Workspace>
+      </Reactodia.WorkspaceProvider>
     </div>
   );
 }
@@ -52,24 +57,25 @@ function Example() {
 
 ## Customize type styles
 
-Reactodia displays [entities](/docs/concepts/graph-model.md) in different places throughout the workspace components. It is possible to customize overall style based on entity types (accent color and icon) by providing a custom [`TypeStyleResolver`](/docs/api/workspace/type-aliases/TypeStyleResolver.md) to the `<Workspace typeStyleResolver={...} />`:
+Reactodia displays [entities](/docs/concepts/graph-model.md) in different places throughout the workspace components. It is possible to customize overall style based on entity types (accent color and icon) by providing a custom [`typeStyleResolver`](/docs/api/workspace/type-aliases/TypeStyleResolver.md) to the [`createWorkspace()`](/docs/api/workspace/functions/createWorkspace.md):
 
 ```tsx
-<Reactodia.Workspace
+const [workspace] = React.useState(() => Reactodia.createWorkspace({
+  defaultLayout,
   typeStyleResolver={types => {
-      if (types.includes('http://www.w3.org/2000/01/rdf-schema#Class')) {
-          return {icon: CERTIFICATE_ICON, iconMonochrome: true};
-      } else if (types.includes('http://www.w3.org/2002/07/owl#Class')) {
-          return {icon: CERTIFICATE_ICON, iconMonochrome: true};
-      } else if (types.includes('http://www.w3.org/2002/07/owl#ObjectProperty')) {
-          return {icon: COG_ICON, iconMonochrome: true};
-      } else if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
-          return {color: '#00b9f2'};
-      } else {
-          return undefined;
-      }
+    if (types.includes('http://www.w3.org/2000/01/rdf-schema#Class')) {
+      return {icon: CERTIFICATE_ICON, iconMonochrome: true};
+    } else if (types.includes('http://www.w3.org/2002/07/owl#Class')) {
+      return {icon: CERTIFICATE_ICON, iconMonochrome: true};
+    } else if (types.includes('http://www.w3.org/2002/07/owl#ObjectProperty')) {
+      return {icon: COG_ICON, iconMonochrome: true};
+    } else if (types.includes('http://www.w3.org/2002/07/owl#DatatypeProperty')) {
+      return {color: '#00b9f2'};
+    } else {
+      return undefined;
+    }
   }}
-  ...>
+}));
 ```
 
 By default, the colors are assigned deterministically based on total hash of the types in the [entity data](/docs/api/workspace/interfaces/ElementModel.md).
