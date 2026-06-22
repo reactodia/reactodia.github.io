@@ -15,11 +15,20 @@
 :Marriage a owl:Class;
     rdfs:label "Marriage"@en, "Брак"@ru .
 
+:burialPlace a owl:ObjectProperty;
+    rdfs:label "burial place"@en, "похоронен(а) в"@ru .
+
+:fromExMarriage a owl:DatatypeProperty;
+    rdfs:label "from ex-marriage"@en, "из бывшего брака"@ru .
+
 :hasGodparent a owl:ObjectProperty;
     rdfs:label "has godparent"@en, "имеет крёстного(ую)"@ru .
 
 :hasPartner a owl:ObjectProperty;
     rdfs:label "has marriage partner"@en, "супруг(а)"@ru .
+
+:isDeceased a owl:DatatypeProperty;
+    rdfs:label "is deceased"@en, "скончался(ась)"@ru .
 
 rdfs:comment a owl:DatatypeProperty;
     rdfs:label "comment"@en, "комментарий"@ru .
@@ -134,7 +143,7 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
         sh:minCount 2 ;
-        dash:reifiableBy :commonPropertyShape ;
+        dash:reifiableBy :hasPartnerShape ;
     ] .
 
 :PersonShape a sh:NodeShape ;
@@ -163,13 +172,19 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:order 4 ;
     ] ;
     sh:property [
-        sh:path schema:thumbnailUrl ;
+        sh:path :isDeceased ;
         sh:maxCount 1 ;
+		sh:datatype xsd:boolean ;
         sh:order 5 ;
     ] ;
     sh:property [
-        sh:path rdfs:comment ;
+        sh:path schema:thumbnailUrl ;
+        sh:maxCount 1 ;
         sh:order 6 ;
+    ] ;
+    sh:property [
+        sh:path rdfs:comment ;
+        sh:order 7 ;
     ] ;
     sh:property [
         sh:path schema:parent ;
@@ -187,7 +202,7 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:path schema:relatedTo ;
 		sh:class schema:Person ;
 		sh:nodeKind sh:IRI ;
-        dash:reifiableBy :commonPropertyShape ;
+        dash:reifiableBy :relatedToShape ;
     ] ;
     sh:property [
         sh:path schema:birthPlace ;
@@ -199,6 +214,13 @@ reactodia:sourceProvider a owl:DatatypeProperty;
     sh:property [
         sh:path schema:deathPlace ;
 		sh:class schema:Place ;
+		sh:nodeKind sh:IRI ;
+        sh:maxCount 1 ;
+        dash:reifiableBy :commonPropertyShape ;
+    ] ;
+    sh:property [
+        sh:path :burialPlace ;
+        sh:class schema:Place ;
 		sh:nodeKind sh:IRI ;
         sh:maxCount 1 ;
         dash:reifiableBy :commonPropertyShape ;
@@ -275,6 +297,16 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:path rdfs:comment ;
     ] .
 
+:relatedToShape a sh:NodeShape ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:uniqueLang true ;
+        sh:order 1 ;
+    ] .
+
 :homeLocationShape a sh:NodeShape ;
     sh:property [
         sh:path rdfs:comment ;
@@ -290,4 +322,15 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:maxCount 1 ;
 		sh:datatype xsd:date ;
         sh:order 2 ;
+    ] .
+
+:hasPartnerShape a sh:NodeShape ;
+    sh:property [
+        sh:path rdfs:comment ;
+    ] ;
+    sh:property [
+        sh:path :fromExMarriage ;
+        sh:maxCount 1 ;
+		sh:datatype xsd:boolean ;
+        sh:order 1 ;
     ] .

@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 
-import { schema } from './Vocabularies';
+import { genealogy, schema } from './Vocabularies';
 
 export function MainMenu(props: {
   onOpen: (bytes: Uint8Array) => void;
   onSave: () => Promise<Blob>;
 }) {
   const {onOpen, onSave} = props;
-  const {model, overlay, translation: t} = Reactodia.useWorkspace();
+  const {model, editor, overlay, translation: t} = Reactodia.useWorkspace();
   return (
     <>
       <Reactodia.ToolbarActionOpen
@@ -50,10 +50,15 @@ export function MainMenu(props: {
       </Reactodia.ToolbarActionSave>
       <Reactodia.ToolbarAction
         onSelect={() => {
-          const batch = model.history.startBatch('Reset pinned properties');
+          const batch = model.history.startBatch(
+            Reactodia.TranslatedText.text('genealogical_tree.reset_pinned_properties')
+          );
           try {
             for (const element of model.elements) {
-              if (element instanceof Reactodia.EntityElement && element.data.types.includes(schema.Person)) {
+              if (
+                element instanceof Reactodia.EntityElement &&
+                element.data.types.includes(schema.Person)
+              ) {
                 batch.history.execute(Reactodia.setElementState(
                   element,
                   element.elementState
@@ -69,7 +74,46 @@ export function MainMenu(props: {
             batch.store();
           }
         }}>
-        Reset pinned properties
+        {t.text('genealogical_tree.reset_pinned_properties')}
+      </Reactodia.ToolbarAction>
+      <Reactodia.ToolbarAction
+        onSelect={() => {
+          const batch = model.history.startBatch(
+            Reactodia.TranslatedText.text('genealogical_tree.migrate_data_schema')
+          );
+          try {
+            for (const link of model.links) {
+              if (link instanceof Reactodia.RelationLink) {
+                if (link.data.linkTypeId === schema.relatedTo) {
+                  const customLabel = link.linkState.get(
+                    Reactodia.TemplateProperties.CustomLabel
+                  );
+                  if (customLabel) {
+                    editor.changeRelation(link.data, {
+                      ...link.data,
+                      properties: {
+                        ...link.data.properties,
+                        [Reactodia.rdfs.label]: [model.factory.literal(customLabel)],
+                      }
+                    });
+                    batch.history.execute(Reactodia.setLinkState(
+                      link,
+                      link.linkState.set(Reactodia.TemplateProperties.CustomLabel, undefined)
+                    ));
+                  }
+                } else if (link.data.linkTypeId === schema.deathPlace) {
+                  editor.changeRelation(link.data, {
+                    ...link.data,
+                    linkTypeId: genealogy.burialPlace,
+                  });
+                }
+              }
+            }
+          } finally {
+            batch.store();
+          }
+        }}>
+        {t.text('genealogical_tree.migrate_data_schema')}
       </Reactodia.ToolbarAction>
       <Reactodia.ToolbarActionClearAll />
       <Reactodia.ToolbarActionExport kind='exportRaster' />

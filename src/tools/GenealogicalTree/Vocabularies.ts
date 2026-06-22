@@ -25,10 +25,13 @@ export const genealogy = vocabulary('http://reactodia.github.io/genealogy#', [
   'Marriage',
   'SchemaOrigin',
   'PackageSettings',
+  'burialPlace',
   'defaultLanguage',
   'defaultNamespaceBase',
   'hasGodparent',
   'hasPartner',
+  'isDeceased',
+  'fromExMarriage',
 ]);
 
 export const rdfs = vocabulary(Reactodia.rdfs.$namespace, [

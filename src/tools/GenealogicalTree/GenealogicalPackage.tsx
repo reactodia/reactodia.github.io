@@ -8,6 +8,7 @@ import { applyRdfChanges } from './ApplyRdfChanges';
 import { genealogy, rdfs, schema, xsd } from './Vocabularies';
 
 export class GenealogicalPackage {
+  private static readonly DIAGRAM_IRI_PREFIX = 'urn:reactodia:genealogical-package:diagram:';
   private static readonly FILE_IRI_PREFIX = 'urn:reactodia:genealogical-package:file:';
 
   static readonly DEFAULT_NAMESPACE_BASE = 'http://reactodia.github.io/genealogy-graph/';
@@ -15,7 +16,7 @@ export class GenealogicalPackage {
   private readonly imageNameToUrl = new Map<string, string>();
 
   private constructor(
-    readonly diagram: Reactodia.SerializedDiagram | undefined,
+    readonly diagrams: ReadonlyMap<Reactodia.ElementIri, Reactodia.SerializedDiagram>,
     readonly graph: readonly Reactodia.Rdf.Quad[],
     private readonly prefixes: Readonly<Record<string, string>>,
     private readonly entries: zip.Entry[],
@@ -44,7 +45,7 @@ export class GenealogicalPackage {
         factory.literal(GenealogicalPackage.DEFAULT_NAMESPACE_BASE),
       ),
     ];
-    return new GenealogicalPackage(undefined, graph, {}, [], controller.signal);
+    return new GenealogicalPackage(new Map(), graph, {}, [], controller.signal);
   }
 
   static async loadFromBytes(bytes: Uint8Array, options: { signal: AbortSignal }): Promise<GenealogicalPackage> {
@@ -55,16 +56,30 @@ export class GenealogicalPackage {
     signal.addEventListener('abort', () => reader.close());
 
     const entries = await reader.getEntries();
-    const diagramEntry = entries.find((e): e is zip.FileEntry => !e.directory && e.filename === 'diagram.json');
     const graphEntry = entries.find((e): e is zip.FileEntry => !e.directory && e.filename === 'graph.ttl');
 
-    let diagram: Reactodia.SerializedDiagram | undefined;
-    if (diagramEntry) {
-      const diagramJson = await diagramEntry.getData(new zip.TextWriter());
-      try {
-        diagram = JSON.parse(diagramJson);
-      } catch (err) {
-        throw new Error('Failed to parse serialized diagram "diagram.json"', {cause: err});
+    const diagrams = new Map<Reactodia.ElementIri, Reactodia.SerializedDiagram>();
+    for (const entry of entries) {
+      if (entry.directory) {
+        continue;
+      }
+
+      const match = /^diagrams\/(.+).json$/.exec(entry.filename);
+      let diagramName = match ? match[1] : undefined;
+
+      // Temporary compatibility with initial version
+      if (entry.filename === 'diagram.json') {
+        diagramName = 'main';
+      }
+
+      if (diagramName) {
+        const diagramJson = await (entry as zip.FileEntry).getData(new zip.TextWriter());
+        try {
+          const diagram = JSON.parse(diagramJson);
+          diagrams.set(GenealogicalPackage.DIAGRAM_IRI_PREFIX + diagramName, diagram);
+        } catch (err) {
+          throw new Error(`Failed to parse serialized diagram "${entry.filename}"`, {cause: err});
+        }
       }
     }
 
@@ -81,7 +96,7 @@ export class GenealogicalPackage {
       }
     }
 
-    return new GenealogicalPackage(diagram, graph, prefixes, entries, signal);
+    return new GenealogicalPackage(diagrams, graph, prefixes, entries, signal);
   }
 
   async resolveFileUrl(iri: string, options: { signal?: AbortSignal }): Promise<string | undefined> {
@@ -107,10 +122,10 @@ export class GenealogicalPackage {
   async exportWith(params: {
     dataProvider: Reactodia.RdfDataProvider;
     authoringState: Reactodia.AuthoringState;
-    diagram: Reactodia.SerializedDiagram | undefined;
+    diagrams: ReadonlyMap<string, Reactodia.SerializedDiagram>;
     uploader?: Forms.MemoryFileUploader;
   }): Promise<Blob> {
-    const {dataProvider, authoringState: baseState, diagram, uploader} = params;
+    const {dataProvider, authoringState: baseState, diagrams, uploader} = params;
     const factory = Reactodia.Rdf.DefaultDataFactory;
 
     let authoringState = baseState;
@@ -191,8 +206,11 @@ export class GenealogicalPackage {
 
     const zipWriter = new zip.ZipWriter(new zip.BlobWriter("application/zip"));
 
-    if (diagram) {
-      await zipWriter.add('diagram.json', new zip.TextReader(JSON.stringify(diagram)));
+    for (const [slug, diagram] of diagrams) {
+      await zipWriter.add(
+        `diagrams/${slug}.json`,
+        new zip.TextReader(JSON.stringify(diagram))
+      );
     }
 
     await zipWriter.add('graph.ttl', new zip.TextReader(graphTurtle));
