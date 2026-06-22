@@ -1,3 +1,15 @@
+.contentSpinner {
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    flex: auto;
+}
+
+.singleDiagram {
+    position: absolute;
+    inset: 0;
+}
+
 .workspace {
     /* Reactodia workspace */
 }

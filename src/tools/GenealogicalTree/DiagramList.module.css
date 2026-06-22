@@ -1,0 +1,135 @@
+.container {
+    flex: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.search {
+    display: grid;
+    margin: 10px 10px 5px 10px;
+}
+
+.searchInput[class] {
+    grid-row: 1;
+    grid-column: 1;
+    width: unset;
+    min-width: 0;
+    padding-right: 30px;
+}
+
+.searchClear {
+    --icon-content: url('@vscode/codicons/src/icons/close.svg');
+
+    grid-row: 1;
+    grid-column: 1;
+    justify-self: end;
+}
+
+.searchClear[class] {
+    background: transparent;
+    border: none;
+    margin: 2px;
+    padding: 5px;
+}
+
+.listRoot {
+    flex: auto;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow-y: scroll;
+}
+
+.listItem {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-auto-rows: 1fr auto;
+    list-style: none;
+    min-height: 40px;
+}
+
+.listItem:first-child {
+    border-top: 1px solid var(--reactodia-color-emphasis-200);
+}
+
+.diagramItem {
+    grid-row: 1;
+    grid-column: 1 / 3;
+
+    border: none;
+    font-size: 14px;
+    line-height: var(--reactodia-line-height-base);
+    font-family: var(--reactodia-font-family-base);
+    padding: 5px 40px 5px 10px;
+    background-color: var(--reactodia-background-color);
+    text-align: left;
+    transition: background-color var(--reactodia-transition-duration);
+    user-select: none;
+    cursor: pointer;
+    outline-offset: -3px;
+}
+
+.diagramItem.activeItem,
+.diagramItem:hover {
+    background-color: var(--reactodia-color-emphasis-200);
+}
+
+.diagramItem:active {
+    background-color: var(--reactodia-color-emphasis-300);
+}
+
+.itemActions {
+    grid-row: 1;
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px;
+}
+
+.actionEdit[class] {
+    --icon-content: url('@vscode/codicons/src/icons/edit.svg');
+
+    padding: 2.5px;
+    border: none;
+}
+
+.actionDelete[class] {
+    --icon-content: url('@vscode/codicons/src/icons/trash.svg');
+
+    padding: 2.5px;
+    border: none;
+}
+
+.itemSeparator {
+    grid-row: 2;
+    grid-column: 1 / 3;
+
+    border-bottom: 1px solid var(--reactodia-color-emphasis-200);
+    margin: 0 5px;
+    transition: margin var(--reactodia-transition-duration);
+}
+
+.listItem:is(:hover, [aria-selected="true"]) .itemSeparator,
+.listItem:has(+ .listItem:is(:hover, [aria-selected="true"])) .itemSeparator,
+.listItem:last-child .itemSeparator {
+    margin: 0;
+}
+
+.noResults {
+    margin: 5px 5px 15px 5px;
+    text-align: center;
+    color: var(--reactodia-color-emphasis-600);
+}
+
+.actionAdd[class] {
+    --icon-content: url('@vscode/codicons/src/icons/add.svg');
+
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 3px;
+    align-items: center;
+    justify-content: center;
+    margin: 5px 10px;
+}

@@ -1,0 +1,8 @@
+.icon {
+    mask: var(--icon-content) 0px 0px / contain no-repeat;
+    background-color: currentColor;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+}

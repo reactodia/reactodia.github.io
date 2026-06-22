@@ -1,0 +1,32 @@
+.copyAction,
+.pasteAction {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.copyAction::before,
+.pasteAction::before {
+    background-color: currentColor;
+    content: '';
+    display: block;
+    height: 16px;
+    width: 16px;
+}
+
+.copyAction::before {
+    mask: url('@vscode/codicons/src/icons/copy.svg') 0px 0px / contain no-repeat;
+}
+
+.pasteAction::before {
+    mask: url('@vscode/codicons/src/icons/clippy.svg') 0px 0px / contain no-repeat;
+}
+
+button.pasteLabel {
+    display: none;
+}
+
+.copyInput {
+    pointer-events: none;
+    opacity: 0;
+}

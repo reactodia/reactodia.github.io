@@ -109,6 +109,9 @@ reactodia:sourceProvider a owl:DatatypeProperty;
 :PackageSettings a owl:Class ;
     rdfs:label "Package Settings"@en, "Настройки пакета"@ru .
 
+:Diagram a owl:Class ;
+    rdfs:label "Diagram"@en, "Диаграмма"@ru .
+
 :defaultLanguage a owl:DatatypeProperty ;
     rdfs:label "default language"@en, "язык по-умолчанию"@ru .
 
@@ -290,6 +293,14 @@ reactodia:sourceProvider a owl:DatatypeProperty;
         sh:maxCount 1 ;
         sh:order 2 ;
         sh:defaultValue "en" ;
+    ] .
+
+:DiagramShape a sh:NodeShape ;
+    sh:targetClass :Diagram ;
+    r_shapes:canCreate false ;
+    sh:property [
+        sh:path rdfs:label ;
+        sh:order 1 ;
     ] .
 
 :commonPropertyShape a sh:NodeShape ;

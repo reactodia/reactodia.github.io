@@ -22,6 +22,7 @@ export function vocabulary<const Keys extends string[]>(prefix: string, keys: Ke
 export const genealogy = vocabulary('http://reactodia.github.io/genealogy#', [
   'ActiveSettings',
   'DataOrigin',
+  'Diagram',
   'Marriage',
   'SchemaOrigin',
   'PackageSettings',

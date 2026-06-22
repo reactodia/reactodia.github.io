@@ -1,6 +1,7 @@
 import * as React from 'react';
 import * as Reactodia from '@reactodia/workspace';
 
+import { ToolbarActionPaste } from './CopyPaste';
 import { genealogy, schema } from './Vocabularies';
 
 export function MainMenu(props: {
@@ -115,6 +116,7 @@ export function MainMenu(props: {
         }}>
         {t.text('genealogical_tree.migrate_data_schema')}
       </Reactodia.ToolbarAction>
+      <ToolbarActionPaste />
       <Reactodia.ToolbarActionClearAll />
       <Reactodia.ToolbarActionExport kind='exportRaster' />
       <Reactodia.ToolbarActionExport kind='exportSvg' />
